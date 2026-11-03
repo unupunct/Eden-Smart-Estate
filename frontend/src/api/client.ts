@@ -102,3 +102,32 @@ export const api = {
   exportUrl: (pid: string, fmt: 'geojson' | 'kml' | 'csv' | 'json') => `/api/properties/${pid}/export.${fmt}`,
   backupUrl: '/api/backup',
 }
+
+// ---------------------------------------------------------------------------------------------- smart home (Phase 5)
+import type { Action, Automation, Camera, Condition, Device, Integration, LogEntry, SmartStatus, Trigger } from '../smart/types'
+
+export const smartApi = {
+  status: () => req<SmartStatus>('/api/smart/status'),
+  integrations: () => req<Integration[]>('/api/integrations'),
+  addIntegration: (b: { kind: string; name: string; url: string; token?: string; options?: Record<string, unknown> }) => req<Integration>('/api/integrations', json('POST', b)),
+  patchIntegration: (id: string, b: Partial<{ name: string; url: string; token: string; enabled: boolean; options: Record<string, unknown> }>) => req<Integration>(`/api/integrations/${id}`, json('PATCH', b)),
+  deleteIntegration: (id: string) => req<void>(`/api/integrations/${id}`, { method: 'DELETE' }),
+  testIntegration: (id: string) => req<{ ok: boolean; message: string; count: number }>(`/api/integrations/${id}/test`, { method: 'POST' }),
+  devices: () => req<Device[]>('/api/devices'),
+  patchDevice: (id: string, b: Partial<{ name: string; objectId: string | null; risky: boolean; unit: string; commandTopic: string }>) => req<Device>(`/api/devices/${id}`, json('PATCH', b)),
+  deleteDevice: (id: string) => req<void>(`/api/devices/${id}`, { method: 'DELETE' }),
+  addMqttDevice: (b: { integrationId: string; name: string; stateTopic: string; commandTopic?: string; unit?: string; risky?: boolean }) => req<Device>('/api/devices/mqtt', json('POST', b)),
+  command: (id: string, service: string, confirm: boolean) => req<{ ok: boolean; state: string | null }>(`/api/devices/${id}/command`, json('POST', { service, confirm })),
+  cameras: () => req<Camera[]>('/api/cameras'),
+  addCamera: (b: Partial<Camera> & { name: string; kind: string; password?: string; integrationId?: string | null }) => req<Camera>('/api/cameras', json('POST', b)),
+  patchCamera: (id: string, b: Partial<{ name: string; url: string; username: string; password: string; objectId: string | null }>) => req<Camera>(`/api/cameras/${id}`, json('PATCH', b)),
+  deleteCamera: (id: string) => req<void>(`/api/cameras/${id}`, { method: 'DELETE' }),
+  snapshotUrl: (id: string) => `/api/cameras/${id}/snapshot`,
+  streamUrl: (id: string) => `/api/cameras/${id}/stream`,
+  automations: () => req<Automation[]>('/api/automations'),
+  addAutomation: (b: { name: string; trigger: Trigger; conditions: Condition[]; actions: Action[]; enabled: boolean; riskAck: boolean }) => req<Automation>('/api/automations', json('POST', b)),
+  patchAutomation: (id: string, b: Partial<{ name: string; trigger: Trigger; conditions: Condition[]; actions: Action[]; enabled: boolean; riskAck: boolean }>) => req<Automation>(`/api/automations/${id}`, json('PATCH', b)),
+  deleteAutomation: (id: string) => req<void>(`/api/automations/${id}`, { method: 'DELETE' }),
+  runAutomation: (id: string, dryRun: boolean, confirm = false) => req<{ ok: boolean; dryRun: boolean; messages: string[] }>(`/api/automations/${id}/run`, json('POST', { dryRun, confirm })),
+  log: (limit = 60) => req<LogEntry[]>(`/api/automations-log?limit=${limit}`),
+}

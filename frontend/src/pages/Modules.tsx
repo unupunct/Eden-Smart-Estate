@@ -13,8 +13,6 @@ interface ModuleInfo {
 
 export const MODULES: Partial<Record<Route, ModuleInfo>> = {
   buildings: { title: 'Buildings', phase: 'Phase 2 (list) · detail pages later', kinds: ['building'], blurb: 'Every building drawn in the Property Editor. Click “Show on map” to edit its footprint, height, roof and services.', planned: ['Building detail page with floors, doors, windows and equipment', 'Associated devices, cameras and maintenance records', 'Roof geometry in 3D beyond simple extrusion'] },
-  smart: { title: 'Smart Home', phase: 'Phase 5', kinds: ['outlet', 'light', 'sensor'], blurb: 'Outlets, lights and sensors that have been positioned on the map. None is connected: no state or energy values are shown.', planned: ['Home Assistant and MQTT integration', 'Outlet control, schedules, energy history', 'Visual automation editor with confirmation for risky actions'] },
-  security: { title: 'Security & Cameras', phase: 'Phase 5', kinds: ['camera'], blurb: 'Camera positions and coverage as drawn. No live streams exist yet and none are simulated.', planned: ['ONVIF / RTSP / Home Assistant streams', 'Camera grid and fullscreen view', 'Credentials stored server-side only'] },
   tasks: { title: 'Tasks & Maintenance', phase: 'Phase 6', blurb: 'Recurring tasks, reminders and completion history linked to objects.', planned: ['Due dates, priorities, recurrence', 'Link tasks to trees, beds, fences and devices'] },
   notes: { title: 'Notes & Documents', phase: 'Phase 6', kinds: ['note'], blurb: 'Map notes placed so far. Every object also carries its own notes field. Photo and document attachments come in Phase 6.', planned: ['Photos, PDFs and documents attached to any object', 'Tags, categories and global search'] },
 }

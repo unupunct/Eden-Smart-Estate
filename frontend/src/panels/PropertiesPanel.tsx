@@ -6,6 +6,8 @@ import { KINDS, STATUS_OPTIONS, kindDef, num, type FieldDef } from '../model/kin
 import { sortedLayers } from '../model/ops'
 import { useEditor } from '../model/store'
 import { useLibrary } from '../library/store'
+import { useApp } from '../model/app'
+import { stateText, useSmart } from '../smart/store'
 import { placementFor } from '../library/place'
 import { KindSections, SpeciesSelect } from './DesignSections'
 import type { Doc } from '../model/types'
@@ -104,6 +106,24 @@ function MultiPanel({ ids }: { ids: string[] }) {
 }
 
 // ---------------------------------------------------------------------------------------------- single object
+/** Live status of the device linked to a map object, or an honest "not connected". */
+function DeviceLink({ objectId }: { objectId: string }) {
+  const devices = useSmart((s) => s.devices).filter((d) => d.objectId === objectId)
+  const cams = useSmart((s) => s.cameras).filter((c) => c.objectId === objectId)
+  const go = useApp((s) => s.go)
+  if (!devices.length && !cams.length) {
+    return <div className="notice">Position only. This is <strong>not connected</strong> to a device, so no status is shown. <button className="linklike" onClick={() => go('smart')}>Link a device</button></div>
+  }
+  return (
+    <div className="notice ok" style={{ display: 'block' }}>
+      {devices.map((d) => (
+        <div key={d.id}><strong>{d.name}</strong>: {stateText(d)}{d.integrationStatus !== 'online' && d.domain !== 'mqtt' ? ' (integration offline, last known)' : ''}</div>
+      ))}
+      {cams.map((c) => <div key={c.id}><strong>{c.name}</strong>: camera feed configured <button className="linklike" onClick={() => go('security')}>View</button></div>)}
+    </div>
+  )
+}
+
 function ObjectPanel({ id }: { id: string }) {
   const o = useEditor((s) => s.doc.objects[id])
   const layers = useEditor((s) => s.doc.layers)
@@ -165,9 +185,7 @@ function ObjectPanel({ id }: { id: string }) {
           </div>
         ))}
         <KindSections o={o} />
-        {def.smart && (
-          <div className="notice">Position only. This device is <strong>not connected</strong> — smart-home integration arrives in a later phase, so no live status is shown.</div>
-        )}
+        {def.smart && <DeviceLink objectId={id} />}
         <label>Status
           <select value={String(o.props.status ?? '')} onChange={(e) => setProp('status', e.target.value || undefined)}>
             <option value="">—</option>

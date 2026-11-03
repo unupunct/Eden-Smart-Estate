@@ -85,7 +85,8 @@ The undoable document is `{ layers, objects }`. Updates are immutable, so histor
 ## Security notes
 
 - Binds to `127.0.0.1` by default. There is **no authentication** yet; `-Lan` exposes full edit access to the network (documented prominently).
-- API keys are stored in the local database and used only server-side (tile proxy); they are never returned by the API nor logged.
+- API keys, Home Assistant tokens, MQTT and camera passwords are stored in the local database (`secrets` table) and used only server-side; they are never returned by the API nor logged. **They are included in a full backup file**, so treat backups as private.
+- With no login, **anyone who can reach the server can operate the connected devices** (including risky ones, which only ask the browser for a confirmation flag). Keep EDEN on `127.0.0.1` unless the whole network is trusted.
 - Uploads: image MIME whitelist, size limit (40 MB), server-generated file names (no path traversal). Backup restore validates the archive, verifies the database opens, takes a safety copy first, and only extracts files directly under `uploads/`.
 - The tile proxy only forwards requests to the provider URL configured by the user.
 
@@ -128,6 +129,28 @@ All astronomy and shadow geometry runs in the browser, in plain tested TypeScrip
 
 **Map integration.** `EdenMap.syncSun` builds the casters and the merged polygons when the document, the sun store or the library changes and writes them to two GeoJSON sources (`shadow`, split into *dense* and *light*, and `sunheat`). Both layers sit under the object layers and are not hit-testable. The Sun page computes the per-area table (15-minute step, about 60 sample points per area) and the heat-map grid (at most 3500 cells) after a short debounce so dragging stays smooth.
 
+## Smart home, cameras and automations (v0.4)
+
+Server side (migration `0002_smart.sql`):
+
+| Table | Purpose |
+|---|---|
+| `integrations` | Home Assistant or MQTT connection (URL/host, options, status and message). Credentials live in `secrets` (`int:<id>`), never in this table. |
+| `devices` | one row per HA entity or MQTT state topic: name, domain, unit, **`state` (NULL until reported)**, last change, linked map object, `risky` flag, MQTT command topic. |
+| `cameras` | kind (snapshot / mjpeg / rtsp / ha), clean URL, user name, optional HA entity and map object; password in `secrets` (`cam:<id>`). |
+| `automations`, `automation_log` | rules as JSON (trigger, conditions, actions), acknowledgement flag, last run; a rolling log of 500 entries. |
+
+| Module | Role |
+|---|---|
+| `smart_ha.py` | Home Assistant REST client (`/api/states`, `/api/services/...`, `/api/camera_proxy/...`), state parsing (drops camera access tokens), the per-domain **allow-list of commands**, plain-language errors. |
+| `smart_mqtt.py` | one paho client per MQTT integration, subscribes to the user's topics, stores the last payload; optional dependency (reports itself missing). |
+| `smart_auto.py` | pure rule evaluation: comparison that never trusts unknown states, change-detection triggers, time windows, validation, risk detection. |
+| `smart.py` | REST routes, the sync/command/camera code, the automation runner and the polling loop (`EDEN_POLL_SECONDS`, default 15, `0` disables). |
+
+**Truthfulness rules, enforced in code and tests:** device state is only written from an integration report; a device missing from a sync loses its state (NULL); an integration in error makes its states count as unknown for automations; after a command the state is **read back** (never assumed); the API never returns tokens or passwords; camera credentials typed into a URL are moved to secrets; commands outside a domain's allow-list are refused; risky devices need `confirm=true`; rules on risky devices need an acknowledgement to be enabled.
+
+**Testing without real hardware:** Home Assistant, cameras and the MQTT broker are replaced by fakes that exist only in `backend/tests/test_smart.py` (httpx `MockTransport`, a fake paho client) and `frontend/e2e/fakes.mjs` (a small HTTP server whose entities are all named *TEST FIXTURE*). Nothing simulated ships in the app.
+
 ## Where the 28-section specification stands
 
 | Spec section | State |
@@ -140,7 +163,7 @@ All astronomy and shadow geometry runs in the browser, in plain tested TypeScrip
 | 7–10 Garden, orchard, greenhouse, pond | ✅ planting plans, companion checks, orchard records/pollination/grid, greenhouse layout and targets, pond planning with fish and water-quality log (live monitoring/automation planned, Phase 5) |
 | 11 Plant & mushroom library | ◐ curated starter set (100 plants, 25 aquatic, 10 fish, 26 mushrooms, 49 relationships) with evidence levels; no photographs; broader sourced data welcome |
 | 12–13 Sun/shadows, night sky | ✅ sun position, cast shadows, sun hours per bed and for the property, season comparison, night-sky chart with planets, Moon and dark window (v0.3); no terrain, no cloud data |
-| 14–15 Smart home, cameras | ◐ placement and camera coverage; integrations planned (Phase 5) |
+| 14–15 Smart home, cameras | ✅ Home Assistant and MQTT devices, control with confirmation, camera snapshot/MJPEG/RTSP/HA feeds, automations with log (v0.4); no ONVIF discovery, recording or motion detection |
 | 17–19 Notes/tasks, weather, global search | ◐ per-object notes and object search; tasks/weather planned (Phase 6) |
 | 25 Data accuracy rules | ✅ no invented values; demo clearly labelled; "not connected" states |
 | 26 Demo project | ✅ |

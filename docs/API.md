@@ -76,6 +76,24 @@ Keys are **write-only**: `GET /api/settings` only reports `hasMaptilerKey: true/
 
 **Adding another provider:** add an entry to `DIRECT` (browser fetches) or `KEYED` (server proxies) in `backend/app/providers.py` and, if it should serve Satellite, to `SATELLITE_CHOICES`.
 
+## Smart home endpoints (v0.4)
+
+| Method & path | Purpose |
+|---|---|
+| `GET/POST /api/integrations` · `PATCH/DELETE /api/integrations/{id}` | Home Assistant (`kind: homeassistant`, `url`, `token`) or MQTT (`kind: mqtt`, host in `url`, `token` = password, `options: {port, username, tls}`). Tokens are **write-only**: responses only say `hasToken`. |
+| `POST /api/integrations/{id}/test` · `/sync` | connect and import; returns `{ok, message, count}` |
+| `GET /api/devices` · `PATCH/DELETE /api/devices/{id}` | devices with their reported `state` (`null` = nothing reported); patch `name`, `objectId`, `risky`, `unit`, `commandTopic` |
+| `POST /api/devices/mqtt` | add an MQTT device `{integrationId, name, stateTopic, commandTopic?, unit?}` (exact topics, no wildcards) |
+| `POST /api/devices/{id}/command` | `{service, confirm}`; `409` when a risky device is commanded without `confirm: true`; `422` for a service not allowed for that device type; returns the state read back |
+| `GET/POST /api/cameras` · `PATCH/DELETE /api/cameras/{id}` | snapshot / mjpeg / rtsp / ha cameras; credentials in the URL are moved to hidden storage |
+| `GET /api/cameras/{id}/snapshot` · `/stream` | picture (`Cache-Control: no-store`) or MJPEG pass-through; failures return `502` (or `501` when ffmpeg is missing) with the reason |
+| `GET/POST /api/automations` · `PATCH/DELETE /api/automations/{id}` | rules `{name, trigger, conditions, actions, enabled, riskAck}`; validation errors are `422` in plain words |
+| `POST /api/automations/{id}/run` | `{dryRun, confirm}`: dry run (default) sends nothing |
+| `GET /api/automations-log?automationId=&limit=` | activity log |
+| `GET /api/smart/status` | poll interval, whether `paho-mqtt` and `ffmpeg` are available |
+
+Rule JSON: triggers `{"type":"state","deviceId","to"|"above"|"below"}` or `{"type":"time","at":"07:30","days":[0..6]}`; conditions `{"type":"state","deviceId","op":"eq|ne|gt|lt","value"}` or `{"type":"time","after","before"}`; actions `{"type":"device","deviceId","service"}` or `{"type":"log","message"}`.
+
 ## Planned integrations (not implemented yet)
 
-Home Assistant REST/WebSocket, MQTT, ONVIF/RTSP cameras, ESPHome, weather APIs — Phases 5 and 6. Until then EDEN shows device and camera positions on the map as *not connected* and never displays invented readings or video.
+ESPHome, ONVIF discovery, weather APIs (Phase 6).

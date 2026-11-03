@@ -12,6 +12,7 @@ FRONTEND_DIST = ROOT / "frontend" / "dist"
 GEOCODER_URL = os.environ.get("EDEN_GEOCODER_URL", "https://nominatim.openstreetmap.org/search")
 USER_AGENT = "EdenSmartEstate/0.1 (self-hosted property editor)"
 MAX_UPLOAD_BYTES = 40 * 1024 * 1024
+POLL_SECONDS = float(os.environ.get("EDEN_POLL_SECONDS", "15"))  # 0 disables the background poller
 
 
 def ensure_dirs() -> None:

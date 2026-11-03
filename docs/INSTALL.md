@@ -29,7 +29,7 @@ powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 
 ### Option B — release zip (no Node.js needed)
 
-1. Download `EdenSmartEstate-0.3.0.zip` from the project's **Releases** page.
+1. Download `EdenSmartEstate-0.4.0.zip` from the project's **Releases** page.
 2. Right-click → *Extract All…* into a folder you will keep, for example `C:\Eden`.
 3. Open PowerShell in that folder and run:
 

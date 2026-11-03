@@ -2,8 +2,8 @@
 
 **A digital twin of your land.** Open a satellite image of your real property, trace its boundary, and gradually turn it into an editable, measured, geographic model — buildings, fences, trees, garden beds with companion-planting checks, an orchard, a greenhouse and a natural swimming pond — stored on your own computer, no cloud subscription required.
 
-> **Status: v0.3.0 — Phases 1–4 (property editor, landscape design, plant library, sun & shadows, night sky).**
-> The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) come with garden-bed planting plans, evidence-labelled companion planting, orchard records, greenhouse and natural-pond planning, a plant library (v0.2), and now **real sun positions, cast shadows, sun-hours per bed and a night-sky chart** (v0.3). Smart home, cameras, tasks and weather are on the [roadmap](#roadmap) and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
+> **Status: v0.4.0 — Phases 1–5 (property editor, landscape design, plant library, sun & shadows, night sky, smart home, cameras, automations).**
+> The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) come with garden-bed planting plans, evidence-labelled companion planting, orchard records, greenhouse and natural-pond planning, a plant library (v0.2), and now **real sun positions, cast shadows, sun hours per bed and a night-sky chart** (v0.3), and **Home Assistant / MQTT devices, camera pictures and simple automations** (v0.4). Tasks and weather are on the [roadmap](#roadmap) and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
 
 ![Property editor with the demo estate](docs/screenshots/02-property-editor.png)
 
@@ -43,6 +43,10 @@
 | ![Sun and shadows](docs/screenshots/20-sun-shadows.png) | ![Sun-hours map](docs/screenshots/22-sun-hours-map.png) |
 | **Midwinter shadows (same estate, 21 December)** | **Night sky** |
 | ![Winter shadows](docs/screenshots/23-winter-shadows.png) | ![Night sky](docs/screenshots/24-night-sky.png) |
+| **Smart Home (test fixture, not real devices)** | **Automations with activity log** |
+| ![Smart Home](docs/screenshots/25-smart-home.png) | ![Automations](docs/screenshots/26-automations.png) |
+| **Cameras: picture, unreachable camera, missing ffmpeg** | **Integration offline: values marked last known** |
+| ![Cameras](docs/screenshots/27-security-cameras.png) | ![Offline](docs/screenshots/28-integration-offline.png) |
 
 <details><summary>More screenshots</summary>
 
@@ -70,6 +74,15 @@
 - **Night sky:** an all-sky chart for your location and time — about 100 bright stars with simplified constellation figures, the five naked-eye planets, the Moon with phase, and the twilight colour of the sky. Moonrise/moonset, next full and new moon, and the **moon-free dark window** for stargazing. Hover anything for its name.
 - Honest limits are shown in the app: flat ground (no terrain), roofs as boxes, foliage transmission is an estimate, planets are accurate to about 1°, and EDEN does not know the cloud cover.
 
+**Smart home, cameras and automations (new in v0.4)**
+- **Home Assistant** (REST API with a long-lived token) and **MQTT** brokers. Switches, lights, sensors, locks, covers, climate, valves and cameras are imported; you can rename them, link each to its position on the map and mark it *risky*.
+- **Only real reports are shown.** A device whose integration has not reported a value says **no data**; if Home Assistant goes offline the values are marked *last known* and controls are disabled. Nothing is simulated or defaulted. Without any integration the app shows no device status at all.
+- **Control with safeguards:** on/off, lock/unlock, open/close. Risky devices (locks, covers, heating, valves by default) ask for confirmation, and after each command the state shown is read back from the integration.
+- **Cameras:** snapshot (JPEG) URLs, MJPEG streams, RTSP (via ffmpeg, if installed) and Home Assistant cameras, in a grid with full screen. Pictures and passwords go through the EDEN server, so credentials never reach the browser; a camera that cannot be reached shows why, never an old picture.
+- **Automations:** *when* a device changes (becomes / rises above / falls below) or at a time of day, *if* conditions hold, *then* control devices or write to the log. Dry run, activity log, a one-minute cooldown, no action on unknown or offline states, and unattended rules on risky devices only after you acknowledge it. Clearly labelled as convenience, **not a safety system**.
+- Credentials are stored on this computer, write-only in the API (and therefore part of a full backup file: keep backups private).
+- Not included: automatic ONVIF discovery, recording or motion detection, a visual node editor, per-user accounts. The screenshots below use a clearly labelled **test fixture** instead of real devices.
+
 ## About the plant data
 
 The library is a **curated starter set** written from general horticultural and botanical knowledge — *not* a citation-backed database and not exhaustive. Every companion relationship carries its evidence level; tradition is never presented as established science. Please verify anything important (especially toxicity, medicinal use and foraging) with local experts and sources. Entries are plain Python in `backend/app/library_*.py`, covered by integrity tests, and meant to be reviewed and extended.
@@ -94,14 +107,14 @@ The complete guide — release zip, LAN/tablet access, autostart, updating, back
 | | |
 |---|---|
 | [Installation guide](docs/INSTALL.md) | Step by step, plus LAN access, autostart, updates, troubleshooting |
-| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, planting plans, orchard, pond, library, sun & shadows, night sky, shortcuts |
+| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, planting plans, orchard, pond, library, sun & shadows, night sky, smart home, cameras, automations, shortcuts |
 | [Architecture & data model](docs/ARCHITECTURE.md) | Object model, coordinates, autosave/undo design, library data model, database schema |
 | [API & integrations](docs/API.md) | REST endpoints, import/export formats, imagery providers, key handling |
 | [Development](docs/DEVELOPMENT.md) | Build, test, extend (object kinds, plant data, migrations, providers) |
 
 ## Tech
 
-React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 119 frontend unit tests, 35 backend tests and three browser end-to-end suites (33 + 34 + 23 checks).
+React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 119 frontend unit tests, 71 backend tests and four browser end-to-end suites (35 + 34 + 23 + 29 checks).
 
 ## Data, privacy and imagery
 
@@ -118,11 +131,11 @@ React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastA
 | 2 | Property editor: boundary, measurements, layers, objects, buildings, fences, notes, undo/redo, autosave | ✅ done (v0.1) |
 | 3 | Landscape design: bed planting plans, orchard records, greenhouse, pond, plant library, sourced companion planting | ✅ done (v0.2) |
 | 4 | Environment: sun position, real shadow projection, seasonal comparison, night sky | ✅ done (v0.3) |
-| 5 | Smart home: Home Assistant, MQTT, outlets, sensors, cameras, automation editor | planned |
+| 5 | Smart home: Home Assistant, MQTT, outlets, sensors, cameras, automation editor | ✅ done (v0.4) |
 | 6 | Management: tasks, maintenance, documents, photos, weather, reports | planned |
 | 7 | Polish: performance, installer, further docs | planned |
 
-Known limitations of v0.3.0: roofs in 3D and in the shadow model are flat boxes (no gable geometry); there is no terrain elevation, so hills and neighbouring buildings outside your property cast no shade; foliage light transmission and greenhouse glazing are estimates; the night sky shows about 100 stars and five planets (no deep-sky objects, satellites or cloud forecast; planets ±1°); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
+Known limitations of v0.4.0: no ONVIF discovery, recording or motion detection for cameras; automations are simple rules (one trigger, a few conditions, device and log actions) running on the EDEN server only while it runs; MQTT and ffmpeg/RTSP paths are covered by unit tests with fakes but have not been run against real hardware; **no login, so in LAN mode anyone on your network can operate your devices** (keep EDEN on `127.0.0.1` unless your network is trusted); roofs in 3D and in the shadow model are flat boxes (no gable geometry); there is no terrain elevation, so hills and neighbouring buildings outside your property cast no shade; foliage light transmission and greenhouse glazing are estimates; the night sky shows about 100 stars and five planets (no deep-sky objects, satellites or cloud forecast; planets ±1°); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
 
 ## License
 

@@ -196,6 +196,50 @@ Open **Night Sky**. The chart looks straight up from the property: the **zenith 
 
 EDEN does not know the **cloud cover** or your local **light pollution**, and does not draw deep-sky objects, comets or satellites. The sky chart has no connection to weather data yet (Phase 6).
 
+## 19. Smart Home
+
+Open **Smart Home**. With nothing connected EDEN shows **no device status at all**; outlets, lights and sensors you drew on the map are simply marked *not connected*.
+
+**Connect Home Assistant**
+1. In Home Assistant open your profile and create a **long-lived access token**.
+2. In EDEN choose *Add an integration → Home Assistant*, enter the address (for example `http://homeassistant.local:8123`) and the token, and press *Save & test*.
+3. EDEN reads the entities of the supported types (switches, lights, sensors, binary sensors, locks, covers, climate, fans, humidifiers, valves, water heaters, cameras). A wrong token, a wrong address or an unreachable server is reported in plain words on the integration's card.
+
+The token is stored on this computer, never shown again and never returned by the API (use *Change token* to replace it). EDEN refreshes states every few seconds while the server runs.
+
+**MQTT:** add the broker (host, port, optional user name and password, TLS), then add each device as one exact state topic (and optionally a command topic; EDEN publishes `ON` / `OFF`). A device shows **no data** until its first message arrives. Needs the `paho-mqtt` package (installed by `install.ps1`).
+
+**Devices table:** rename a device by editing its name; **link it to a map object** (outlet, light, sensor, camera…) so the object's panel in the editor shows the live state; tick **risky** for anything that could cause damage or harm if switched wrongly (heaters, pumps, door locks). Locks, covers, climate, valves and water heaters are risky by default. Risky devices ask *“Really send…?”* before every command. Read-only devices (sensors) have no buttons.
+
+**What the state means:** the value is exactly what Home Assistant (or the MQTT message) reported, with its unit and *changed … ago*. `unavailable` / `unknown` are Home Assistant's own answers for an offline device. **no data** means nothing was ever reported. If the integration itself goes offline the card turns red, the values are marked *integration offline: last known value* and the control buttons are disabled.
+
+After a command EDEN reads the state back from Home Assistant, so what you see afterwards is what Home Assistant says happened, not what EDEN hoped for.
+
+## 20. Security & Cameras
+
+*Add camera* and choose the type:
+- **Snapshot URL (JPEG):** an address that returns the current picture (most IP cameras have one). Refreshed every 2–30 seconds, your choice; pause and full-screen are available.
+- **MJPEG stream:** shown as a live stream.
+- **RTSP stream:** needs **ffmpeg** on the EDEN computer; EDEN grabs a frame every few seconds (not smooth video). The page says if ffmpeg is missing.
+- **Home Assistant camera:** a `camera.…` entity of your connected Home Assistant.
+
+User name and password can be typed into the address (`http://user:pass@192.168.1.20/snap.jpg`); EDEN moves them into hidden storage and keeps a clean address. Pictures are fetched by the EDEN server, so camera credentials never reach the browser. You can link a camera to its position on the map.
+
+If a camera cannot be reached EDEN shows the reason (*Cannot reach the camera*, *rejected the user name/password (401)*, *ffmpeg not found*), never an old or invented picture. Every picture shows when it was taken.
+
+Not included: automatic ONVIF discovery (use the snapshot or RTSP address your camera publishes), recording, motion detection and cloud access.
+
+## 21. Automations
+
+*New automation*:
+- **When:** a device *becomes* a value (`on`), *rises above* or *falls below* a number, or simply *changes*; or it is a **time of day** (optionally only on some weekdays, on the EDEN computer's clock). State triggers fire on a **change that EDEN observes**: never at start-up and never from an unknown or `unavailable` reading.
+- **Only if (optional):** device conditions (is / is not / above / below) and a time window (which may span midnight). An unknown state never satisfies a condition.
+- **Then:** control devices (on, off, lock, unlock, open, close) and/or write a message to the log.
+
+Safeguards: *Dry run* shows what would happen and sends nothing; every command and every skipped trigger is written to the **activity log**; a rule cannot run more than once a minute; a rule is skipped when its integration is offline. A rule that controls a **risky** device can only be **enabled** after you tick the acknowledgement that it will operate that device without asking (a disabled draft needs none), and *Run now* asks for confirmation.
+
+Rules run on the EDEN server **only while it is running**. Automations are a convenience, **not a safety system**: do not rely on them for frost protection, flood prevention, heating or locks.
+
 ## Keyboard shortcuts
 
 | Key | Action |

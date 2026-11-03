@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Bell, BookOpen, Box, Camera, ChevronsLeft, ChevronsRight, ClipboardList, Cpu, Droplets, FileText, Flower2, Home, LayoutDashboard, Map as MapIcon, Moon, Settings, Sprout, Sun, TreeDeciduous, Warehouse } from 'lucide-react'
+import { Bell, BookOpen, Box, Camera, ChevronsLeft, ChevronsRight, ClipboardList, Cpu, Droplets, FileText, Flower2, Home, LayoutDashboard, Map as MapIcon, Moon, Settings, Sprout, Sun, TreeDeciduous, Warehouse, Zap } from 'lucide-react'
 import { startAutosave } from './model/autosave'
 import { useLibrary } from './library/store'
 import { useApp, type Route } from './model/app'
@@ -10,7 +10,11 @@ import { GardenPage, GreenhousePage, OrchardPage, PondPage } from './pages/Desig
 import { LibraryPage } from './pages/Library'
 import { ModulePage } from './pages/Modules'
 import { Overview } from './pages/Overview'
+import { AutomationsPage } from './pages/Automations'
+import { SecurityPage } from './pages/Security'
 import { SettingsPage } from './pages/Settings'
+import { SmartHomePage } from './pages/SmartHome'
+import { useSmart } from './smart/store'
 import { SkyPage } from './pages/Sky'
 import { SunPage } from './pages/Sun'
 
@@ -23,8 +27,9 @@ const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean 
   { route: 'greenhouse', label: 'Greenhouse', icon: <Sprout size={18} />, live: true },
   { route: 'pond', label: 'Natural Swimming Pond', icon: <Droplets size={18} />, live: true },
   { route: 'library', label: 'Plants & Mushrooms', icon: <BookOpen size={18} />, live: true },
-  { route: 'smart', label: 'Smart Home', icon: <Cpu size={18} /> },
-  { route: 'security', label: 'Security & Cameras', icon: <Camera size={18} /> },
+  { route: 'smart', label: 'Smart Home', icon: <Cpu size={18} />, live: true },
+  { route: 'automations', label: 'Automations', icon: <Zap size={18} />, live: true },
+  { route: 'security', label: 'Security & Cameras', icon: <Camera size={18} />, live: true },
   { route: 'sun', label: 'Sun & Shadows', icon: <Sun size={18} />, live: true },
   { route: 'sky', label: 'Night Sky', icon: <Moon size={18} />, live: true },
   { route: 'tasks', label: 'Tasks & Maintenance', icon: <ClipboardList size={18} /> },
@@ -37,7 +42,13 @@ export default function App() {
   useEffect(() => {
     void boot()
     void useLibrary.getState().load()
-    return startAutosave()
+    void useSmart.getState().load()
+    const poll = setInterval(() => void useSmart.getState().load(), 10000)
+    const stop = startAutosave()
+    return () => {
+      clearInterval(poll)
+      stop()
+    }
   }, [boot])
 
   return (
@@ -81,6 +92,9 @@ export default function App() {
           : route === 'library' ? <LibraryPage />
           : route === 'sun' ? <SunPage />
           : route === 'sky' ? <SkyPage />
+          : route === 'smart' ? <SmartHomePage />
+          : route === 'security' ? <SecurityPage />
+          : route === 'automations' ? <AutomationsPage />
           : <ModulePage route={route} />}
       </main>
       {dialog === 'new-property' && <NewPropertyDialog />}

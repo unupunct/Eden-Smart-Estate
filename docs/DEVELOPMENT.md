@@ -11,6 +11,7 @@ backend/            FastAPI app (app/), SQL migrations, pytest suite
   app/exchange.py    GeoJSON/KML/CSV import-export
   app/demo.py        fictional demo estate
   app/layers.py      default layers + kind→layer map
+  app/smart*.py      Home Assistant client, MQTT hub, automation rules, smart-home routes and poller
   migrations/        0001_init.sql, …
 frontend/           React + TypeScript + Vite
   src/model/         types, kind catalog, store (undo/redo), autosave, app state
@@ -19,6 +20,7 @@ frontend/           React + TypeScript + Vite
   src/panels/        editor UI (top bar, left/right panels, dialogs)
   src/sun/           astronomy, time zones, shadow geometry, sun-hours (pure, unit-tested)
   src/sky/           star list, constellation figures, dome projection
+  src/smart/         smart-home types and store (devices, cameras, automations)
   src/library/       library types, logic (companions, beds, orchard, pond)
   src/pages/         overview, module pages, settings
   e2e/               Playwright tests and the screenshot generator
@@ -44,10 +46,10 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -SkipE2E   # no browse
 
 | Suite | Command | Covers |
 |---|---|---|
-| Backend | `backend\.venv\Scripts\python -m pytest` (in `backend/`) | CRUD, validation, change sets, import/export round trips, overlays, backup/restore, settings & key secrecy, migrations, **plant-library integrity** (ids, references, evidence labels, warnings, demo contract) |
+| Backend | `backend\.venv\Scripts\python -m pytest` (in `backend/`) | CRUD, validation, change sets, **smart home (fake Home Assistant/MQTT/cameras: state truthfulness, secrets, risky confirmation, automations engine)**, import/export round trips, overlays, backup/restore, settings & key secrecy, migrations, **plant-library integrity** (ids, references, evidence labels, warnings, demo contract) |
 | Frontend unit | `npx vitest run` (in `frontend/`) | measurements, transforms, vertex editing, calibration maths, undo/redo, layers, autosave diff, feature building, catalog ↔ backend consistency, **companion levels, bed analysis, neighbour checks, pollination, orchard grid, greenhouse box, pond volume, fish verdicts, water ranges, sun/moon/planet positions against almanac values, sunrise/sunset, polar day/night, time zones and DST, shadow geometry, foliage density, sun hours, heat grid, star list, sky projection, moon-free window** |
 | Type check | `npx tsc --noEmit` | strict TypeScript |
-| End-to-end | `npm run build && npm run e2e` | real Edge/Chrome via `playwright-core`; each suite starts its own server on a temp data dir. `e2e/interact.mjs`: draws, edits, drags, undoes, calibrates an image, switches 2D/3D, reloads and checks persistence. `e2e/design.mjs`: planting conflicts, library → Add to property, companion links, orchard grid + undo, pollination, pond warnings, module pages, mushroom safety. `e2e/sun.mjs`: sun readouts, shadow direction morning/afternoon, no shadows at night, season table, foliage, sun-hours map, editor shadow chip, night-sky chart by night and day, moon facts. Needs Microsoft Edge (or change `channel` in the script). |
+| End-to-end | `npm run build && npm run e2e` | real Edge/Chrome via `playwright-core`; each suite starts its own server on a temp data dir. `e2e/interact.mjs`: draws, edits, drags, undoes, calibrates an image, switches 2D/3D, reloads and checks persistence. `e2e/design.mjs`: planting conflicts, library → Add to property, companion links, orchard grid + undo, pollination, pond warnings, module pages, mushroom safety. `e2e/smart.mjs` (with the fixtures in `e2e/fakes.mjs`): connect a fake Home Assistant, wrong token, devices and units, commands and risky confirmation, linking to the map, a rule firing on a real value change, dry run, cooldown, risky-rule acknowledgement, cameras (picture, unreachable, ffmpeg missing), integration going offline. `e2e/sun.mjs`: sun readouts, shadow direction morning/afternoon, no shadows at night, season table, foliage, sun-hours map, editor shadow chip, night-sky chart by night and day, moon facts. Needs Microsoft Edge (or change `channel` in the script). |
 
 ## Screenshots
 
@@ -55,7 +57,7 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -SkipE2E   # no browse
 
 ## Release package
 
-`scripts\package.ps1 -Version 0.3.0` builds `release\EdenSmartEstate-0.3.0.zip` (built web app + backend source + scripts + docs).
+`scripts\package.ps1 -Version 0.4.0` builds `release\EdenSmartEstate-0.4.0.zip` (built web app + backend source + scripts + docs).
 
 ## Extending
 

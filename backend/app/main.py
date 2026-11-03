@@ -4,7 +4,9 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import config, db
+import asyncio
+
+from . import config, db, smart, smart_mqtt
 from .providers import router as providers_router
 from .routes import router
 
@@ -13,12 +15,20 @@ from .routes import router
 async def lifespan(_app: FastAPI):
     config.ensure_dirs()
     db.migrate()
-    yield
+    smart.start_mqtt_all()
+    task = asyncio.create_task(smart.poll_loop(config.POLL_SECONDS)) if config.POLL_SECONDS > 0 else None
+    try:
+        yield
+    finally:
+        if task:
+            task.cancel()
+        smart_mqtt.stop_all()
 
 
-app = FastAPI(title="EDEN Smart Estate", version="0.3.0", lifespan=lifespan)
+app = FastAPI(title="EDEN Smart Estate", version="0.4.0", lifespan=lifespan)
 app.include_router(router)
 app.include_router(providers_router)
+app.include_router(smart.router)
 
 dist = config.FRONTEND_DIST
 if (dist / "index.html").exists():

@@ -37,7 +37,7 @@ try {
   const pid = created.id
   const model = async () => (await fetch(`${base}/api/properties/${pid}`)).json()
   const geojson = async () => (await fetch(`${base}/api/properties/${pid}/export.geojson`)).json()
-  const saved = async () => { await sleep(1800) } // autosave debounce is 700 ms
+  const saved = async () => { await sleep(1000); await page.waitForFunction(() => window.__edenStore.getState().save.status === 'saved', null, { timeout: 20000 }); await sleep(250) } // autosave debounce is 700 ms
   const settle = () => page.waitForFunction(() => !window.__edenMap.isMoving() && window.__edenMap.loaded(), null, { timeout: 15000 }).then(() => sleep(400))
 
   browser = await chromium.launch({ channel: 'msedge', headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] })

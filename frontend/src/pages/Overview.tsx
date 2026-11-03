@@ -8,6 +8,7 @@ import { fmtArea, fmtLength } from '../geo/measure'
 import { useApp } from '../model/app'
 import { useEditor } from '../model/store'
 import { estateStats } from '../panels/PropertiesPanel'
+import { useSmart } from '../smart/store'
 
 export function Overview() {
   const { properties, currentId, open, remove, go, setDialog, refresh } = useApp()
@@ -129,15 +130,8 @@ export function Overview() {
                 </>
               )}
               <h2 className="sect">Live data</h2>
-              <p className="muted">These tiles stay empty until the matching integration exists. EDEN never shows invented sensor values or camera pictures.</p>
-              <div className="stats">
-                <Pending icon={<CloudSun size={18} />} label="Weather" phase="Phase 6" />
-                <Pending icon={<Thermometer size={18} />} label="Indoor / outdoor temperature" phase="Phase 5" />
-                <Pending icon={<Plug size={18} />} label="Smart devices" phase="Phase 5" sub={`${(st.counts.outlet ?? 0) + (st.counts.light ?? 0) + (st.counts.sensor ?? 0)} placed on the map, none connected`} />
-                <Pending icon={<Camera size={18} />} label="Cameras" phase="Phase 5" sub={`${st.counts.camera ?? 0} placed on the map, none connected`} />
-                <Pending icon={<Sprout size={18} />} label="Greenhouse conditions" phase="Phase 3 / 5" />
-                <Pending icon={<Droplets size={18} />} label="Pond water quality" phase="Phase 3" />
-              </div>
+              <p className="muted">Tiles show only what a connected integration reports. EDEN never shows invented sensor values or camera pictures.</p>
+              <LiveTiles placed={st.counts} />
             </>
           )}
         </>
@@ -151,4 +145,27 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
 }
 function Pending({ icon, label, phase, sub }: { icon: React.ReactNode; label: string; phase: string; sub?: string }) {
   return <div className="stat glass pending">{icon}<small>{label}</small><strong>Not connected</strong><em>{sub ?? `Planned · ${phase}`}</em></div>
+}
+
+function LiveTiles({ placed }: { placed: Record<string, number> }) {
+  const { integrations, devices, cameras } = useSmart()
+  const go = useApp((x) => x.go)
+  const online = integrations.filter((i) => i.status === 'online')
+  const temp = devices.filter((d) => d.deviceClass === 'temperature' && d.state !== null && !['unavailable', 'unknown'].includes(d.state) && d.integrationStatus === 'online').slice(0, 2)
+  const real = devices.filter((d) => d.state !== null)
+  const placedDevices = (placed.outlet ?? 0) + (placed.light ?? 0) + (placed.sensor ?? 0)
+  return (
+    <div className="stats">
+      <Pending icon={<CloudSun size={18} />} label="Weather" phase="Phase 6" />
+      {temp.length ? temp.map((d) => <Stat key={d.id} label={d.name} value={`${d.state} ${d.unit}`} sub="reported by your integration" />) : <Pending icon={<Thermometer size={18} />} label="Temperature" phase="no temperature sensor connected" />}
+      {integrations.length ? (
+        <div className="stat glass" onClick={() => go('smart')} style={{ cursor: 'pointer' }}><Plug size={18} /><small>Smart devices</small><strong>{real.length} reporting</strong><em>{devices.length} known · {online.length}/{integrations.length} integrations connected · {Math.max(0, placedDevices - devices.filter((d) => d.objectId).length)} map positions unlinked</em></div>
+      ) : <Pending icon={<Plug size={18} />} label="Smart devices" phase="Phase 5" sub={`${placedDevices} placed on the map, none connected`} />}
+      {cameras.length ? (
+        <div className="stat glass" onClick={() => go('security')} style={{ cursor: 'pointer' }}><Camera size={18} /><small>Cameras</small><strong>{cameras.length} configured</strong><em>pictures load on the Security page</em></div>
+      ) : <Pending icon={<Camera size={18} />} label="Cameras" phase="Phase 5" sub={`${placed.camera ?? 0} placed on the map, none connected`} />}
+      <Pending icon={<Sprout size={18} />} label="Greenhouse conditions" phase="needs a linked sensor" />
+      <Pending icon={<Droplets size={18} />} label="Pond water quality" phase="manual log on the Pond page" />
+    </div>
+  )
 }
