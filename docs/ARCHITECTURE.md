@@ -151,6 +151,21 @@ Server side (migration `0002_smart.sql`):
 
 **Testing without real hardware:** Home Assistant, cameras and the MQTT broker are replaced by fakes that exist only in `backend/tests/test_smart.py` (httpx `MockTransport`, a fake paho client) and `frontend/e2e/fakes.mjs` (a small HTTP server whose entities are all named *TEST FIXTURE*). Nothing simulated ships in the app.
 
+## Management: tasks, documents, weather, reports (v0.5)
+
+Server side (migration `0003_manage.sql`, module `manage.py`):
+
+| Table | Purpose |
+|---|---|
+| `tasks`, `task_history` | tasks (calendar-day `due`, priority, category, repeat rule, linked `object_id`) and an append-only record of completions (the maintenance history survives deleting the task) |
+| `documents` | metadata of uploaded files (title, tags, note, date, linked object); the file itself is `uploads/doc_<id>.<ext>`: **flat in the uploads folder**, so the existing backup/restore carries it |
+| `weather_cache` | the last real answer per rounded location with its fetch time |
+
+- `recurrence.py`: next-occurrence maths. Occurrences are computed from the original anchor (no drift at month ends) and, when keeping the rhythm, past occurrences are skipped.
+- **Uploads:** extension allow-list, **content sniffing** (magic bytes), size limit, generated stored names, `Content-Security-Policy: sandbox` + `nosniff`, inline only for images and PDF. Deleting a document or a property removes the files.
+- **Weather:** opt-in setting (`weather_enabled`), fixed provider URL (overridable by `EDEN_WEATHER_URL` for tests), 20-minute cache, stale fallback flagged `stale: true` with the original fetch time, `502` when nothing real exists. Only the parts EDEN shows are stored.
+- Frontend: `manage/logic.ts` (urgency, due wording, WMO weather codes, facts derived from forecast numbers), `manage/store.ts`, `reports/build.ts` (a pure function from the data to report sections, so honest "nothing to report" wording is unit-tested); pages `Tasks`, `Documents`, `Weather`, `Reports`; `ObjectManage` shows tasks and attachments in an object's panel.
+
 ## Where the 28-section specification stands
 
 | Spec section | State |
@@ -164,6 +179,6 @@ Server side (migration `0002_smart.sql`):
 | 11 Plant & mushroom library | ◐ curated starter set (100 plants, 25 aquatic, 10 fish, 26 mushrooms, 49 relationships) with evidence levels; no photographs; broader sourced data welcome |
 | 12–13 Sun/shadows, night sky | ✅ sun position, cast shadows, sun hours per bed and for the property, season comparison, night-sky chart with planets, Moon and dark window (v0.3); no terrain, no cloud data |
 | 14–15 Smart home, cameras | ✅ Home Assistant and MQTT devices, control with confirmation, camera snapshot/MJPEG/RTSP/HA feeds, automations with log (v0.4); no ONVIF discovery, recording or motion detection |
-| 17–19 Notes/tasks, weather, global search | ◐ per-object notes and object search; tasks/weather planned (Phase 6) |
+| 17–19 Notes/tasks, weather, global search | ✅ tasks with repeats and history, documents and photos per object, opt-in weather forecast, object search; search across tasks and documents is per page (no single global search) (v0.5) |
 | 25 Data accuracy rules | ✅ no invented values; demo clearly labelled; "not connected" states |
 | 26 Demo project | ✅ |

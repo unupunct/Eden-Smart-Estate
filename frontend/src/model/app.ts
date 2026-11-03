@@ -6,7 +6,7 @@ import type { PropertyMeta } from './types'
 
 export type Route =
   | 'overview' | 'editor' | 'buildings' | 'garden' | 'orchard' | 'greenhouse' | 'pond' | 'library'
-  | 'smart' | 'security' | 'automations' | 'sun' | 'sky' | 'tasks' | 'notes' | 'settings'
+  | 'smart' | 'security' | 'automations' | 'sun' | 'sky' | 'tasks' | 'notes' | 'weather' | 'reports' | 'settings'
 
 interface AppState {
   route: Route

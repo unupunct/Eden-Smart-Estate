@@ -24,7 +24,7 @@ ALLOWED_IMAGE = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp
 def health():
     with db.session() as conn:
         n = conn.execute("SELECT COUNT(*) FROM properties").fetchone()[0]
-    return {"status": "ok", "app": "EDEN Smart Estate", "version": "0.4.0", "properties": n}
+    return {"status": "ok", "app": "EDEN Smart Estate", "version": "0.5.0", "properties": n}
 
 
 @router.get("/library")

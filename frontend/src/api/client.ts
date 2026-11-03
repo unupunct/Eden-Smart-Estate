@@ -131,3 +131,29 @@ export const smartApi = {
   runAutomation: (id: string, dryRun: boolean, confirm = false) => req<{ ok: boolean; dryRun: boolean; messages: string[] }>(`/api/automations/${id}/run`, json('POST', { dryRun, confirm })),
   log: (limit = 60) => req<LogEntry[]>(`/api/automations-log?limit=${limit}`),
 }
+
+// ---------------------------------------------------------------------------------------------- management (Phase 6)
+import type { DocumentInfo, HistoryEntry, Task, TaskInput, WeatherReply } from '../manage/types'
+
+export const manageApi = {
+  tasks: (propertyId: string) => req<Task[]>(`/api/tasks?propertyId=${propertyId}`),
+  addTask: (b: TaskInput) => req<Task>('/api/tasks', json('POST', b)),
+  patchTask: (id: string, b: Partial<Omit<TaskInput, 'propertyId'>> & { status?: 'open' | 'done' }) => req<Task>(`/api/tasks/${id}`, json('PATCH', b)),
+  deleteTask: (id: string) => req<void>(`/api/tasks/${id}`, { method: 'DELETE' }),
+  completeTask: (id: string, note = '', completedOn?: string) => req<Task>(`/api/tasks/${id}/complete`, json('POST', { note, completedOn })),
+  history: (propertyId: string, limit = 200) => req<HistoryEntry[]>(`/api/tasks-history?propertyId=${propertyId}&limit=${limit}`),
+  tasksCsvUrl: (propertyId: string) => `/api/properties/${propertyId}/tasks.csv`,
+  documents: (propertyId: string) => req<DocumentInfo[]>(`/api/documents?propertyId=${propertyId}`),
+  upload: (propertyId: string, file: File, extra: { objectId?: string; title?: string; tags?: string; note?: string; takenAt?: string } = {}) => {
+    const f = new FormData()
+    f.append('file', file)
+    f.append('propertyId', propertyId)
+    for (const [k, v] of Object.entries(extra)) if (v) f.append(k, v)
+    return req<DocumentInfo>('/api/documents', { method: 'POST', body: f })
+  },
+  patchDocument: (id: string, b: Partial<{ title: string; tags: string; note: string; objectId: string | null; takenAt: string | null }>) => req<DocumentInfo>(`/api/documents/${id}`, json('PATCH', b)),
+  deleteDocument: (id: string) => req<void>(`/api/documents/${id}`, { method: 'DELETE' }),
+  weatherSettings: () => req<{ enabled: boolean; provider: string; url: string }>('/api/weather/settings'),
+  setWeatherEnabled: (enabled: boolean) => req<{ enabled: boolean }>('/api/weather/settings', json('PUT', { enabled })),
+  weather: (lat: number, lng: number) => req<WeatherReply>(`/api/weather?lat=${lat}&lng=${lng}`),
+}

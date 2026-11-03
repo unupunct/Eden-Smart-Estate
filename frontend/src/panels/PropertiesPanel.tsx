@@ -8,6 +8,7 @@ import { useEditor } from '../model/store'
 import { useLibrary } from '../library/store'
 import { useApp } from '../model/app'
 import { stateText, useSmart } from '../smart/store'
+import { ObjectManage } from './ObjectManage'
 import { placementFor } from '../library/place'
 import { KindSections, SpeciesSelect } from './DesignSections'
 import type { Doc } from '../model/types'
@@ -132,6 +133,7 @@ function ObjectPanel({ id }: { id: string }) {
   const dup = useEditor((s) => s.duplicateObjects)
   const setGeoms = useEditor((s) => s.setGeometries)
   const libIx = useLibrary((s) => s.ix)
+  const property = useEditor((s) => s.property)
   if (!o) return null
   const def = kindDef(o.kind)
   const layer = layers.find((l) => l.id === o.layerId)
@@ -185,6 +187,7 @@ function ObjectPanel({ id }: { id: string }) {
           </div>
         ))}
         <KindSections o={o} />
+        {property && <ObjectManage objectId={id} propertyId={property.id} />}
         {def.smart && <DeviceLink objectId={id} />}
         <label>Status
           <select value={String(o.props.status ?? '')} onChange={(e) => setProp('status', e.target.value || undefined)}>

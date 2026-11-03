@@ -2,8 +2,8 @@
 
 **A digital twin of your land.** Open a satellite image of your real property, trace its boundary, and gradually turn it into an editable, measured, geographic model — buildings, fences, trees, garden beds with companion-planting checks, an orchard, a greenhouse and a natural swimming pond — stored on your own computer, no cloud subscription required.
 
-> **Status: v0.4.0 — Phases 1–5 (property editor, landscape design, plant library, sun & shadows, night sky, smart home, cameras, automations).**
-> The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) come with garden-bed planting plans, evidence-labelled companion planting, orchard records, greenhouse and natural-pond planning, a plant library (v0.2), and now **real sun positions, cast shadows, sun hours per bed and a night-sky chart** (v0.3), and **Home Assistant / MQTT devices, camera pictures and simple automations** (v0.4). Tasks and weather are on the [roadmap](#roadmap) and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
+> **Status: v0.5.0 — Phases 1–6 (property editor, landscape design, plant library, sun & shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports).**
+> The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) come with garden-bed planting plans, evidence-labelled companion planting, orchard records, greenhouse and natural-pond planning, a plant library (v0.2), and now **real sun positions, cast shadows, sun hours per bed and a night-sky chart** (v0.3), and **Home Assistant / MQTT devices, camera pictures and simple automations** (v0.4). **tasks, documents and photos, an opt-in weather forecast and printable reports** (v0.5). Only polish and the installer remain on the [roadmap](#roadmap) and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
 
 ![Property editor with the demo estate](docs/screenshots/02-property-editor.png)
 
@@ -47,6 +47,10 @@
 | ![Smart Home](docs/screenshots/25-smart-home.png) | ![Automations](docs/screenshots/26-automations.png) |
 | **Cameras: picture, unreachable camera, missing ffmpeg** | **Integration offline: values marked last known** |
 | ![Cameras](docs/screenshots/27-security-cameras.png) | ![Offline](docs/screenshots/28-integration-offline.png) |
+| **Weather (test fixture forecast)** | **Tasks and maintenance** |
+| ![Weather](docs/screenshots/29-weather.png) | ![Tasks](docs/screenshots/30-tasks.png) |
+| **Notes & documents** | **Printable report** |
+| ![Documents](docs/screenshots/31-documents.png) | ![Report](docs/screenshots/32-report.png) |
 
 <details><summary>More screenshots</summary>
 
@@ -83,6 +87,13 @@
 - Credentials are stored on this computer, write-only in the API (and therefore part of a full backup file: keep backups private).
 - Not included: automatic ONVIF discovery, recording or motion detection, a visual node editor, per-user accounts. The screenshots below use a clearly labelled **test fixture** instead of real devices.
 
+**Management (new in v0.5)**
+- **Tasks & maintenance:** reminders with due dates, priority and category, linked to any tree, bed, fence or building. Repeating tasks (every N days/weeks/months/years) either keep their rhythm (missed occurrences are skipped) or count from when you finish. Overdue / today / next 7 days views, a maintenance history ("when did I last prune this tree?") and CSV export. Reminders are shown inside EDEN only; nothing is pushed to a phone.
+- **Notes & documents:** photos, PDFs, manuals, receipts, spreadsheets and text files attached to the property or to a specific object, with tags, notes, dates and search. Files live in the data folder, are checked by type **and content**, are served with `nosniff` and a sandbox policy, and travel with every backup.
+- **Weather (opt-in):** a 7-day and 48-hour forecast from the free **Open-Meteo** service for the property's location, with plain facts derived from the numbers (frost likely on …, rain total, strong wind) and a one-click frost reminder. It is **off until you enable it** (it sends the rounded coordinates and your IP address to Open-Meteo), always shows when it was fetched, and falls back to the last real forecast marked as old, never a guess. It is a model forecast, not a measurement at your garden.
+- **Reports:** a printable estate report (summary, inventory, beds with companion check, orchard, ponds, tasks, documents, weather) to print or save as PDF, plus CSV/GeoJSON exports.
+- Not included: push notifications, e-mail reminders, a calendar view, OCR/full-text search inside documents, a global search across tasks and documents (each page has its own search).
+
 ## About the plant data
 
 The library is a **curated starter set** written from general horticultural and botanical knowledge — *not* a citation-backed database and not exhaustive. Every companion relationship carries its evidence level; tradition is never presented as established science. Please verify anything important (especially toxicity, medicinal use and foraging) with local experts and sources. Entries are plain Python in `backend/app/library_*.py`, covered by integrity tests, and meant to be reviewed and extended.
@@ -107,18 +118,19 @@ The complete guide — release zip, LAN/tablet access, autostart, updating, back
 | | |
 |---|---|
 | [Installation guide](docs/INSTALL.md) | Step by step, plus LAN access, autostart, updates, troubleshooting |
-| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, planting plans, orchard, pond, library, sun & shadows, night sky, smart home, cameras, automations, shortcuts |
+| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, planting plans, orchard, pond, library, sun & shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports, shortcuts |
 | [Architecture & data model](docs/ARCHITECTURE.md) | Object model, coordinates, autosave/undo design, library data model, database schema |
 | [API & integrations](docs/API.md) | REST endpoints, import/export formats, imagery providers, key handling |
 | [Development](docs/DEVELOPMENT.md) | Build, test, extend (object kinds, plant data, migrations, providers) |
 
 ## Tech
 
-React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 119 frontend unit tests, 71 backend tests and four browser end-to-end suites (35 + 34 + 23 + 29 checks).
+React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 133 frontend unit tests, 89 backend tests and five browser end-to-end suites (35 + 34 + 23 + 29 + 26 checks).
 
 ## Data, privacy and imagery
 
 - All your data lives in the local `data/` folder (SQLite database + imported images). Nothing is uploaded anywhere by EDEN.
+- **Weather** is the one feature that sends your property's coordinates to a third party (Open-Meteo), and only after you enable it on the Weather page.
 - Your **browser** requests map tiles directly from the imagery provider you select (so that provider sees your IP address and viewed area, like any web map). Place search goes through your local EDEN server to OpenStreetMap Nominatim and is only sent when you press Enter. Both are optional; the editor and the plant library work offline with stored data.
 - Please read your imagery provider's terms. Esri World Imagery is shown with its required attribution; heavy or commercial use calls for your own key from a provider such as MapTiler.
 - There is **no login yet**. Run on `127.0.0.1` (default). `-Lan` mode exposes editing to your whole network — see the install guide.
@@ -132,10 +144,10 @@ React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastA
 | 3 | Landscape design: bed planting plans, orchard records, greenhouse, pond, plant library, sourced companion planting | ✅ done (v0.2) |
 | 4 | Environment: sun position, real shadow projection, seasonal comparison, night sky | ✅ done (v0.3) |
 | 5 | Smart home: Home Assistant, MQTT, outlets, sensors, cameras, automation editor | ✅ done (v0.4) |
-| 6 | Management: tasks, maintenance, documents, photos, weather, reports | planned |
+| 6 | Management: tasks, maintenance, documents, photos, weather, reports | ✅ done (v0.5) |
 | 7 | Polish: performance, installer, further docs | planned |
 
-Known limitations of v0.4.0: no ONVIF discovery, recording or motion detection for cameras; automations are simple rules (one trigger, a few conditions, device and log actions) running on the EDEN server only while it runs; MQTT and ffmpeg/RTSP paths are covered by unit tests with fakes but have not been run against real hardware; **no login, so in LAN mode anyone on your network can operate your devices** (keep EDEN on `127.0.0.1` unless your network is trusted); roofs in 3D and in the shadow model are flat boxes (no gable geometry); there is no terrain elevation, so hills and neighbouring buildings outside your property cast no shade; foliage light transmission and greenhouse glazing are estimates; the night sky shows about 100 stars and five planets (no deep-sky objects, satellites or cloud forecast; planets ±1°); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
+Known limitations of v0.5.0: reminders are in-app only (no push or e-mail); weather is a model forecast from one provider and needs internet; uploaded photos keep their own metadata (GPS position included) so strip it before sharing files; no OCR or search inside documents; no ONVIF discovery, recording or motion detection for cameras; automations are simple rules (one trigger, a few conditions, device and log actions) running on the EDEN server only while it runs; MQTT and ffmpeg/RTSP paths are covered by unit tests with fakes but have not been run against real hardware; **no login, so in LAN mode anyone on your network can operate your devices** (keep EDEN on `127.0.0.1` unless your network is trusted); roofs in 3D and in the shadow model are flat boxes (no gable geometry); there is no terrain elevation, so hills and neighbouring buildings outside your property cast no shade; foliage light transmission and greenhouse glazing are estimates; the night sky shows about 100 stars and five planets (no deep-sky objects, satellites or cloud forecast; planets ±1°); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
 
 ## License
 

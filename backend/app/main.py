@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 import asyncio
 
-from . import config, db, smart, smart_mqtt
+from . import config, db, manage, smart, smart_mqtt
 from .providers import router as providers_router
 from .routes import router
 
@@ -25,10 +25,11 @@ async def lifespan(_app: FastAPI):
         smart_mqtt.stop_all()
 
 
-app = FastAPI(title="EDEN Smart Estate", version="0.4.0", lifespan=lifespan)
+app = FastAPI(title="EDEN Smart Estate", version="0.5.0", lifespan=lifespan)
 app.include_router(router)
 app.include_router(providers_router)
 app.include_router(smart.router)
+app.include_router(manage.router)
 
 dist = config.FRONTEND_DIST
 if (dist / "index.html").exists():

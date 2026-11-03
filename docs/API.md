@@ -94,6 +94,20 @@ Keys are **write-only**: `GET /api/settings` only reports `hasMaptilerKey: true/
 
 Rule JSON: triggers `{"type":"state","deviceId","to"|"above"|"below"}` or `{"type":"time","at":"07:30","days":[0..6]}`; conditions `{"type":"state","deviceId","op":"eq|ne|gt|lt","value"}` or `{"type":"time","after","before"}`; actions `{"type":"device","deviceId","service"}` or `{"type":"log","message"}`.
 
+## Management endpoints (v0.5)
+
+| Method & path | Purpose |
+|---|---|
+| `GET /api/tasks?propertyId=&status=&objectId=` · `POST /api/tasks` · `PATCH/DELETE /api/tasks/{id}` | tasks `{title, notes, category, priority, due: "YYYY-MM-DD", repeatEvery, repeatUnit, repeatFrom: due\|completion, objectId}` |
+| `POST /api/tasks/{id}/complete` | `{note?, completedOn?}`: records history; repeating tasks move to the next date, others become `done` |
+| `GET /api/tasks-history?propertyId=&objectId=&limit=` | completions |
+| `GET /api/properties/{id}/tasks.csv` | CSV export (formula-safe) |
+| `POST /api/documents` (multipart: `file`, `propertyId`, `objectId?`, `title?`, `tags?`, `note?`, `takenAt?`) | upload; `415` wrong type or content, `413` too large, `422` empty/bad date |
+| `GET /api/documents?propertyId=&objectId=&q=&kind=photo\|document` · `PATCH/DELETE /api/documents/{id}` | list/search, edit metadata, delete (removes the file) |
+| `GET /api/documents/{id}/file[?download=true]` | the file, with `nosniff` and a sandbox CSP |
+| `GET/PUT /api/weather/settings` | `{enabled}`: weather is off by default |
+| `GET /api/weather?lat=&lng=` | `403` while switched off; otherwise `{source, fetchedAt, stale, error?, data}` (current, 7 days, next 48 hours) |
+
 ## Planned integrations (not implemented yet)
 
-ESPHome, ONVIF discovery, weather APIs (Phase 6).
+ESPHome and ONVIF discovery.

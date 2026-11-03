@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState } from 'react'
-import { Camera, CloudSun, Droplets, FlaskConical, Map as MapIcon, Plug, Sprout, Thermometer, Trash2, Upload } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Camera, ClipboardList, CloudSun, Droplets, FlaskConical, Map as MapIcon, Plug, Sprout, Thermometer, Trash2, Upload } from 'lucide-react'
 import { moonPosition, sunEvents } from '../sun/astro'
 import { loadZone } from '../sun/store'
 import { dayStart, fmtClock, fmtDuration } from '../sun/tz'
@@ -9,6 +9,8 @@ import { useApp } from '../model/app'
 import { useEditor } from '../model/store'
 import { estateStats } from '../panels/PropertiesPanel'
 import { useSmart } from '../smart/store'
+import { summariseTasks, weatherText } from '../manage/logic'
+import { useManage } from '../manage/store'
 
 export function Overview() {
   const { properties, currentId, open, remove, go, setDialog, refresh } = useApp()
@@ -153,10 +155,19 @@ function LiveTiles({ placed }: { placed: Record<string, number> }) {
   const online = integrations.filter((i) => i.status === 'online')
   const temp = devices.filter((d) => d.deviceClass === 'temperature' && d.state !== null && !['unavailable', 'unknown'].includes(d.state) && d.integrationStatus === 'online').slice(0, 2)
   const real = devices.filter((d) => d.state !== null)
+  const { tasks, weather, weatherEnabled } = useManage()
+  const lat = useEditor((s) => s.property?.center)
+  useEffect(() => {
+    if (weatherEnabled && lat) void useManage.getState().loadWeather(lat[1], lat[0])
+  }, [weatherEnabled, lat?.[0], lat?.[1]]) // eslint-disable-line react-hooks/exhaustive-deps
+  const tc = summariseTasks(tasks)
   const placedDevices = (placed.outlet ?? 0) + (placed.light ?? 0) + (placed.sensor ?? 0)
   return (
     <div className="stats">
-      <Pending icon={<CloudSun size={18} />} label="Weather" phase="Phase 6" />
+      <div className="stat glass" onClick={() => go('tasks')} style={{ cursor: 'pointer' }}><ClipboardList size={18} /><small>Tasks</small><strong>{tc.overdue ? `${tc.overdue} overdue` : tc.today ? `${tc.today} due today` : 'nothing due'}</strong><em>{tc.overdue + tc.today + tc.soon + tc.later + tc.undated} open · {tc.soon} in the next 7 days</em></div>
+      {weatherEnabled && weather ? (
+        <div className="stat glass" onClick={() => go('weather')} style={{ cursor: 'pointer' }}><CloudSun size={18} /><small>Weather · {weatherText(weather.data.current.weather_code).text}</small><strong>{weather.data.current.temperature_2m.toFixed(1)} °C</strong><em>{weather.stale ? 'OLD forecast, ' : ''}fetched {new Date(weather.fetchedAt).toLocaleTimeString()} (Open-Meteo)</em></div>
+      ) : <div className="stat glass pending" onClick={() => go('weather')} style={{ cursor: 'pointer' }}><CloudSun size={18} /><small>Weather</small><strong>{weatherEnabled ? 'Loading…' : 'Switched off'}</strong><em>{weatherEnabled ? 'asking the forecast service' : 'enable on the Weather page'}</em></div>}
       {temp.length ? temp.map((d) => <Stat key={d.id} label={d.name} value={`${d.state} ${d.unit}`} sub="reported by your integration" />) : <Pending icon={<Thermometer size={18} />} label="Temperature" phase="no temperature sensor connected" />}
       {integrations.length ? (
         <div className="stat glass" onClick={() => go('smart')} style={{ cursor: 'pointer' }}><Plug size={18} /><small>Smart devices</small><strong>{real.length} reporting</strong><em>{devices.length} known · {online.length}/{integrations.length} integrations connected · {Math.max(0, placedDevices - devices.filter((d) => d.objectId).length)} map positions unlinked</em></div>

@@ -64,6 +64,7 @@ def create_property(conn, data: PropertyCreate, is_demo: bool = False, pid: str 
 
 def delete_property(conn, pid: str) -> list[str]:
     files = [r["filename"] for r in conn.execute("SELECT filename FROM image_overlays WHERE property_id=?", (pid,))]
+    files += [r["filename"] for r in conn.execute("SELECT filename FROM documents WHERE property_id=?", (pid,))]
     conn.execute("DELETE FROM properties WHERE id=?", (pid,))
     return files
 

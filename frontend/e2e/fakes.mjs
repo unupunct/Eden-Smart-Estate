@@ -81,3 +81,39 @@ export async function startFakeHA(port, token = 'e2e-token') {
   await new Promise((r) => server.listen(port, '127.0.0.1', r))
   return { server, calls, states, close: () => new Promise((r) => { server.closeAllConnections?.(); server.close(r) }), url: `http://127.0.0.1:${port}` }
 }
+
+/** TEST FIXTURE: a stand-in for the Open-Meteo forecast API (the numbers are made up for tests, with one frost night). */
+export async function startFakeWeather(port) {
+  const state = { requests: 0, params: null, fail: false }
+  const p2 = (n) => String(n).padStart(2, '0')
+  const server = createServer((req, res) => {
+    const url = new URL(req.url, 'http://x')
+    state.requests++
+    state.params = Object.fromEntries(url.searchParams)
+    if (state.fail) { res.writeHead(503); return res.end() }
+    const now = new Date()
+    const iso = (d) => `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`
+    const hourStr = (d) => `${iso(d)}T${p2(d.getHours())}:00`
+    const days = Array.from({ length: 7 }, (_, i) => new Date(now.getFullYear(), now.getMonth(), now.getDate() + i))
+    const hours = Array.from({ length: 80 }, (_, i) => new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() - 3 + i))
+    const mins = [3, -1.5, 2, 6, 8, 5, 4]
+    const body = {
+      timezone: 'Europe/Bucharest', elevation: 410,
+      current_units: { temperature_2m: '°C' }, daily_units: {}, hourly_units: {},
+      current: { time: `${iso(now)}T${p2(now.getHours())}:${p2(now.getMinutes())}`, temperature_2m: 17.5, relative_humidity_2m: 58, apparent_temperature: 16.9, precipitation: 0, weather_code: 2, wind_speed_10m: 9.4, wind_gusts_10m: 18.2, surface_pressure: 1013 },
+      daily: {
+        time: days.map(iso), weather_code: [2, 0, 3, 61, 63, 2, 1], temperature_2m_max: [19, 14, 16, 15, 13, 18, 21], temperature_2m_min: mins,
+        precipitation_sum: [0, 0, 0.4, 6.2, 11.8, 0, 0], precipitation_probability_max: [5, 0, 20, 70, 90, 10, 0], wind_speed_10m_max: [14, 9, 12, 28, 33, 15, 10],
+        sunrise: days.map((d) => `${iso(d)}T05:31`), sunset: days.map((d) => `${iso(d)}T21:03`), uv_index_max: [7, 7, 6, 3, 2, 6, 7],
+      },
+      hourly: {
+        time: hours.map(hourStr), temperature_2m: hours.map((_, i) => 10 + 6 * Math.sin((i / 24) * 2 * Math.PI)), precipitation: hours.map((_, i) => (i > 40 && i < 46 ? 0.8 : 0)),
+        soil_temperature_0cm: hours.map((_, i) => 12 + 3 * Math.sin((i / 24) * 2 * Math.PI)), precipitation_probability: hours.map(() => 10), wind_speed_10m: hours.map(() => 9), weather_code: hours.map(() => 2),
+      },
+    }
+    res.writeHead(200, { 'content-type': 'application/json' })
+    res.end(JSON.stringify(body))
+  })
+  await new Promise((r) => server.listen(port, '127.0.0.1', r))
+  return { state, url: `http://127.0.0.1:${port}/v1/forecast`, close: () => new Promise((r) => { server.closeAllConnections?.(); server.close(r) }) }
+}

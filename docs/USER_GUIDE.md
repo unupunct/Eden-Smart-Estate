@@ -240,6 +240,38 @@ Safeguards: *Dry run* shows what would happen and sends nothing; every command a
 
 Rules run on the EDEN server **only while it is running**. Automations are a convenience, **not a safety system**: do not rely on them for frost protection, flood prevention, heating or locks.
 
+## 22. Tasks & Maintenance
+
+*New task*: what needs doing, a due date, a priority, a category, optionally the **object it is about** (a tree, bed, fence, building…), and optionally a repeat.
+
+- **Views:** *Overdue*, *Today*, *Next 7 days*, *Later*, *No date*; switch to *Done* to see finished ones; filter by category. The Overview shows how many are overdue or due today.
+- **Completing** a task ticks it off and writes a line to the **maintenance history** (with the day it was really done). A one-off task moves to *Done* (you can reopen it); a **repeating** task jumps to its next date.
+- **Repeats:** every N days / weeks / months / years. *Keeping the original rhythm*: a task due every Monday stays on Mondays even if you did it on Wednesday, and occurrences you missed are skipped. *Counted from when I finish*: "3 weeks after each feeding". Month arithmetic keeps the day of the month (31 January → 28 February → 31 March).
+- **On an object:** select a tree or bed in the Property Editor and its panel shows the open tasks, when it was last maintained, a quick *Add a task* box and its attachments.
+- **Export:** *Export CSV* for a spreadsheet (text that starts with `=`, `+`, `-` or `@` is neutralised so it cannot run as a formula).
+
+Reminders appear only inside EDEN: there is no push notification, e-mail or calendar sync.
+
+## 23. Notes & Documents
+
+*Add files* (JPG, PNG, WebP, GIF, PDF, TXT, CSV, MD, DOCX, XLSX, ODT, ODS, up to 40 MB). Choose first whether the files belong to the **whole property** or to a specific object. For each file you can set a title, **tags**, a note and a date (when the photo was taken or the document is dated), change which object it belongs to, download it or delete it. Photos open in a viewer; other files download or open in the browser's own viewer.
+
+*Search* looks at title, tags, note, file name and the object's name; *Show* limits the list to photos or documents. Map notes pinned in the Property Editor are listed below the files.
+
+Safety: files are accepted by extension **and** by content (a `.pdf` that is not a PDF is refused; HTML and executables are never accepted), are stored under generated names, and are served with `nosniff` and a sandbox policy. They are part of every **backup** and restore. Photos keep their own metadata (including GPS position, if the camera recorded it) — remove it before sharing a file or backup.
+
+## 24. Weather
+
+Weather is **off until you enable it** on the Weather page, because it sends the property's coordinates (rounded to 4 decimals) and your IP address to the free **Open-Meteo** service. You can switch it off again at any time.
+
+Once on, you see current conditions, a modelled soil-surface temperature, a 48-hour chart (temperature and rain), a 7-day table and a short list of **facts derived from the forecast numbers**: frost is likely on a day with a forecast minimum of 0 °C or less (ground frost possible at 0–2 °C), rain total for the week, strong wind, hot days. *Add a reminder* turns a frost warning into a task.
+
+Everything shows **when it was fetched**. The forecast is cached for 20 minutes. If the service cannot be reached EDEN shows the **last real forecast marked as old**, or an error if there is none — never an estimate. It is a model forecast for a grid cell, not a measurement at your garden: frost pockets and microclimates are not captured. Data: Open-Meteo.com, CC BY 4.0.
+
+## 25. Reports
+
+Open **Reports**, tick the sections you want (summary, inventory, beds and plantings with the companion check, orchard, ponds, tasks, documents, weather) and press **Print / save as PDF**: the menu is hidden in the printout. The weather section appears only when weather is on and loaded. The page also links the task CSV, the object CSV and the GeoJSON export. A report built from the demo estate says **DEMO DATA** at the top.
+
 ## Keyboard shortcuts
 
 | Key | Action |

@@ -13,8 +13,6 @@ interface ModuleInfo {
 
 export const MODULES: Partial<Record<Route, ModuleInfo>> = {
   buildings: { title: 'Buildings', phase: 'Phase 2 (list) · detail pages later', kinds: ['building'], blurb: 'Every building drawn in the Property Editor. Click “Show on map” to edit its footprint, height, roof and services.', planned: ['Building detail page with floors, doors, windows and equipment', 'Associated devices, cameras and maintenance records', 'Roof geometry in 3D beyond simple extrusion'] },
-  tasks: { title: 'Tasks & Maintenance', phase: 'Phase 6', blurb: 'Recurring tasks, reminders and completion history linked to objects.', planned: ['Due dates, priorities, recurrence', 'Link tasks to trees, beds, fences and devices'] },
-  notes: { title: 'Notes & Documents', phase: 'Phase 6', kinds: ['note'], blurb: 'Map notes placed so far. Every object also carries its own notes field. Photo and document attachments come in Phase 6.', planned: ['Photos, PDFs and documents attached to any object', 'Tags, categories and global search'] },
 }
 
 export function ModulePage({ route }: { route: Route }) {
