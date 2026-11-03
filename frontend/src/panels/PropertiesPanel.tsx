@@ -5,6 +5,9 @@ import { mapRef } from '../map/controller'
 import { KINDS, STATUS_OPTIONS, kindDef, num, type FieldDef } from '../model/kinds'
 import { sortedLayers } from '../model/ops'
 import { useEditor } from '../model/store'
+import { useLibrary } from '../library/store'
+import { placementFor } from '../library/place'
+import { KindSections, SpeciesSelect } from './DesignSections'
 import type { Doc } from '../model/types'
 
 export function PropertiesPanel() {
@@ -108,6 +111,7 @@ function ObjectPanel({ id }: { id: string }) {
   const del = useEditor((s) => s.deleteObjects)
   const dup = useEditor((s) => s.duplicateObjects)
   const setGeoms = useEditor((s) => s.setGeometries)
+  const libIx = useLibrary((s) => s.ix)
   if (!o) return null
   const def = kindDef(o.kind)
   const layer = layers.find((l) => l.id === o.layerId)
@@ -116,6 +120,21 @@ function ObjectPanel({ id }: { id: string }) {
   const setProp = (key: string, value: unknown) => patch(id, { props: { [key]: value } }, `prop:${id}:${key}`)
   const sections = [...new Set(def.fields.map((f) => f.section ?? 'Details'))]
   const sectionsOrdered = ['Details', ...sections.filter((s) => s !== 'Details')].filter((s) => sections.includes(s))
+  const pickSpecies = (sid: string) => {
+    const sp = sid ? (libIx?.plants.get(sid) ?? libIx?.aquatic.get(sid)) : undefined
+    const old = typeof o.props.speciesId === 'string' ? libIx?.plants.get(o.props.speciesId) : undefined
+    const props: Record<string, unknown> = { speciesId: sid || undefined }
+    if (sp && libIx) {
+      const pl = placementFor(libIx, sid)
+      props.species = sp.name
+      if (pl) {
+        if (o.kind === 'tree') props.category = pl.extra.category
+        for (const k of ['canopy', 'height'] as const) if (o.props[k] === undefined && pl.extra[k] !== undefined) props[k] = pl.extra[k]
+      }
+    }
+    const wasDefault = !o.name || o.name === def.label || o.name === old?.name || o.name === String(o.props.species ?? '')
+    patch(id, { props, ...(wasDefault && sp ? { name: sp.name } : {}) })
+  }
   const orientation = num(o.props.orientation, 0)
   const transform = (kind: 'rot' | 'scale', v: number) => {
     const pivot = pivotOf(o.geometry)
@@ -140,9 +159,12 @@ function ObjectPanel({ id }: { id: string }) {
         {sectionsOrdered.map((sec) => (
           <div key={sec}>
             {sectionsOrdered.length > 1 && <h4>{sec}</h4>}
-            {def.fields.filter((f) => (f.section ?? 'Details') === sec).map((f) => <FieldInput key={f.key} f={f} value={o.props[f.key]} onChange={(v) => setProp(f.key, v)} />)}
+            {def.fields.filter((f) => (f.section ?? 'Details') === sec).map((f) => f.type === 'species'
+              ? <label key={f.key}>{f.label}<SpeciesSelect place={f.place} value={typeof o.props.speciesId === 'string' ? o.props.speciesId : ''} onChange={pickSpecies} /></label>
+              : <FieldInput key={f.key} f={f} value={o.props[f.key]} onChange={(v) => setProp(f.key, v)} />)}
           </div>
         ))}
+        <KindSections o={o} />
         {def.smart && (
           <div className="notice">Position only. This device is <strong>not connected</strong> — smart-home integration arrives in a later phase, so no live status is shown.</div>
         )}

@@ -39,15 +39,16 @@ function ToolOptions() {
   const setShape = useEditor((s) => s.setShape)
   const setSnap = useEditor((s) => s.setSnap)
   const setTool = useEditor((s) => s.setTool)
+  const showMature = useEditor((s) => s.showMature)
+  const setShowMature = useEditor((s) => s.setShowMature)
   const def = tool.type === 'draw' ? kindDef(tool.kind) : null
-  if (tool.type === 'select' && !snap) return null
   return (
     <div className="tooloptions glass">
       {tool.type === 'draw' && def && (
         <>
           <span className="swatch" style={{ background: def.color }} />
           <strong>{def.label}</strong>
-          {def.presets && (
+          {def.presets && !tool.extra && (
             <select value={tool.presetId ?? def.presets[0].id} onChange={(e) => setTool({ type: 'draw', kind: tool.kind, presetId: e.target.value })}>
               {def.presets.map((p) => (
                 <option key={p.id} value={p.id}>{p.label}</option>
@@ -63,10 +64,12 @@ function ToolOptions() {
           )}
         </>
       )}
+      {tool.type === 'draw' && tool.extra && typeof tool.extra.species === 'string' && <small className="muted">species: {tool.extra.species}</small>}
       {tool.type === 'measure' && <strong>{tool.mode === 'area' ? 'Measure area' : 'Measure distance'}</strong>}
       <button className={`chip ${snap ? 'on' : ''}`} title="Snap to existing corners and edges (hold Alt to bypass)" onClick={() => setSnap(!snap)}>
         <Magnet size={14} /> Snap
       </button>
+      <button className={`chip ${showMature ? 'on' : ''}`} title="Show every tree's projected canopy at maturity" onClick={() => setShowMature(!showMature)}>🌳 Mature canopy</button>
       {tool.type !== 'select' && (
         <button className="chip" onClick={() => setTool({ type: 'select' })}>
           <X size={14} /> Done

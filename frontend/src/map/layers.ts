@@ -24,7 +24,7 @@ export const HIT_LAYERS = {
 
 export function installEdenLayers(map: maplibregl.Map): void {
   const src = (id: string) => map.addSource(id, { type: 'geojson', data: EMPTY })
-  ;['eden', 'ext', 'wedges', 'handles', 'draw'].forEach(src)
+  ;['eden', 'ext', 'wedges', 'mature', 'compat', 'handles', 'draw'].forEach(src)
 
   const add = (l: maplibregl.LayerSpecification) => map.addLayer(l)
 
@@ -62,6 +62,10 @@ export function installEdenLayers(map: maplibregl.Map): void {
   add({ id: 'eden-extrusion', type: 'fill-extrusion', source: 'ext', layout: { visibility: 'none' },
     paint: { 'fill-extrusion-color': ['get', 'color'], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'base'], 'fill-extrusion-opacity': 0.9 } })
 
+  // projected mature canopy of trees (optional) sits under the live canopy circles
+  add({ id: 'eden-mature-fill', type: 'fill', source: 'mature', paint: { 'fill-color': '#4ade80', 'fill-opacity': 0.07 } })
+  add({ id: 'eden-mature-line', type: 'line', source: 'mature', paint: { 'line-color': '#bbf7d0', 'line-width': 1.2, 'line-opacity': 0.75, 'line-dasharray': [3, 2] } })
+
   add({ id: 'eden-canopy', type: 'circle', source: 'eden', filter: ['all', isPoint, ['>', ['get', 'rpx'], 0]],
     paint: { 'circle-radius': metric('rpx'), 'circle-color': ['get', 'color'], 'circle-opacity': 0.28,
       'circle-stroke-color': ['get', 'color'], 'circle-stroke-width': 1.2, 'circle-stroke-opacity': 0.9, 'circle-pitch-alignment': 'map' } })
@@ -75,6 +79,10 @@ export function installEdenLayers(map: maplibregl.Map): void {
   add({ id: 'eden-point', type: 'symbol', source: 'eden', filter: ['all', isPoint, ['==', ['get', 'rpx'], 0]],
     layout: { 'icon-image': ['get', 'icon'], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
       'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.5, 19, 0.85], 'symbol-sort-key': ['get', 'sort'] } })
+
+  // companion-planting links from the selected plant to its neighbours (green / yellow / red)
+  add({ id: 'eden-compat', type: 'line', source: 'compat', layout: { 'line-cap': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': 3.5, 'line-opacity': 0.95 } })
+  add({ id: 'eden-compat-end', type: 'circle', source: 'compat', filter: ['==', ['geometry-type'], 'Point'], paint: { 'circle-radius': 7, 'circle-color': ['get', 'color'], 'circle-stroke-color': '#0c1114', 'circle-stroke-width': 2 } })
 
   // selection handles
   add({ id: 'h-stem', type: 'line', source: 'handles', filter: ['==', ['get', 'role'], 'stem'], paint: { 'line-color': '#34d399', 'line-width': 1.5 } })

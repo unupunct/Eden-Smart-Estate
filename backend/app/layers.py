@@ -30,5 +30,9 @@ KIND_LAYER = {
     "water_pipe": "water_infra", "irrigation": "water_infra", "cable": "electrical",
     "tree": "trees", "bush": "bushes", "plant": "garden_beds", "note": "notes", "gate": "fences",
     "camera": "cameras", "outlet": "outlets", "light": "lighting", "well": "water_infra", "sensor": "electrical",
+    "pond_pump": "pond", "pond_filter": "pond", "pond_skimmer": "pond", "pond_waterfall": "pond", "pond_stone": "pond",
+    "pond_steps": "pond", "pond_stream": "pond",
+    "gh_bed": "greenhouse", "gh_shelf": "greenhouse", "gh_door": "greenhouse", "gh_vent": "greenhouse", "gh_heater": "greenhouse",
+    "gh_fan": "greenhouse", "gh_light": "greenhouse", "gh_irrigation": "greenhouse", "gh_tank": "greenhouse",
 }
 GEOMETRY_DEFAULT_KIND = {"Point": "note", "LineString": "path", "Polygon": "zone"}

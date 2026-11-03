@@ -117,6 +117,50 @@ The **2D/3D** button tilts the camera and extrudes buildings (floors/height), gr
 
 The top-right box searches your objects by name, type and species (click a result to zoom to it and select it), jumps to `lat, lng`, and — on Enter — looks up places.
 
+## 12. The plant library and “Add to property”
+
+*Sidebar → Plants & Mushrooms.* Four tabs: **Plants & trees** (100 entries), **Mushrooms** (26), **Aquatic plants** (25) and **Pond fish** (10).
+
+- **Filter** by name (common, Latin or Romanian), category (vegetables, herbs, fruit trees, nut trees, native, medicinal, toxic…), native status, sun, water, edibility, winter hardiness zone, flowering month, harvest month, mature height and wildlife value. **Companion of…** lists only the plants that have a recorded relationship with the plant you choose.
+- Click a plant for its detail page: size, soil, spacing, sowing/flowering/harvest months, propagation, wildlife value, notes, pollination needs (fruit trees) and every companion relationship with its **evidence label**.
+- **ADD TO PROPERTY** switches to the map with that species armed: each click places one specimen (trees, bushes or plants, named after the species, linked to the library). Press **Esc** to stop. Aquatic plants and invasive-species warnings work the same way (invasive aquatic plants cannot be added).
+- Toxic plants ask for confirmation before they are placed.
+- **Medicinal** entries describe *traditional* use only — not evidence, not medical advice. **Mushrooms** never claim that anything is safe because of a photo; no photos are bundled; poisonous and deadly species and look-alikes are called out first.
+
+The data is a starter set (see the README). Where the library has no record it says so — that is *not* a statement that two plants are compatible.
+
+## 13. Garden beds, companion planting and neighbour checks
+
+1. Draw a **Garden bed** and select it. In the right panel *Plantings*: add each crop from the drop-down, then enter the number of plants, spacing (cm) and sowing date. EDEN shows the room for each crop at that spacing, warns when the plan is overcrowded, and lists the sowing and harvest months.
+2. **Companion check** lists every pair of crops in the bed:
+   - 🟢 **green** – documented compatibility or benefit;
+   - 🟡 **yellow** – conditional, or only *mixed* or *traditional* evidence ("potentially compatible");
+   - 🔴 **red** – known incompatibility.
+   Each row shows the evidence label and the explanation (for example *tomato + potato: same family, shared late blight*).
+3. Place individual plants from the library. Select one: the panel lists relationships with plants **near it** (within 6 m; 15 m around walnut trees because of juglone), and the map draws **green / yellow / red links** to those neighbours. *All known companions of …* lists everything the library knows, with a *place* button for good partners.
+4. The **Garden & Permaculture** page lists all beds with their planting totals and worst companion result, and has a companion explorer for any plant.
+
+## 14. Orchard
+
+- Choose a **Species** for each tree in its panel (or place trees from the library). Enter **variety**, **planting year**, rootstock and expected yield. The panel shows **age**, **mature canopy** and **mature height** from the library, and keeps **pruning**, **fertilisation** and **pests and diseases** logs.
+- **Show projected mature canopy** (chip at the top of the map or tick-box in the tree panel) draws a dashed ring per tree at its eventual size, so you can judge spacing.
+- **Pollination:** for species that need a partner, EDEN looks for a *different named variety of the same species within 50 m*. It reports *partner nearby*, *no partner within 50 m*, *variety needed* or *self-fertile*. Real compatibility depends on each cultivar's pollination group and flowering time — confirm with your nursery.
+- **Plant a grid:** select an **Orchard area** and use *Plant a grid of trees*: pick the species, spacing along and between rows, row angle and stagger; the button shows how many trees will be planted. One **Undo** removes the whole grid.
+- The **Orchard** page shows statistics (trees, species, average age, mature canopy as a share of the orchard area) and a table of trees with pollination status.
+
+## 15. Greenhouse
+
+Draw a **Greenhouse** footprint, then draw its interior from the **Greenhouse** group: growing beds, shelving, doors, ventilation windows, heater, fan/cooling, grow lights, irrigation outlets and a water tank (add **sensors** and **smart outlets** from the Utilities group). The panel shows true length × width, floor area, the compass direction of the long axis, and how many items are inside. Fill in the **Target ranges** (temperature, humidity, soil moisture). Monitoring is marked *no sensors connected*: live readings, alerts and automation come with the smart-home integration.
+
+## 16. Natural swimming pond
+
+Draw the **Pond**, depth zones (**Pond zone**: swimming, regeneration, plant filtration, deep) and equipment (pump, filter, skimmer, waterfall, entry steps, stones, stream; pipes from the Water group). In the pond's panel:
+
+- surface and **volume estimate** (zone areas × depths, remaining surface at half the maximum depth — a planning figure, not a survey);
+- **Fish:** add species and numbers. Each gets a verdict for natural swimming ponds — *suitable*, *caution* (conditional) or *not suitable* (koi, goldfish, grass carp, mosquitofish…) — with reasons, including size, non-native and overstocking warnings. Many pond designers recommend no fish at all; check local rules.
+- **Aquatic plants:** place them from the library into the pond area; any invasive species is flagged.
+- **Water-quality log:** enter temperature, pH, dissolved oxygen, ammonia, nitrite and nitrate by hand. EDEN charts the trend and warns when the latest reading is outside general ranges. The ranges are general guidance and no sensor is connected.
+
 ## Keyboard shortcuts
 
 | Key | Action |

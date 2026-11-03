@@ -81,9 +81,74 @@ try {
   await shot('06-measure')
   await page.keyboard.press('Escape'); await page.keyboard.press('Escape')
 
+  // ---------------------------------------------------------------- Phase 3
+  const byName = (n) => model.objects.find((o) => o.name === n)
+  const ctr = (o) => { const g = o.geometry; const pts = g.type === 'Point' ? [g.coordinates] : g.type === 'LineString' ? g.coordinates : g.coordinates[0].slice(0, -1); return [pts.reduce((s, p) => s + p[0], 0) / pts.length, pts.reduce((s, p) => s + p[1], 0) / pts.length] }
+  const pick = async (o, zoom) => {
+    const c = ctr(o)
+    await page.evaluate(([lng, lat, z]) => window.__edenMap.jumpTo({ center: [lng, lat], zoom: z }), [c[0], c[1], zoom])
+    await settle()
+    const p = await page.evaluate(([lng, lat]) => { const q = window.__edenMap.project([lng, lat]); return [q.x, q.y] }, c)
+    await page.mouse.click(box.x + p[0], box.y + p[1])
+    await sleep(700)
+  }
+  const scrollPanelTo = async (re) => { await page.locator('.rightpanel h4', { hasText: re }).first().scrollIntoViewIfNeeded(); await sleep(300) }
+  await page.locator('.navitem', { hasText: 'Property Editor' }).click()
+  await page.waitForFunction(() => window.__edenMap?.loaded?.())
+
+  await pick(byName('Bed 5'), 19.6)
+  await scrollPanelTo(/plantings/i)
+  await shot('09-bed-plantings')
+
+  await pick(byName('Tomato'), 21.2)
+  await scrollPanelTo(/companion planting/i)
+  await shot('10-companion-links')
+
+  await page.keyboard.press('Escape')
+  await page.evaluate(() => { const s = document.querySelector('.rightpanel .scroll'); if (s) s.scrollTop = 0 })
+  await page.locator('label.chip, button.chip', { hasText: 'Mature canopy' }).first().click()
+  await page.evaluate(([lng, lat]) => window.__edenMap.jumpTo({ center: [lng, lat], zoom: 18.1 }), ctr(byName('Orchard')))
+  await settle()
+  await shot('11-mature-canopy')
+  await page.locator('button.chip', { hasText: 'Mature canopy' }).first().click()
+
+  await pick(byName('Apple 1'), 19.4)
+  await scrollPanelTo(/tree record/i)
+  await shot('12-tree-record')
+
+  await page.fill('.search input', 'Natural swimming')
+  await page.locator('.searchpop button', { hasText: 'Natural swimming pond' }).first().click()
+  await settle(); await sleep(500)
+  await scrollPanelTo(/^fish$/i)
+  await shot('13-pond-panel')
+
+  await page.locator('.navitem', { hasText: 'Plants & Mushrooms' }).click()
+  await page.waitForSelector('text=Plants & trees')
+  await page.locator('.liblist .item', { hasText: 'Apple' }).first().click()
+  await sleep(300)
+  await shot('14-plant-library')
+  await page.locator('.seg button', { hasText: 'Mushrooms' }).click()
+  await page.locator('.liblist .item', { hasText: 'Death cap' }).click()
+  await sleep(300)
+  await shot('15-mushroom-safety')
+
+  await page.locator('.navitem', { hasText: 'Garden' }).click()
+  await page.waitForSelector('text=Companion planting explorer')
+  await sleep(300)
+  await shot('16-garden-page')
   await page.locator('.navitem', { hasText: 'Orchard' }).click()
-  await sleep(500)
-  await shot('07-orchard-module')
+  await page.waitForSelector('text=By species')
+  await sleep(300)
+  await shot('17-orchard-page')
+  await page.locator('.navitem', { hasText: 'Greenhouse' }).click()
+  await page.waitForSelector('text=Floor area')
+  await sleep(300)
+  await shot('18-greenhouse-page')
+  await page.locator('.navitem', { hasText: 'Natural Swimming Pond' }).click()
+  await page.waitForSelector('text=Latest water reading')
+  await sleep(300)
+  await shot('19-pond-page')
+
   await page.locator('.navitem', { hasText: 'Settings' }).click()
   await sleep(600)
   await shot('08-settings')

@@ -400,7 +400,7 @@ export class Interaction {
     const kind = s.tool.kind
     const shape = this.shapeFor()
     if (shape === 'point') {
-      const obj = createObject(s.doc.layers, kind, { type: 'Point', coordinates: pos }, s.tool.presetId)
+      const obj = createObject(s.doc.layers, kind, { type: 'Point', coordinates: pos }, s.tool.presetId, s.tool.extra)
       s.addObjects([obj])
       return
     }
@@ -444,7 +444,7 @@ export class Interaction {
 
   private commitShape(kind: string, presetId: string | undefined, geometry: Geom) {
     const s = this.st()
-    const obj = createObject(s.doc.layers, kind, geometry, presetId)
+    const obj = createObject(s.doc.layers, kind, geometry, presetId, s.tool.type === 'draw' ? s.tool.extra : undefined)
     s.addObjects([obj])
   }
 

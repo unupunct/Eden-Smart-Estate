@@ -1,10 +1,12 @@
 import type { GeomType, Props } from './types'
 
-export type FieldType = 'text' | 'textarea' | 'number' | 'select' | 'boolean' | 'color' | 'date'
+export type FieldType = 'text' | 'textarea' | 'number' | 'select' | 'boolean' | 'color' | 'date' | 'species'
 export interface FieldDef {
   key: string
   label: string
   type: FieldType
+  /** species picker: which library entries to offer */
+  place?: 'tree' | 'bush' | 'plant'
   unit?: string
   options?: { value: string; label: string }[]
   min?: number
@@ -143,6 +145,12 @@ export const KINDS: KindDef[] = [
       { key: 'covering', label: 'Covering', type: 'text' },
       { key: 'doors', label: 'Doors', type: 'number', min: 0, step: 1 },
       { key: 'vents', label: 'Ventilation windows', type: 'number', min: 0, step: 1 },
+      { key: 'tempMin', label: 'Target temperature min', type: 'number', unit: '°C', section: 'Target ranges' },
+      { key: 'tempMax', label: 'Target temperature max', type: 'number', unit: '°C', section: 'Target ranges' },
+      { key: 'humMin', label: 'Target humidity min', type: 'number', unit: '%', min: 0, max: 100, section: 'Target ranges' },
+      { key: 'humMax', label: 'Target humidity max', type: 'number', unit: '%', min: 0, max: 100, section: 'Target ranges' },
+      { key: 'soilMin', label: 'Target soil moisture min', type: 'number', unit: '%', min: 0, max: 100, section: 'Target ranges' },
+      { key: 'soilMax', label: 'Target soil moisture max', type: 'number', unit: '%', min: 0, max: 100, section: 'Target ranges' },
     ],
     defaults: { height: 3, roofType: 'gable', doors: 1, vents: 2, status: 'good' },
   },
@@ -242,14 +250,16 @@ export const KINDS: KindDef[] = [
       { id: 'fig', label: 'Fig', name: 'Fig', props: { category: 'fruit_tree', species: 'Fig', canopy: 4, height: 3.5 } },
     ],
     fields: [
-      { key: 'species', label: 'Species', type: 'text' },
+      { key: 'speciesId', label: 'Species (plant library)', type: 'species', place: 'tree' },
+      { key: 'species', label: 'Species name (if not in the library)', type: 'text' },
       { key: 'variety', label: 'Variety', type: 'text' },
       { key: 'category', label: 'Category', type: 'select', options: opts(['tree', 'Tree'], ['fruit_tree'], ['nut_tree'], ['ornamental_tree'], ['forest_tree']) },
       { key: 'plantedYear', label: 'Planted (year)', type: 'number', step: 1 },
-      { key: 'height', label: 'Height', type: 'number', unit: 'm', min: 0.1, step: 0.1 },
-      { key: 'canopy', label: 'Canopy diameter', type: 'number', unit: 'm', min: 0.2, step: 0.1 },
+      { key: 'height', label: 'Height now', type: 'number', unit: 'm', min: 0.1, step: 0.1 },
+      { key: 'canopy', label: 'Canopy diameter now', type: 'number', unit: 'm', min: 0.2, step: 0.1 },
       { key: 'rootstock', label: 'Rootstock', type: 'text' },
       { key: 'harvestSeason', label: 'Harvest season', type: 'text' },
+      { key: 'expectedYield', label: 'Expected yield', type: 'number', unit: 'kg / year', min: 0 },
     ],
     defaults: { category: 'tree', canopy: 4, height: 6, status: 'good' },
   },
@@ -257,7 +267,8 @@ export const KINDS: KindDef[] = [
     kind: 'bush', label: 'Bush / shrub', geom: 'Point', layerKey: 'bushes', group: 'Garden & plants', color: '#7ccf6e', icon: '🌿', radiusProp: 'canopy',
     extrude: { heightProp: 'height', fallback: 1.5 },
     fields: [
-      { key: 'species', label: 'Species', type: 'text' },
+      { key: 'speciesId', label: 'Species (plant library)', type: 'species', place: 'bush' },
+      { key: 'species', label: 'Species name (if not in the library)', type: 'text' },
       { key: 'height', label: 'Height', type: 'number', unit: 'm', min: 0.1, step: 0.1 },
       { key: 'canopy', label: 'Spread', type: 'number', unit: 'm', min: 0.2, step: 0.1 },
       { key: 'plantedYear', label: 'Planted (year)', type: 'number', step: 1 },
@@ -265,9 +276,11 @@ export const KINDS: KindDef[] = [
     defaults: { canopy: 1.5, height: 1.5, status: 'good' },
   },
   {
-    kind: 'plant', label: 'Plant', geom: 'Point', layerKey: 'garden_beds', group: 'Garden & plants', color: '#a3e635', icon: '🌱',
+    kind: 'plant', label: 'Plant', geom: 'Point', layerKey: 'garden_beds', group: 'Garden & plants', color: '#a3e635', icon: '🌱', radiusProp: 'canopy',
     fields: [
-      { key: 'species', label: 'Species', type: 'text' },
+      { key: 'speciesId', label: 'Species (plant library)', type: 'species', place: 'plant' },
+      { key: 'species', label: 'Species name (if not in the library)', type: 'text' },
+      { key: 'canopy', label: 'Spread', type: 'number', unit: 'm', min: 0.05, step: 0.05 },
       { key: 'quantity', label: 'Quantity', type: 'number', min: 1, step: 1 },
       { key: 'plantingDate', label: 'Planting date', type: 'date' },
     ],
@@ -312,6 +325,37 @@ export const KINDS: KindDef[] = [
     kind: 'well', label: 'Well / water point', geom: 'Point', layerKey: 'water_infra', group: 'Water', color: '#38bdf8', icon: '💧',
     fields: [{ key: 'depth', label: 'Depth', type: 'number', unit: 'm', min: 0 }],
   },
+
+  {
+    kind: 'pond_pump', label: 'Pump', geom: 'Point', layerKey: 'pond', group: 'Water', color: '#60a5fa', icon: '🔄', smart: true,
+    fields: [{ key: 'flowLph', label: 'Flow', type: 'number', unit: 'L/h', min: 0 }, { key: 'powerW', label: 'Power', type: 'number', unit: 'W', min: 0 }],
+  },
+  { kind: 'pond_filter', label: 'Filter', geom: 'Point', layerKey: 'pond', group: 'Water', color: '#38bdf8', icon: '🧽', fields: [{ key: 'filterType', label: 'Type', type: 'text' }] },
+  { kind: 'pond_skimmer', label: 'Skimmer', geom: 'Point', layerKey: 'pond', group: 'Water', color: '#7dd3fc', icon: '🧹', fields: [] },
+  { kind: 'pond_waterfall', label: 'Waterfall', geom: 'Point', layerKey: 'pond', group: 'Water', color: '#93c5fd', icon: '🌊', fields: [{ key: 'drop', label: 'Drop height', type: 'number', unit: 'm', min: 0, step: 0.1 }] },
+  { kind: 'pond_stone', label: 'Stone / boulder', geom: 'Point', layerKey: 'pond', group: 'Water', color: '#a8a29e', icon: '🪨', fields: [] },
+  { kind: 'pond_steps', label: 'Entry steps', geom: 'Point', layerKey: 'pond', group: 'Water', color: '#d6d3d1', icon: '🪜', fields: [{ key: 'treads', label: 'Number of steps', type: 'number', min: 1, step: 1 }] },
+  {
+    kind: 'pond_stream', label: 'Stream', geom: 'LineString', layerKey: 'pond', group: 'Water', color: '#38bdf8', lineWidth: 3, widthProp: 'width',
+    fields: [{ key: 'width', label: 'Width', type: 'number', unit: 'm', min: 0.1, step: 0.1 }], defaults: { width: 0.6 },
+  },
+
+  // ------------------------------------------------------------ greenhouse interior
+  {
+    kind: 'gh_bed', label: 'Growing bed', geom: 'Polygon', layerKey: 'greenhouse', group: 'Greenhouse', color: '#86efac', fillOpacity: 0.5, lineWidth: 1.5,
+    fields: [{ key: 'crops', label: 'Crops', type: 'text' }, { key: 'soil', label: 'Soil / substrate', type: 'text' }],
+  },
+  {
+    kind: 'gh_shelf', label: 'Shelving', geom: 'Polygon', layerKey: 'greenhouse', group: 'Greenhouse', color: '#d6b38a', fillOpacity: 0.5, lineWidth: 1.5,
+    fields: [{ key: 'tiers', label: 'Tiers', type: 'number', min: 1, step: 1 }],
+  },
+  { kind: 'gh_door', label: 'Door', geom: 'Point', layerKey: 'greenhouse', group: 'Greenhouse', color: '#e9c46a', icon: '🚪', fields: [{ key: 'width', label: 'Width', type: 'number', unit: 'm', step: 0.1 }] },
+  { kind: 'gh_vent', label: 'Ventilation window', geom: 'Point', layerKey: 'greenhouse', group: 'Greenhouse', color: '#a5f3fc', icon: '🌬️', fields: [{ key: 'ventType', label: 'Type', type: 'select', options: opts(['roof'], ['side']) }, { key: 'width', label: 'Opening width', type: 'number', unit: 'm', step: 0.1 }] },
+  { kind: 'gh_heater', label: 'Heater', geom: 'Point', layerKey: 'greenhouse', group: 'Greenhouse', color: '#fb923c', icon: '🔥', smart: true, fields: [{ key: 'powerKw', label: 'Power', type: 'number', unit: 'kW', step: 0.1 }, { key: 'fuel', label: 'Energy source', type: 'text' }] },
+  { kind: 'gh_fan', label: 'Fan / cooling', geom: 'Point', layerKey: 'greenhouse', group: 'Greenhouse', color: '#67e8f9', icon: '🌀', smart: true, fields: [{ key: 'airflow', label: 'Airflow', type: 'number', unit: 'm³/h' }] },
+  { kind: 'gh_light', label: 'Grow light', geom: 'Point', layerKey: 'greenhouse', group: 'Greenhouse', color: '#fde68a', icon: '💡', smart: true, fields: [{ key: 'watts', label: 'Power', type: 'number', unit: 'W' }] },
+  { kind: 'gh_irrigation', label: 'Irrigation outlet', geom: 'Point', layerKey: 'greenhouse', group: 'Greenhouse', color: '#22d3ee', icon: '🚿', smart: true, fields: [{ key: 'irrigationType', label: 'Type', type: 'select', options: opts(['drip'], ['mist'], ['sprinkler'], ['manual']) }] },
+  { kind: 'gh_tank', label: 'Water tank', geom: 'Point', layerKey: 'greenhouse', group: 'Greenhouse', color: '#3b82f6', icon: '🛢️', fields: [{ key: 'litres', label: 'Capacity', type: 'number', unit: 'L', min: 0 }] },
 
   // ------------------------------------------------------------ utilities & smart
   {

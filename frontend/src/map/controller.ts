@@ -5,7 +5,9 @@ import { noteView } from '../model/autosave'
 import { kindDef } from '../model/kinds'
 import { useEditor } from '../model/store'
 import type { EdenObject, Pos, PropertyMeta } from '../model/types'
-import { buildCameraWedges, buildExtrusions, buildHandles, buildObjectCollection, type LabelItem } from './features'
+import { buildCameraWedges, buildCompat, buildExtrusions, buildHandles, buildMature, buildObjectCollection, type LabelItem } from './features'
+import { neighbourLinks } from '../library/logic'
+import { useLibrary } from '../library/store'
 import { Interaction } from './interaction'
 import { EMPTY, FIRST_EDEN_LAYER, installEdenLayers } from './layers'
 import { applyBaseMap, installIcons, LabelLayer, syncOverlays, useStatus } from './support'
@@ -50,7 +52,12 @@ export class EdenMap {
     this.map.on('zoom', () => this.schedule())
     this.map.on('moveend', () => this.onMoveEnd())
     this.map.on('mousemove', (e) => useStatus.setState({ cursor: [e.lngLat.lng, e.lngLat.lat] }))
-    this.unsub = useEditor.subscribe(() => this.schedule())
+    const offA = useEditor.subscribe(() => this.schedule())
+    const offB = useLibrary.subscribe(() => this.schedule())
+    this.unsub = () => {
+      offA()
+      offB()
+    }
   }
 
   destroy(): void {
@@ -95,6 +102,14 @@ export class EdenMap {
       this.setData('ext', s.view3d ? buildExtrusions(s.doc) : EMPTY)
       this.setData('wedges', buildCameraWedges(s.doc))
     }
+    const ix = useLibrary.getState().ix
+    if (docChanged || s.showMature !== l.showMature || ix !== this.lastIx) this.setData('mature', s.showMature ? buildMature(s.doc, ix) : EMPTY)
+    if (docChanged || selChanged || ix !== this.lastIx) {
+      const only = s.selection.length === 1 ? s.doc.objects[s.selection[0]] : undefined
+      const wantsLinks = only && ix && (only.kind === 'plant' || only.kind === 'tree' || only.kind === 'bush' || only.kind === 'garden_bed')
+      this.setData('compat', wantsLinks ? buildCompat(neighbourLinks(ix, s.doc.objects, only.id)) : EMPTY)
+    }
+    this.lastIx = ix
     if (s.view3d !== l.view3d) this.apply3d(s.view3d)
     this.updateHandles()
     if (docChanged || selChanged || s.tool !== l.tool || s.shape !== l.shape || s.calibration !== l.calibration) {
@@ -129,6 +144,7 @@ export class EdenMap {
   }
 
   private labelZoom: number | undefined
+  private lastIx: unknown = null
 
   private updateLabels() {
     const s = useEditor.getState()

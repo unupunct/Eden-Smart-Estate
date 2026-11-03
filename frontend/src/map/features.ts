@@ -4,6 +4,7 @@ import { displayColor, sortedLayers } from '../model/ops'
 import type { Doc, EdenObject, Geom, Pos } from '../model/types'
 import { circlePolygon, lineQuads, midpoints, offsetFrom, pivotOf, vertices } from '../geo/transform'
 import { centroid, measureGeom } from '../geo/measure'
+import { LEVEL_COLOR, matureCanopy, type LibraryIndex, type NeighbourLink } from '../library/logic'
 
 const M_PER_PX_Z0 = 78271.517 // MapLibre uses 512px tiles
 
@@ -137,6 +138,30 @@ export function buildCameraWedges(doc: Doc): FeatureCollection {
     if (!byId.get(o.layerId)?.visible) continue
     const w = cameraWedge(o)
     if (w) features.push(feat(w, { id: o.id }))
+  }
+  return { type: 'FeatureCollection', features }
+}
+
+/** Dashed ring showing each tree's canopy at maturity (library size for its species, never smaller than its own canopy). */
+export function buildMature(doc: Doc, ix: LibraryIndex | null): FeatureCollection {
+  const byId = new Map(doc.layers.map((l) => [l.id, l]))
+  const features: Feature[] = []
+  for (const o of Object.values(doc.objects)) {
+    if (o.kind !== 'tree' || o.geometry.type !== 'Point' || !byId.get(o.layerId)?.visible) continue
+    const sp = ix && typeof o.props.speciesId === 'string' ? ix.plants.get(o.props.speciesId) : undefined
+    const d = matureCanopy(o, sp)
+    if (d > 0) features.push(feat(circlePolygon(o.geometry.coordinates, d / 2, 28), { id: o.id }))
+  }
+  return { type: 'FeatureCollection', features }
+}
+
+/** Lines (and end dots) from the selected plant to every neighbour it has a known relationship with. */
+export function buildCompat(links: NeighbourLink[]): FeatureCollection {
+  const features: Feature[] = []
+  for (const l of links) {
+    const color = LEVEL_COLOR[l.level]
+    features.push(feat({ type: 'LineString', coordinates: [l.from, l.to] }, { color }))
+    features.push(feat({ type: 'Point', coordinates: l.to }, { color }))
   }
   return { type: 'FeatureCollection', features }
 }

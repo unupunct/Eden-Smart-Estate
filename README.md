@@ -1,9 +1,9 @@
 # EDEN — Smart Estate
 
-**A digital twin of your land.** Open a satellite image of your real property, trace its boundary, and gradually turn it into an editable, measured, geographic model — buildings, fences, trees, garden zones, a greenhouse, a pond — stored on your own computer, no cloud subscription required.
+**A digital twin of your land.** Open a satellite image of your real property, trace its boundary, and gradually turn it into an editable, measured, geographic model — buildings, fences, trees, garden beds with companion-planting checks, an orchard, a greenhouse and a natural swimming pond — stored on your own computer, no cloud subscription required.
 
-> **Status: v0.1.0 — Phase 1 + 2 (foundation and Property Editor).**
-> The map, object system, editor, measurements, layers, image calibration, 3D view, import/export and backup are built and tested. The remaining modules (garden/orchard designers, sun & shadows, night sky, smart home, cameras, tasks, plant library…) are on the [roadmap](#roadmap) and are shown in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
+> **Status: v0.2.0 — Phases 1–3 (property editor, landscape design, plant library).**
+> The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) now come with garden-bed planting plans, evidence-labelled companion planting, orchard records and pollination checks, greenhouse and natural-pond planning, and a plant / aquatic / fish / mushroom library. Sun & shadows, night sky, smart home, cameras, tasks and weather are on the [roadmap](#roadmap) and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
 
 ![Property editor with the demo estate](docs/screenshots/02-property-editor.png)
 
@@ -15,33 +15,51 @@
 - **Bring your own aerial photo or plan:** import a PNG/JPEG/WebP and calibrate it with two known points, a known distance + bearing, or a world file.
 
 **Property editor**
-- Draw **property boundary, zones, buildings (12 presets), greenhouses, fences (6 types), hedges, gates, roads, paths, garden beds, trees (13 fruit/nut presets), bushes, plants, ponds and pond zones, pipes, drainage, cables, smart outlets, cameras, lights, sensors, solar and notes.**
+- Draw **property boundary, zones, buildings (12 presets), greenhouses, fences (6 types), hedges, gates, roads, paths, garden beds, trees (13 fruit/nut presets), bushes, plants, ponds, pipes, drainage, cables, smart outlets, cameras, lights, sensors, solar and notes.**
 - Polygons as free shapes, rectangles or circles; lines and points; **snapping** to existing corners and edges.
-- Every shape stays editable: **move, reshape (drag corners), add corners (drag edge handles), remove corners (right-click), rotate (handle or numeric), scale, duplicate, delete, rename, recolour, move between layers.**
-- Per-object properties panel: dimensions, floors, height, roof type, materials, services, species, canopy, fence type/height/sections, camera direction and field of view (drawn as a coverage wedge), status, description and notes.
-- **Live measurements:** property area (m² and ha), perimeter, edge lengths, polygon areas, fence/path lengths, plus *Distance* and *Area* measuring tools.
-- **Layers** (17 ready-made): show/hide, lock, rename, recolour, reorder, add your own.
-- **Unlimited undo/redo** (Ctrl+Z / Ctrl+Y) and **autosave** to the local database.
-- **2D ↔ 3D** toggle: buildings, greenhouses, tree crowns, fences and hedges extruded from the very same objects.
-- Import GeoJSON/KML; export GeoJSON, KML, CSV and a full EDEN project file; one-click full **backup & restore** (database + images).
-- A fictional, clearly labelled **DEMO estate** you can explore and delete.
+- Every shape stays editable: **move, reshape, add/remove corners, rotate, scale, duplicate, delete, rename, recolour, move between layers.**
+- Per-object properties panel with live measurements (area in m² and ha, perimeter, edge lengths, fence sections…), **17 layers** (show/hide, lock, rename, recolour, reorder), **unlimited undo/redo**, **autosave**, **2D ↔ 3D**.
+- Import GeoJSON/KML; export GeoJSON, KML, CSV and a full project file; one-click full **backup & restore**.
+
+**Landscape design (new in v0.2)**
+- **Plant library:** 100 plants and trees (vegetables, herbs, fruit and nut trees, native forest trees, wild edibles, climbers, flowers, toxic plants), 25 aquatic plants, 10 pond fish and 26 mushrooms. Filter by name (common, Latin, Romanian), category, native status, sun, water, edibility, winter hardiness, flowering and harvest month, mature height, wildlife value and *companion of…*. **ADD TO PROPERTY** arms the map so you place that species with one click.
+- **Companion planting with honest evidence:** 49 recorded relationships, each labelled **documented**, **mixed** or **traditional**. Green = documented compatibility, yellow = conditional or only traditional/mixed evidence, red = known incompatibility. Tomato + marigold (nematodes) is *documented*; tomato + basil is *traditional*; tomato + potato is red, and so are tomato, potato and apple near a walnut tree (juglone, checked out to 15 m). Nothing is invented — and where the library has no entry it says so.
+- **Garden beds:** list the crops, counts, spacing and sowing dates per bed; room-for-N estimates, overcrowding warnings, expected harvest windows, and a pair-by-pair companion check. Select any plant to see **green/yellow/red links** to neighbours on the map.
+- **Orchard:** per-tree species, variety, planting year → **age**, projected **mature canopy** (toggle on the map), pruning / fertilisation / pest logs, **pollination partner finder** (same species, different variety, within 50 m) and an **orchard statistics page**. **Plant a grid** of trees into an orchard area at chosen spacing, row angle and stagger — undone in one step.
+- **Greenhouse:** footprint, true length × width and orientation, interior items (beds, shelving, doors, vents, heater, fan, lights, irrigation, tank), target temperature/humidity/soil-moisture ranges. Monitoring shows **“no sensors connected”** until a real integration exists.
+- **Natural swimming pond:** area, **estimated volume** from depth zones, equipment (pump, filter, skimmer, waterfall, steps, stones, stream), aquatic plants by zone with **invasive-species warnings**, fish stock with **suitability warnings** (koi, goldfish, grass carp flagged), and a manual **water-quality log** with trend chart and range warnings.
+- **Safety:** medicinal entries are **traditional use only**; toxic plants and mushrooms carry loud warnings; the mushroom library never claims anything is safe from a photo (and bundles no photos).
 
 | Select and edit | 3D view |
 |---|---|
 | ![Object properties](docs/screenshots/03-object-properties.png) | ![3D view](docs/screenshots/05-3d-view.png) |
-| **Layers** | **Measuring** |
-| ![Layers](docs/screenshots/04-layers.png) | ![Measure tool](docs/screenshots/06-measure.png) |
+| **Garden bed planting plan with companion check** | **Companion links on the map** |
+| ![Bed plantings](docs/screenshots/09-bed-plantings.png) | ![Companion links](docs/screenshots/10-companion-links.png) |
+| **Plant library** | **Mushroom safety** |
+| ![Plant library](docs/screenshots/14-plant-library.png) | ![Mushroom safety](docs/screenshots/15-mushroom-safety.png) |
+| **Natural pond: fish and water quality** | **Projected mature canopy** |
+| ![Pond panel](docs/screenshots/13-pond-panel.png) | ![Mature canopy](docs/screenshots/11-mature-canopy.png) |
 
 <details><summary>More screenshots</summary>
 
+![Orchard page](docs/screenshots/17-orchard-page.png)
+![Greenhouse page](docs/screenshots/18-greenhouse-page.png)
+![Pond page](docs/screenshots/19-pond-page.png)
+![Garden page](docs/screenshots/16-garden-page.png)
+![Tree record](docs/screenshots/12-tree-record.png)
+![Layers](docs/screenshots/04-layers.png)
+![Measuring](docs/screenshots/06-measure.png)
 ![Overview](docs/screenshots/01-overview.png)
-![Orchard module](docs/screenshots/07-orchard-module.png)
 ![Settings](docs/screenshots/08-settings.png)
 ![Welcome](docs/screenshots/00-welcome.png)
 
 </details>
 
-> The screenshots show the fictional demo estate placed on a random open meadow. It is not a real property.
+> The screenshots show the fictional **demo estate** placed on a random open meadow. It is not a real property. The demo's garden bed 5 deliberately pairs potato with tomato, and its pond holds a goldfish, to show the warnings.
+
+## About the plant data
+
+The library is a **curated starter set** written from general horticultural and botanical knowledge — *not* a citation-backed database and not exhaustive. Every companion relationship carries its evidence level; tradition is never presented as established science. Please verify anything important (especially toxicity, medicinal use and foraging) with local experts and sources. Entries are plain Python in `backend/app/library_*.py`, covered by integrity tests, and meant to be reviewed and extended.
 
 ## Install (Windows 11)
 
@@ -54,7 +72,7 @@ powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 powershell -ExecutionPolicy Bypass -File scripts\start.ps1
 ```
 
-Your browser opens at <http://127.0.0.1:8787>. Click **Explore the demo estate**, or **Create my property**.
+Your browser opens at <http://127.0.0.1:8787>. Click **Explore the demo estate**, or **Create my property**. Your existing data is migrated automatically when you update.
 
 The complete guide — release zip, LAN/tablet access, autostart, updating, backup, troubleshooting — is in **[docs/INSTALL.md](docs/INSTALL.md)**.
 
@@ -63,19 +81,19 @@ The complete guide — release zip, LAN/tablet access, autostart, updating, back
 | | |
 |---|---|
 | [Installation guide](docs/INSTALL.md) | Step by step, plus LAN access, autostart, updates, troubleshooting |
-| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, image calibration, shortcuts |
-| [Architecture & data model](docs/ARCHITECTURE.md) | Object model, coordinates, autosave/undo design, database schema |
+| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, planting plans, orchard, pond, library, shortcuts |
+| [Architecture & data model](docs/ARCHITECTURE.md) | Object model, coordinates, autosave/undo design, library data model, database schema |
 | [API & integrations](docs/API.md) | REST endpoints, import/export formats, imagery providers, key handling |
-| [Development](docs/DEVELOPMENT.md) | Build, test, extend (new object kinds, migrations, providers) |
+| [Development](docs/DEVELOPMENT.md) | Build, test, extend (object kinds, plant data, migrations, providers) |
 
 ## Tech
 
-React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 40 frontend unit tests, 20 backend tests and a 35-check browser end-to-end test.
+React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 62 frontend unit tests, 34 backend tests and two browser end-to-end suites (35 + 34 checks).
 
 ## Data, privacy and imagery
 
 - All your data lives in the local `data/` folder (SQLite database + imported images). Nothing is uploaded anywhere by EDEN.
-- Your **browser** requests map tiles directly from the imagery provider you select (so that provider sees your IP address and viewed area, like any web map). Place search goes through your local EDEN server to OpenStreetMap Nominatim and is only sent when you press Enter. Both are optional; the editor works offline with imported images and stored data.
+- Your **browser** requests map tiles directly from the imagery provider you select (so that provider sees your IP address and viewed area, like any web map). Place search goes through your local EDEN server to OpenStreetMap Nominatim and is only sent when you press Enter. Both are optional; the editor and the plant library work offline with stored data.
 - Please read your imagery provider's terms. Esri World Imagery is shown with its required attribution; heavy or commercial use calls for your own key from a provider such as MapTiler.
 - There is **no login yet**. Run on `127.0.0.1` (default). `-Lan` mode exposes editing to your whole network — see the install guide.
 
@@ -83,15 +101,15 @@ React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastA
 
 | Phase | Scope | Status |
 |---|---|---|
-| 1 | Foundation: architecture, database, navigation, property creation, imagery, image calibration | ✅ done |
-| 2 | Property editor: boundary, measurements, layers, objects, buildings, fences, notes, undo/redo, autosave | ✅ done |
-| 3 | Landscape design: bed designer, orchard records, greenhouse, pond, plant library, sourced companion planting | planned |
+| 1 | Foundation: architecture, database, navigation, property creation, imagery, image calibration | ✅ done (v0.1) |
+| 2 | Property editor: boundary, measurements, layers, objects, buildings, fences, notes, undo/redo, autosave | ✅ done (v0.1) |
+| 3 | Landscape design: bed planting plans, orchard records, greenhouse, pond, plant library, sourced companion planting | ✅ done (v0.2) |
 | 4 | Environment: sun position, real shadow projection, seasonal comparison, night sky | planned |
 | 5 | Smart home: Home Assistant, MQTT, outlets, sensors, cameras, automation editor | planned |
 | 6 | Management: tasks, maintenance, documents, photos, weather, reports | planned |
 | 7 | Polish: performance, installer, further docs | planned |
 
-Known limitations of v0.1.0: roofs in 3D are flat extrusions (no gable geometry yet); no terrain elevation; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
+Known limitations of v0.2.0: roofs in 3D are flat extrusions (no gable geometry yet); no terrain elevation; shade from trees and buildings is not simulated yet (Phase 4); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
 
 ## License
 

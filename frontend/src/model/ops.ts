@@ -23,13 +23,14 @@ export function createObject(layers: Layer[], kind: string, geometry: Geom, pres
   const def: KindDef = kindDef(kind)
   const preset = def.presets?.find((p) => p.id === presetId)
   const layer = layerForKind(layers, kind) ?? layers[0]
+  const { name, ...rest } = extra // extra.name overrides the default object name (not stored as a property)
   return {
     id: newId(),
     layerId: layer.id,
     kind,
-    name: preset?.name ?? def.label,
+    name: typeof name === 'string' && name ? name : (preset?.name ?? def.label),
     geometry,
-    props: { ...(def.defaults ?? {}), ...(preset?.props ?? {}), ...extra },
+    props: { ...(def.defaults ?? {}), ...(preset?.props ?? {}), ...rest },
   }
 }
 

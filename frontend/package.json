@@ -1,14 +1,14 @@
 {
   "name": "eden-smart-estate-frontend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "test": "vitest run",
     "preview": "vite preview",
-    "e2e": "node e2e/interact.mjs",
+    "e2e": "node e2e/interact.mjs && node e2e/design.mjs",
     "screenshots": "node e2e/screenshots.mjs ../docs/screenshots"
   },
   "dependencies": {

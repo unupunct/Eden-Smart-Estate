@@ -5,7 +5,7 @@ import { duplicateObject, emptyDoc, newId, sortedLayers } from './ops'
 
 export type Tool =
   | { type: 'select' }
-  | { type: 'draw'; kind: string; presetId?: string }
+  | { type: 'draw'; kind: string; presetId?: string; extra?: Props } // extra: props for every object created (e.g. a library species)
   | { type: 'measure'; mode: 'distance' | 'area' }
   | { type: 'calibrate' }
 
@@ -41,6 +41,7 @@ export interface EditorState {
   shape: Shape
   snap: boolean
   view3d: boolean
+  showMature: boolean
   baseMap: string
   catalog: ProviderCatalog | null
   save: { status: SaveStatus; error?: string; savedAt?: number }
@@ -55,6 +56,7 @@ export interface EditorState {
   setShape: (s: Shape) => void
   setSnap: (v: boolean) => void
   setView3d: (v: boolean) => void
+  setShowMature: (v: boolean) => void
   setBaseMap: (id: string) => void
   setSelection: (ids: string[]) => void
   toggleSelection: (id: string) => void
@@ -100,6 +102,7 @@ export const useEditor = create<EditorState>((set, get) => ({
   shape: 'polygon',
   snap: true,
   view3d: false,
+  showMature: false,
   baseMap: 'satellite',
   catalog: null,
   save: { status: 'idle' },
@@ -121,6 +124,7 @@ export const useEditor = create<EditorState>((set, get) => ({
   setShape: (shape) => set({ shape }),
   setSnap: (snap) => set({ snap }),
   setView3d: (view3d) => set({ view3d }),
+  setShowMature: (showMature) => set({ showMature }),
   setBaseMap: (baseMap) => set({ baseMap }),
   setSelection: (selection) => set({ selection }),
   toggleSelection: (id) => set((s) => ({ selection: s.selection.includes(id) ? s.selection.filter((x) => x !== id) : [...s.selection, id] })),

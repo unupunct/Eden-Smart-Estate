@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { Bell, BookOpen, Box, Camera, ChevronsLeft, ChevronsRight, ClipboardList, Cpu, Droplets, FileText, Flower2, Home, LayoutDashboard, Map as MapIcon, Moon, Settings, Sprout, Sun, TreeDeciduous, Warehouse } from 'lucide-react'
 import { startAutosave } from './model/autosave'
+import { useLibrary } from './library/store'
 import { useApp, type Route } from './model/app'
 import { ImageImportDialog } from './panels/ImageImport'
 import { NewPropertyDialog } from './panels/NewProperty'
 import { EditorPage } from './pages/EditorPage'
+import { GardenPage, GreenhousePage, OrchardPage, PondPage } from './pages/Design'
+import { LibraryPage } from './pages/Library'
 import { ModulePage } from './pages/Modules'
 import { Overview } from './pages/Overview'
 import { SettingsPage } from './pages/Settings'
@@ -13,11 +16,11 @@ const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean 
   { route: 'overview', label: 'Estate Overview', icon: <LayoutDashboard size={18} />, live: true },
   { route: 'editor', label: 'Property Editor', icon: <MapIcon size={18} />, live: true },
   { route: 'buildings', label: 'Buildings', icon: <Warehouse size={18} /> },
-  { route: 'garden', label: 'Garden & Permaculture', icon: <Flower2 size={18} /> },
-  { route: 'orchard', label: 'Orchard', icon: <TreeDeciduous size={18} /> },
-  { route: 'greenhouse', label: 'Greenhouse', icon: <Sprout size={18} /> },
-  { route: 'pond', label: 'Natural Swimming Pond', icon: <Droplets size={18} /> },
-  { route: 'library', label: 'Plants & Mushrooms', icon: <BookOpen size={18} /> },
+  { route: 'garden', label: 'Garden & Permaculture', icon: <Flower2 size={18} />, live: true },
+  { route: 'orchard', label: 'Orchard', icon: <TreeDeciduous size={18} />, live: true },
+  { route: 'greenhouse', label: 'Greenhouse', icon: <Sprout size={18} />, live: true },
+  { route: 'pond', label: 'Natural Swimming Pond', icon: <Droplets size={18} />, live: true },
+  { route: 'library', label: 'Plants & Mushrooms', icon: <BookOpen size={18} />, live: true },
   { route: 'smart', label: 'Smart Home', icon: <Cpu size={18} /> },
   { route: 'security', label: 'Security & Cameras', icon: <Camera size={18} /> },
   { route: 'sun', label: 'Sun & Shadows', icon: <Sun size={18} /> },
@@ -31,6 +34,7 @@ export default function App() {
   const { route, go, collapsed, toggleSidebar, booting, serverError, dialog, boot } = useApp()
   useEffect(() => {
     void boot()
+    void useLibrary.getState().load()
     return startAutosave()
   }, [boot])
 
@@ -68,6 +72,11 @@ export default function App() {
         ) : route === 'overview' ? <Overview />
           : route === 'editor' ? <EditorPage />
           : route === 'settings' ? <SettingsPage />
+          : route === 'garden' ? <GardenPage />
+          : route === 'orchard' ? <OrchardPage />
+          : route === 'greenhouse' ? <GreenhousePage />
+          : route === 'pond' ? <PondPage />
+          : route === 'library' ? <LibraryPage />
           : <ModulePage route={route} />}
       </main>
       {dialog === 'new-property' && <NewPropertyDialog />}

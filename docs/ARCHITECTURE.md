@@ -89,6 +89,28 @@ The undoable document is `{ layers, objects }`. Updates are immutable, so histor
 - Uploads: image MIME whitelist, size limit (40 MB), server-generated file names (no path traversal). Backup restore validates the archive, verifies the database opens, takes a safety copy first, and only extracts files directly under `uploads/`.
 - The tile proxy only forwards requests to the provider URL configured by the user.
 
+## Landscape design and plant library (v0.2)
+
+**Library data** is bundled with the server (`backend/app/library_plants.py`, `library_other.py`, served read-only by `GET /api/library`). It is deliberately plain Python so it can be reviewed in a diff:
+
+| Collection | Notes |
+|---|---|
+| `PLANTS` | id, names (common, Latin, Romanian where known), family, categories, native status, edibility, sun, water, soil, size, spacing, hardiness, sowing/flowering/harvest months, wildlife, `med` (traditional use only), `tox` (warning), pollination (fruit trees), `place` (tree / bush / plant) |
+| `AQUATIC` | planting zone, water depth range, vigour, invasive flag with reason |
+| `FISH` | suitability for a natural swimming pond (`suitable` … `unsuitable`), size, temperature range, warnings |
+| `MUSHROOMS` | status (edible → deadly), look-alikes, warnings, cultivation notes; no images |
+| `COMPANIONS` | pair, type (beneficial, pest, nutrient, compatible, conditional, incompatible), **evidence** (documented / mixed / traditional), explanation |
+
+Integrity tests enforce unique ids, valid references, an evidence level on every relationship, loud warnings on toxic plants and mushrooms, that traditional claims are never labelled "documented", and that the demo only references existing species.
+
+**Object links:** drawn objects reference the library with `props.speciesId`; nothing about a species is copied except sensible starting sizes. Plant lists for beds live in `props.plantings`, tree records in `props.pruning / fertilizing / pests`, pond data in `props.fish` and `props.waterLog`, greenhouse targets in plain props. No schema change was needed (the object model is generic).
+
+**Logic** (`frontend/src/library/logic.ts`, pure and unit-tested): relationship index and green/yellow/red mapping; bed analysis (room, overcrowding, pair checks); neighbour links with per-species reach (walnut 15 m); pollination partner search; orchard statistics; grid-in-polygon generation; smallest-area rotated rectangle for greenhouse size and orientation; pond volume estimate; fish verdicts; water-quality range checks.
+
+**New object kinds:** greenhouse interior (`gh_bed`, `gh_shelf`, `gh_door`, `gh_vent`, `gh_heater`, `gh_fan`, `gh_light`, `gh_irrigation`, `gh_tank`) and pond equipment (`pond_pump`, `pond_filter`, `pond_skimmer`, `pond_waterfall`, `pond_steps`, `pond_stone`, `pond_stream`) on the existing *Greenhouse* and *Pond* layers.
+
+**Map additions:** projected mature canopy rings (own source, optional) and companion links from the selected plant (green/yellow/red, own source). Both are derived from the document at render time.
+
 ## Where the 28-section specification stands
 
 | Spec section | State |
@@ -98,8 +120,8 @@ The undoable document is `{ layers, objects }`. Updates are immutable, so histor
 | 4 Property editor, 4.1 imagery + calibration, 4.2 boundary/measurements, 4.3 layers, 5 object editor | ✅ implemented (photos/documents/maintenance schedules planned with Phase 6) |
 | 5.1/5.2 building editor and 3D | ✅ footprints, properties, extrusion; detail page and roof geometry planned |
 | 6 Fences & infrastructure | ✅ fences, gates, roads, paths, pipes, cables; sections computed |
-| 7–10 Garden, orchard, greenhouse, pond | ◐ drawing, placement and properties; designers/monitoring planned (Phase 3/5) |
-| 11 Plant & mushroom library | planned (Phase 3, needs vetted data) |
+| 7–10 Garden, orchard, greenhouse, pond | ✅ planting plans, companion checks, orchard records/pollination/grid, greenhouse layout and targets, pond planning with fish and water-quality log (live monitoring/automation planned, Phase 5) |
+| 11 Plant & mushroom library | ◐ curated starter set (100 plants, 25 aquatic, 10 fish, 26 mushrooms, 49 relationships) with evidence levels; no photographs; broader sourced data welcome |
 | 12–13 Sun/shadows, night sky | planned (Phase 4) |
 | 14–15 Smart home, cameras | ◐ placement and camera coverage; integrations planned (Phase 5) |
 | 17–19 Notes/tasks, weather, global search | ◐ per-object notes and object search; tasks/weather planned (Phase 6) |

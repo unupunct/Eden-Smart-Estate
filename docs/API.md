@@ -19,6 +19,7 @@ The web app talks to the server through a JSON REST API under `/api`. When the s
 | `POST /api/import-project` | multipart `.eden.json` → new property (new ids) |
 | `GET /api/backup` · `POST /api/restore` | full backup zip / restore (validates, takes a safety copy) |
 | `GET /api/geocode?q=` | place search via Nominatim (identified with a User-Agent, results trimmed) |
+| `GET /api/library` | read-only bundled plants, aquatic plants, fish, mushrooms, companion relationships, water-quality ranges and disclaimers |
 | `GET/PUT /api/settings` | imagery provider, Esri zoom limit, custom tile URL, keys (write-only) |
 | `GET /api/map-providers` | provider catalog and base-map definitions for the browser |
 | `GET /api/tiles/{provider}/{z}/{x}/{y}` | server-side tile proxy for keyed providers |

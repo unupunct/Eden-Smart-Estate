@@ -10,7 +10,7 @@ import httpx
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, Response
 
-from . import config, db, exchange, repo
+from . import config, db, exchange, library, repo
 from .demo import build_demo
 from .layers import GEOMETRY_DEFAULT_KIND, KIND_LAYER
 from .models import ChangeSet, Geometry, ObjectIn, OverlayIn, PropertyCreate
@@ -24,7 +24,13 @@ ALLOWED_IMAGE = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp
 def health():
     with db.session() as conn:
         n = conn.execute("SELECT COUNT(*) FROM properties").fetchone()[0]
-    return {"status": "ok", "app": "EDEN Smart Estate", "version": "0.1.0", "properties": n}
+    return {"status": "ok", "app": "EDEN Smart Estate", "version": "0.2.0", "properties": n}
+
+
+@router.get("/library")
+def get_library():
+    """Bundled plant / mushroom / aquatic / companion data (read-only)."""
+    return library.payload()
 
 
 # ---------------------------------------------------------------- properties
