@@ -31,6 +31,7 @@ export interface Plant {
   tox: string | null
   pollination: Pollination | null
   place: 'tree' | 'bush' | 'plant'
+  leaf: 'deciduous' | 'evergreen' // for woody plants: whether they shade in winter
 }
 
 export interface AquaticPlant {

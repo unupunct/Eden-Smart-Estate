@@ -8,7 +8,7 @@ import type { Fish, Library, Plant, Relation } from './types'
 const plant = (id: string, extra: Partial<Plant> = {}): Plant => ({
   id, name: id, ro: null, sci: id, family: 'F', cats: [], native: 'introduced', edible: 'yes', sun: 'full', water: 'medium', height: 1, spacing: 30,
   flower: null, harvest: null, sow: null, soil: '', zone: null, canopy: null, prop: '', wildlife: '', root: 'medium', shadeTol: false, notes: '',
-  med: null, tox: null, pollination: null, place: 'plant', ...extra,
+  med: null, tox: null, pollination: null, place: 'plant', leaf: 'deciduous', ...extra,
 })
 const rel = (a: string, b: string, type: Relation['type'], evidence: Relation['evidence']): Relation => ({ a, b, type, evidence, note: 'x'.repeat(30) })
 

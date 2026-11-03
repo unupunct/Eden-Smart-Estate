@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { Magnet, X } from 'lucide-react'
+import { Magnet, Sun, X } from 'lucide-react'
+import { useSun } from '../sun/store'
+import { fmtClock, fmtDate, fromWall, toWall } from '../sun/tz'
 import { EdenMap, mapRef } from '../map/controller'
 import { useStatus } from '../map/support'
 import { kindDef } from '../model/kinds'
@@ -70,12 +72,34 @@ function ToolOptions() {
         <Magnet size={14} /> Snap
       </button>
       <button className={`chip ${showMature ? 'on' : ''}`} title="Show every tree's projected canopy at maturity" onClick={() => setShowMature(!showMature)}>🌳 Mature canopy</button>
+      <SunMini />
       {tool.type !== 'select' && (
         <button className="chip" onClick={() => setTool({ type: 'select' })}>
           <X size={14} /> Done
         </button>
       )}
     </div>
+  )
+}
+
+/** Shadows toggle with a compact time-of-day slider; the Sun & Shadows page has the full controls. */
+function SunMini() {
+  const { on, instant, tz, set } = useSun()
+  const w = toWall(instant, tz)
+  const minutes = w.h * 60 + w.mi
+  const setMinutes = (m: number) => set({ instant: fromWall({ ...w, h: Math.floor(m / 60), mi: m % 60 }, tz) })
+  return (
+    <>
+      <button className={`chip ${on ? 'on' : ''}`} title="Cast shadows of buildings, trees and fences for the chosen date and time" onClick={() => set({ on: !on })}>
+        <Sun size={14} /> Shadows
+      </button>
+      {on && (
+        <>
+          <input type="range" min={0} max={1439} step={5} value={minutes} style={{ width: 130 }} aria-label="Time of day" title="Time of day" onChange={(e) => setMinutes(Number(e.target.value))} />
+          <small className="mono">{fmtDate(instant, tz).slice(5)} {fmtClock(instant, tz)}</small>
+        </>
+      )}
+    </>
   )
 }
 

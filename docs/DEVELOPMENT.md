@@ -17,6 +17,9 @@ frontend/           React + TypeScript + Vite
   src/geo/           measurements, transforms, image calibration
   src/map/           MapLibre controller, layers, interaction, label/overlay support
   src/panels/        editor UI (top bar, left/right panels, dialogs)
+  src/sun/           astronomy, time zones, shadow geometry, sun-hours (pure, unit-tested)
+  src/sky/           star list, constellation figures, dome projection
+  src/library/       library types, logic (companions, beds, orchard, pond)
   src/pages/         overview, module pages, settings
   e2e/               Playwright tests and the screenshot generator
 scripts/            install, start, dev, test, package (PowerShell)
@@ -42,9 +45,9 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -SkipE2E   # no browse
 | Suite | Command | Covers |
 |---|---|---|
 | Backend | `backend\.venv\Scripts\python -m pytest` (in `backend/`) | CRUD, validation, change sets, import/export round trips, overlays, backup/restore, settings & key secrecy, migrations, **plant-library integrity** (ids, references, evidence labels, warnings, demo contract) |
-| Frontend unit | `npx vitest run` (in `frontend/`) | measurements, transforms, vertex editing, calibration maths, undo/redo, layers, autosave diff, feature building, catalog ↔ backend consistency, **companion levels, bed analysis, neighbour checks, pollination, orchard grid, greenhouse box, pond volume, fish verdicts, water ranges** |
+| Frontend unit | `npx vitest run` (in `frontend/`) | measurements, transforms, vertex editing, calibration maths, undo/redo, layers, autosave diff, feature building, catalog ↔ backend consistency, **companion levels, bed analysis, neighbour checks, pollination, orchard grid, greenhouse box, pond volume, fish verdicts, water ranges, sun/moon/planet positions against almanac values, sunrise/sunset, polar day/night, time zones and DST, shadow geometry, foliage density, sun hours, heat grid, star list, sky projection, moon-free window** |
 | Type check | `npx tsc --noEmit` | strict TypeScript |
-| End-to-end | `npm run build && npm run e2e` | real Edge/Chrome via `playwright-core`; each suite starts its own server on a temp data dir. `e2e/interact.mjs`: draws, edits, drags, undoes, calibrates an image, switches 2D/3D, reloads and checks persistence. `e2e/design.mjs`: planting conflicts, library → Add to property, companion links, orchard grid + undo, pollination, pond warnings, module pages, mushroom safety. Needs Microsoft Edge (or change `channel` in the script). |
+| End-to-end | `npm run build && npm run e2e` | real Edge/Chrome via `playwright-core`; each suite starts its own server on a temp data dir. `e2e/interact.mjs`: draws, edits, drags, undoes, calibrates an image, switches 2D/3D, reloads and checks persistence. `e2e/design.mjs`: planting conflicts, library → Add to property, companion links, orchard grid + undo, pollination, pond warnings, module pages, mushroom safety. `e2e/sun.mjs`: sun readouts, shadow direction morning/afternoon, no shadows at night, season table, foliage, sun-hours map, editor shadow chip, night-sky chart by night and day, moon facts. Needs Microsoft Edge (or change `channel` in the script). |
 
 ## Screenshots
 
@@ -52,7 +55,7 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -SkipE2E   # no browse
 
 ## Release package
 
-`scripts\package.ps1 -Version 0.2.0` builds `release\EdenSmartEstate-0.2.0.zip` (built web app + backend source + scripts + docs).
+`scripts\package.ps1 -Version 0.3.0` builds `release\EdenSmartEstate-0.3.0.zip` (built web app + backend source + scripts + docs).
 
 ## Extending
 

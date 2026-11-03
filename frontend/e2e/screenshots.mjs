@@ -149,6 +149,34 @@ try {
   await sleep(300)
   await shot('19-pond-page')
 
+  // ---------------------------------------------------------------- Phase 4
+  const BUCHAREST = 'Europe/Bucharest'
+  const setSun = (patch) => page.evaluate((p) => window.__edenSun.getState().set(p), patch)
+  const local = (y, mo, d, h, mi = 0, off = 3) => Date.UTC(y, mo - 1, d, h - off, mi) // UTC+3 in summer, UTC+2 in winter
+  await page.locator('.navitem', { hasText: 'Sun & Shadows' }).click()
+  await page.waitForSelector('.sunpage .maplibregl-canvas')
+  await page.waitForFunction(() => window.__edenMap?.loaded?.())
+  await setSun({ tz: BUCHAREST, instant: local(2025, 6, 21, 16, 30), leaf: 'auto', heatOn: false })
+  await page.evaluate(([lng, lat]) => window.__edenMap.jumpTo({ center: [lng, lat], zoom: 18.1 }), model.property.center)
+  await settle(); await sleep(3500)
+  await shot('20-sun-shadows')
+  await page.evaluate(() => { document.querySelector('.sunpage').scrollTop = 99999 })
+  await sleep(400)
+  await shot('21-sun-seasons')
+  await page.evaluate(() => { document.querySelector('.sunpage').scrollTop = 0 })
+  await setSun({ heatOn: true, instant: local(2025, 6, 21, 12, 0) })
+  await sleep(5000)
+  await shot('22-sun-hours-map')
+  await setSun({ heatOn: false, instant: local(2025, 12, 21, 12, 0, 2) })
+  await sleep(2500)
+  await shot('23-winter-shadows')
+
+  await page.locator('.navitem', { hasText: 'Night Sky' }).click()
+  await page.waitForSelector('.skycanvas canvas')
+  await setSun({ tz: BUCHAREST, instant: local(2025, 11, 3, 22, 0, 2) })
+  await sleep(1200)
+  await shot('24-night-sky')
+
   await page.locator('.navitem', { hasText: 'Settings' }).click()
   await sleep(600)
   await shot('08-settings')

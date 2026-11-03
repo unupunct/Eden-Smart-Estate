@@ -111,6 +111,23 @@ Integrity tests enforce unique ids, valid references, an evidence level on every
 
 **Map additions:** projected mature canopy rings (own source, optional) and companion links from the selected plant (green/yellow/red, own source). Both are derived from the document at render time.
 
+## Sun, shadows and sky (v0.3)
+
+All astronomy and shadow geometry runs in the browser, in plain tested TypeScript, from the property's coordinates and the document: nothing is stored and no service is called.
+
+| Module | Role |
+|---|---|
+| `sun/astro.ts` | Sun (NOAA/Meeus, ~0.01°), moon (Meeus ch. 47 main terms, ~0.2°, topocentric parallax, phase and illumination), five planets (JPL approximate Keplerian elements, ~0.5–1°), precession, sunrise/sunset/twilight by bisection (−0.833° standard altitude), moonrise/set, next moon phase. Times are UTC milliseconds. |
+| `sun/tz.ts` | Time zones via `Intl` (no tz database shipped): wall-clock ↔ UTC, local day boundaries (23/25 h days work), formatting. |
+| `sun/shadows.ts` | Shading volumes from the document (building/greenhouse/solar boxes, fence and hedge walls, tree and bush cylinders) with a **density** per caster; sweep geometry; exact point-in-shadow tests; merged ground-shadow polygons (`polygon-clipping` union); sun-hours sampling; heat-map grid; season days. |
+| `sun/store.ts` | Zustand store: shadows on/off, zone, instant, foliage mode, heat-map data. |
+| `sky/stars.ts`, `sky/chart.ts` | Bright-star list (J2000), simplified constellation figures, horizontal coordinates, dome projection, twilight colours, moon-free dark window. |
+| `pages/Sun.tsx`, `pages/Sky.tsx` | The two pages (the sky is a canvas drawing). |
+
+**Shadow model.** Ground is flat. A point at height *z* casts its shadow *z / tan(elevation)* away from the sun (capped at 20× for grazing sun). A caster's shadow is the footprint swept from the displacement of its bottom to that of its top, so a prism is a hull and a tree crown a capsule. A ground point is shaded by a caster when the segment from the point back towards the sun meets the footprint: exact and cheap, so sun-hours need no polygon operations. Several casters multiply their light transmission (1 − density), so two layers of foliage shade more than one. Densities: buildings, fences and solar 1.0; hedge 0.8; greenhouse glazing 0.4; deciduous crowns 0.75 in leaf and 0.2 bare (interpolated through April and October); evergreen crowns 0.85. `Plant.leaf` in the library says which is which.
+
+**Map integration.** `EdenMap.syncSun` builds the casters and the merged polygons when the document, the sun store or the library changes and writes them to two GeoJSON sources (`shadow`, split into *dense* and *light*, and `sunheat`). Both layers sit under the object layers and are not hit-testable. The Sun page computes the per-area table (15-minute step, about 60 sample points per area) and the heat-map grid (at most 3500 cells) after a short debounce so dragging stays smooth.
+
 ## Where the 28-section specification stands
 
 | Spec section | State |
@@ -122,7 +139,7 @@ Integrity tests enforce unique ids, valid references, an evidence level on every
 | 6 Fences & infrastructure | ✅ fences, gates, roads, paths, pipes, cables; sections computed |
 | 7–10 Garden, orchard, greenhouse, pond | ✅ planting plans, companion checks, orchard records/pollination/grid, greenhouse layout and targets, pond planning with fish and water-quality log (live monitoring/automation planned, Phase 5) |
 | 11 Plant & mushroom library | ◐ curated starter set (100 plants, 25 aquatic, 10 fish, 26 mushrooms, 49 relationships) with evidence levels; no photographs; broader sourced data welcome |
-| 12–13 Sun/shadows, night sky | planned (Phase 4) |
+| 12–13 Sun/shadows, night sky | ✅ sun position, cast shadows, sun hours per bed and for the property, season comparison, night-sky chart with planets, Moon and dark window (v0.3); no terrain, no cloud data |
 | 14–15 Smart home, cameras | ◐ placement and camera coverage; integrations planned (Phase 5) |
 | 17–19 Notes/tasks, weather, global search | ◐ per-object notes and object search; tasks/weather planned (Phase 6) |
 | 25 Data accuracy rules | ✅ no invented values; demo clearly labelled; "not connected" states |

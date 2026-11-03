@@ -16,7 +16,7 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(title="EDEN Smart Estate", version="0.2.0", lifespan=lifespan)
+app = FastAPI(title="EDEN Smart Estate", version="0.3.0", lifespan=lifespan)
 app.include_router(router)
 app.include_router(providers_router)
 

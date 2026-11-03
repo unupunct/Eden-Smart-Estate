@@ -183,7 +183,9 @@ try {
   const bRow = page.locator('.layerrow', { hasText: 'Buildings' }).first()
   await bRow.locator('button').first().click()
   await settle()
-  const hidden = await page.evaluate(() => window.__edenMap.queryRenderedFeatures(undefined, { layers: ['eden-fill'] }).filter((f) => f.properties.kind === 'building').length)
+  const countBuildings = () => page.evaluate(() => window.__edenMap.queryRenderedFeatures(undefined, { layers: ['eden-fill'] }).filter((f) => f.properties.kind === 'building').length)
+  let hidden = await countBuildings()
+  for (let i = 0; i < 12 && hidden !== 0; i++) { await sleep(250); hidden = await countBuildings() } // the map repaints on the next frame
   check('hiding a layer removes its objects from the map', hidden === 0)
   await bRow.locator('button').first().click()
   await saved()

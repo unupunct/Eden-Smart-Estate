@@ -11,6 +11,9 @@ IMPORTANT - how to read this data
 
 PLANTS: list[dict] = []
 
+# Woody plants that keep their leaves through winter (used by the shadow model: evergreens shade in winter too).
+EVERGREEN = {"spruce", "fir", "scotspine", "yew"}
+
 
 def P(id, name, sci, family, cat, native, edible, sun, water, h, spacing, fl=None, hv=None, sow=None, *, ro=None,
       soil="", zone=None, canopy=None, prop="", wild="", root="medium", shade_tol=False, notes="", med=None, tox=None,
@@ -27,7 +30,7 @@ def P(id, name, sci, family, cat, native, edible, sun, water, h, spacing, fl=Non
     PLANTS.append(dict(id=id, name=name, ro=ro, sci=sci, family=family, cats=cats, native=native, edible=edible, sun=sun,
                        water=water, height=h, spacing=spacing, flower=fl, harvest=hv, sow=sow, soil=soil, zone=zone,
                        canopy=canopy, prop=prop, wildlife=wild, root=root, shadeTol=shade_tol, notes=notes, med=med,
-                       tox=tox, pollination=poll, place=place))
+                       tox=tox, pollination=poll, place=place, leaf="evergreen" if id in EVERGREEN else "deciduous"))
 
 
 # ------------------------------------------------------------------ vegetables

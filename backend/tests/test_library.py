@@ -165,3 +165,13 @@ def test_demo_only_references_species_that_exist_and_shows_a_conflict(tmp_path, 
     assert pairs == {"conflict"}
     kinds = {o["kind"] for o in objs}
     assert {"gh_bed", "gh_heater", "pond_pump", "pond_stream", "plant"} <= kinds
+
+
+def test_woody_plants_say_whether_they_keep_their_leaves():
+    """The shadow model needs to know which trees shade in winter."""
+    leaf = {p["id"]: p["leaf"] for p in PLANTS}
+    assert set(leaf.values()) == {"deciduous", "evergreen"}
+    for pid in ("spruce", "fir", "scotspine", "yew"):
+        assert leaf[pid] == "evergreen"
+    for pid in ("apple", "walnut", "oak", "birch", "linden"):
+        assert leaf[pid] == "deciduous"

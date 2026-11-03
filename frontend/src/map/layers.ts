@@ -24,13 +24,19 @@ export const HIT_LAYERS = {
 
 export function installEdenLayers(map: maplibregl.Map): void {
   const src = (id: string) => map.addSource(id, { type: 'geojson', data: EMPTY })
-  ;['eden', 'ext', 'wedges', 'mature', 'compat', 'handles', 'draw'].forEach(src)
+  ;['eden', 'ext', 'wedges', 'mature', 'compat', 'handles', 'draw', 'shadow', 'sunheat'].forEach(src)
 
   const add = (l: maplibregl.LayerSpecification) => map.addLayer(l)
 
   // camera coverage wedges sit under everything else
   add({ id: 'eden-wedge', type: 'fill', source: 'wedges', paint: { 'fill-color': '#f87171', 'fill-opacity': 0.17 } })
   add({ id: 'eden-wedge-line', type: 'line', source: 'wedges', paint: { 'line-color': '#fca5a5', 'line-width': 1.2, 'line-opacity': 0.85 } })
+
+  // sun-hours heat map and cast shadows lie on the ground, under the objects
+  add({ id: 'sunheat-fill', type: 'fill', source: 'sunheat',
+    paint: { 'fill-color': ['interpolate', ['linear'], ['get', 'hours'], 0, '#312e81', 3, '#38bdf8', 6, '#a3e635', 9, '#fbbf24', 12, '#f97316', 15, '#ef4444'], 'fill-opacity': 0.55, 'fill-antialias': false } })
+  add({ id: 'shadow-light', type: 'fill', source: 'shadow', filter: ['==', ['get', 'cls'], 'light'], paint: { 'fill-color': '#05080f', 'fill-opacity': 0.22 } })
+  add({ id: 'shadow-dense', type: 'fill', source: 'shadow', filter: ['==', ['get', 'cls'], 'dense'], paint: { 'fill-color': '#05080f', 'fill-opacity': 0.5 } })
 
   add({ id: 'eden-fill', type: 'fill', source: 'eden', filter: isPoly,
     layout: { 'fill-sort-key': ['get', 'sort'] },

@@ -11,6 +11,8 @@ import { LibraryPage } from './pages/Library'
 import { ModulePage } from './pages/Modules'
 import { Overview } from './pages/Overview'
 import { SettingsPage } from './pages/Settings'
+import { SkyPage } from './pages/Sky'
+import { SunPage } from './pages/Sun'
 
 const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean }[] = [
   { route: 'overview', label: 'Estate Overview', icon: <LayoutDashboard size={18} />, live: true },
@@ -23,8 +25,8 @@ const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean 
   { route: 'library', label: 'Plants & Mushrooms', icon: <BookOpen size={18} />, live: true },
   { route: 'smart', label: 'Smart Home', icon: <Cpu size={18} /> },
   { route: 'security', label: 'Security & Cameras', icon: <Camera size={18} /> },
-  { route: 'sun', label: 'Sun & Shadows', icon: <Sun size={18} /> },
-  { route: 'sky', label: 'Night Sky', icon: <Moon size={18} /> },
+  { route: 'sun', label: 'Sun & Shadows', icon: <Sun size={18} />, live: true },
+  { route: 'sky', label: 'Night Sky', icon: <Moon size={18} />, live: true },
   { route: 'tasks', label: 'Tasks & Maintenance', icon: <ClipboardList size={18} /> },
   { route: 'notes', label: 'Notes & Documents', icon: <FileText size={18} /> },
   { route: 'settings', label: 'Settings', icon: <Settings size={18} />, live: true },
@@ -77,6 +79,8 @@ export default function App() {
           : route === 'greenhouse' ? <GreenhousePage />
           : route === 'pond' ? <PondPage />
           : route === 'library' ? <LibraryPage />
+          : route === 'sun' ? <SunPage />
+          : route === 'sky' ? <SkyPage />
           : <ModulePage route={route} />}
       </main>
       {dialog === 'new-property' && <NewPropertyDialog />}

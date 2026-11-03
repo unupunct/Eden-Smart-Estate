@@ -8,6 +8,9 @@ import type { EdenObject, Pos, PropertyMeta } from '../model/types'
 import { buildCameraWedges, buildCompat, buildExtrusions, buildHandles, buildMature, buildObjectCollection, type LabelItem } from './features'
 import { neighbourLinks } from '../library/logic'
 import { useLibrary } from '../library/store'
+import { sunPosition } from '../sun/astro'
+import { buildCasters, leafFactor, monthOf, shadowFeatures, sunVector } from '../sun/shadows'
+import { useSun } from '../sun/store'
 import { Interaction } from './interaction'
 import { EMPTY, FIRST_EDEN_LAYER, installEdenLayers } from './layers'
 import { applyBaseMap, installIcons, LabelLayer, syncOverlays, useStatus } from './support'
@@ -54,9 +57,11 @@ export class EdenMap {
     this.map.on('mousemove', (e) => useStatus.setState({ cursor: [e.lngLat.lng, e.lngLat.lat] }))
     const offA = useEditor.subscribe(() => this.schedule())
     const offB = useLibrary.subscribe(() => this.schedule())
+    const offC = useSun.subscribe(() => this.schedule())
     this.unsub = () => {
       offA()
       offB()
+      offC()
     }
   }
 
@@ -109,6 +114,7 @@ export class EdenMap {
       const wantsLinks = only && ix && (only.kind === 'plant' || only.kind === 'tree' || only.kind === 'bush' || only.kind === 'garden_bed')
       this.setData('compat', wantsLinks ? buildCompat(neighbourLinks(ix, s.doc.objects, only.id)) : EMPTY)
     }
+    this.syncSun(docChanged, ix)
     this.lastIx = ix
     if (s.view3d !== l.view3d) this.apply3d(s.view3d)
     this.updateHandles()
@@ -119,6 +125,28 @@ export class EdenMap {
     else if (Math.abs(this.map.getZoom() - (this.labelZoom ?? -1)) > 0.05) this.updateLabels()
     if (s.focusRequest && s.focusRequest !== l.focusRequest) this.focusObject(s.focusRequest.id)
     this.last = { ...s }
+  }
+
+  private lastSun: unknown = null
+
+  /** Ground shadows (and the optional sun-hours map) for the time chosen in the sun store. */
+  private syncSun(docChanged: boolean, ix: unknown) {
+    const sun = useSun.getState()
+    if (!docChanged && sun === this.lastSun && ix === this.lastIx) return
+    this.lastSun = sun
+    const s = useEditor.getState()
+    const origin = s.property?.center
+    if (!sun.on || !origin) {
+      this.setData('shadow', EMPTY)
+      this.setData('sunheat', EMPTY)
+      return
+    }
+    const pos = sunPosition(sun.instant, origin[1], origin[0])
+    const leaf = sun.leaf === 'auto' ? leafFactor(monthOf(sun.instant, sun.tz), origin[1]) : sun.leaf === 'on' ? 1 : 0
+    const casters = buildCasters(s.doc, origin, { leaf, ix: useLibrary.getState().ix })
+    const f = shadowFeatures(casters, sunVector(pos.az, pos.alt), origin)
+    this.setData('shadow', { type: 'FeatureCollection', features: [...f.dense, ...f.light] })
+    this.setData('sunheat', sun.heatOn && sun.heat ? sun.heat : EMPTY)
   }
 
   private apply3d(on: boolean) {

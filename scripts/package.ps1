@@ -1,6 +1,6 @@
 <# Builds release\EdenSmartEstate-<version>.zip: built web app + backend source + scripts + docs.
    The zip needs only Python 3.11+ on the target PC (no Node.js). #>
-param([string]$Version = '0.2.0')
+param([string]$Version = '0.3.0')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 Push-Location (Join-Path $root 'frontend')

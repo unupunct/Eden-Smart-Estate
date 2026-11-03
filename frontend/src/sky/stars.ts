@@ -1,0 +1,57 @@
+// Bright-star list for the chart: [id, name, RA (deg, J2000), Dec (deg, J2000), visual magnitude].
+// Coordinates are rounded to about 0.01 deg from standard catalogues; magnitudes to 0.01-0.1. Variable stars (Betelgeuse,
+// Algol) show a typical value. This is a chart of ~95 of the brightest stars, not a full catalogue.
+export type Star = [id: string, name: string, ra: number, dec: number, mag: number]
+
+export const STAR_LIST: Star[] = [
+  ['sirius', 'Sirius', 101.287, -16.716, -1.46], ['canopus', 'Canopus', 95.988, -52.696, -0.74], ['arcturus', 'Arcturus', 213.915, 19.182, -0.05],
+  ['rigil', 'Rigil Kentaurus', 219.9, -60.835, -0.01], ['vega', 'Vega', 279.235, 38.784, 0.03], ['capella', 'Capella', 79.172, 45.998, 0.08],
+  ['rigel', 'Rigel', 78.634, -8.202, 0.13], ['procyon', 'Procyon', 114.825, 5.225, 0.34], ['achernar', 'Achernar', 24.429, -57.237, 0.46],
+  ['betelgeuse', 'Betelgeuse', 88.793, 7.407, 0.5], ['hadar', 'Hadar', 210.956, -60.373, 0.61], ['altair', 'Altair', 297.696, 8.868, 0.76],
+  ['acrux', 'Acrux', 186.65, -63.099, 0.77], ['aldebaran', 'Aldebaran', 68.98, 16.509, 0.86], ['antares', 'Antares', 247.352, -26.432, 0.96],
+  ['spica', 'Spica', 201.298, -11.161, 0.97], ['pollux', 'Pollux', 116.329, 28.026, 1.14], ['fomalhaut', 'Fomalhaut', 344.413, -29.622, 1.16],
+  ['deneb', 'Deneb', 310.358, 45.28, 1.25], ['mimosa', 'Mimosa', 191.93, -59.689, 1.25], ['regulus', 'Regulus', 152.093, 11.967, 1.35],
+  ['adhara', 'Adhara', 104.656, -28.972, 1.5], ['castor', 'Castor', 113.65, 31.888, 1.58], ['gacrux', 'Gacrux', 187.791, -57.113, 1.64],
+  ['shaula', 'Shaula', 263.402, -37.104, 1.62], ['bellatrix', 'Bellatrix', 81.283, 6.35, 1.64], ['elnath', 'Elnath', 81.573, 28.608, 1.65],
+  ['miaplacidus', 'Miaplacidus', 138.3, -69.717, 1.67], ['alnilam', 'Alnilam', 84.053, -1.202, 1.69], ['alnair', 'Alnair', 332.058, -46.961, 1.74],
+  ['alnitak', 'Alnitak', 85.19, -1.943, 1.74], ['alioth', 'Alioth', 193.507, 55.96, 1.77], ['dubhe', 'Dubhe', 165.932, 61.751, 1.79],
+  ['mirfak', 'Mirfak', 51.081, 49.861, 1.8], ['wezen', 'Wezen', 107.098, -26.393, 1.84], ['sargas', 'Sargas', 264.33, -42.998, 1.86],
+  ['kaus', 'Kaus Australis', 276.043, -34.385, 1.85], ['alkaid', 'Alkaid', 206.885, 49.313, 1.86], ['avior', 'Avior', 125.628, -59.51, 1.86],
+  ['menkalinan', 'Menkalinan', 89.882, 44.947, 1.9], ['atria', 'Atria', 252.166, -69.028, 1.92], ['alhena', 'Alhena', 99.428, 16.399, 1.93],
+  ['peacock', 'Peacock', 306.412, -56.735, 1.94], ['polaris', 'Polaris', 37.955, 89.264, 1.98], ['mirzam', 'Mirzam', 95.675, -17.956, 1.98],
+  ['alphard', 'Alphard', 141.897, -8.659, 1.98], ['hamal', 'Hamal', 31.793, 23.462, 2.0], ['diphda', 'Diphda', 10.897, -17.987, 2.04],
+  ['nunki', 'Nunki', 283.816, -26.297, 2.05], ['menkent', 'Menkent', 211.671, -36.37, 2.06], ['mirach', 'Mirach', 17.433, 35.621, 2.05],
+  ['alpheratz', 'Alpheratz', 2.097, 29.091, 2.06], ['rasalhague', 'Rasalhague', 263.734, 12.56, 2.07], ['kochab', 'Kochab', 222.676, 74.156, 2.08],
+  ['saiph', 'Saiph', 86.939, -9.67, 2.07], ['denebola', 'Denebola', 177.265, 14.572, 2.14], ['algol', 'Algol', 47.042, 40.956, 2.1],
+  ['sadr', 'Sadr', 305.557, 40.257, 2.2], ['gienah', 'Gienah', 311.553, 33.97, 2.46], ['albireo', 'Albireo', 292.68, 27.96, 3.18],
+  ['deltacyg', 'Delta Cygni', 296.244, 45.131, 2.87], ['schedar', 'Schedar', 10.127, 56.537, 2.24], ['mizar', 'Mizar', 200.981, 54.925, 2.23],
+  ['merak', 'Merak', 165.46, 56.382, 2.37], ['phecda', 'Phecda', 178.457, 53.695, 2.44], ['megrez', 'Megrez', 183.857, 57.033, 3.31],
+  ['caph', 'Caph', 2.295, 59.15, 2.27], ['navi', 'Navi', 14.177, 60.717, 2.47], ['ruchbah', 'Ruchbah', 21.454, 60.235, 2.68],
+  ['segin', 'Segin', 28.599, 63.67, 3.37], ['eltanin', 'Eltanin', 269.153, 51.489, 2.23], ['mintaka', 'Mintaka', 83.002, -0.299, 2.23],
+  ['sheliak', 'Sheliak', 282.52, 33.363, 3.45], ['sulafat', 'Sulafat', 284.736, 32.69, 3.25], ['graffias', 'Acrab', 241.359, -19.805, 2.62],
+  ['dschubba', 'Dschubba', 240.083, -22.622, 2.32], ['epssco', 'Larawag', 252.541, -34.293, 2.29], ['kappasco', 'Girtab', 265.622, -39.03, 2.41],
+  ['lesath', 'Lesath', 262.691, -37.296, 2.69], ['algieba', 'Algieba', 154.993, 19.842, 2.08], ['zosma', 'Zosma', 168.527, 20.524, 2.56],
+  ['etaleo', 'Eta Leonis', 151.833, 16.763, 3.52], ['muleo', 'Rasalas', 148.191, 26.007, 3.88], ['epsleo', 'Ras Elased Australis', 146.463, 23.774, 2.98],
+  ['deltacru', 'Imai', 183.786, -58.749, 2.8], ['alphecca', 'Alphecca', 233.672, 26.715, 2.23], ['enif', 'Enif', 326.046, 9.875, 2.39],
+  ['markab', 'Markab', 346.19, 15.205, 2.49], ['scheat', 'Scheat', 345.944, 28.083, 2.42], ['algenib', 'Algenib', 3.309, 15.184, 2.83],
+  ['alderamin', 'Alderamin', 319.645, 62.586, 2.51], ['almach', 'Almach', 30.975, 42.33, 2.17], ['sheratan', 'Sheratan', 28.66, 20.808, 2.64],
+  ['alcyone', 'Alcyone (Pleiades)', 56.871, 24.105, 2.87], ['thuban', 'Thuban', 211.097, 64.376, 3.65],
+  ['zubeneschamali', 'Zubeneschamali', 229.252, -9.383, 2.61], ['sabik', 'Sabik', 257.595, -15.725, 2.43], ['unukalhai', 'Unukalhai', 236.067, 6.426, 2.65],
+  ['tarazed', 'Tarazed', 296.565, 10.613, 2.72], ['alshain', 'Alshain', 298.828, 6.407, 3.71],
+]
+
+/** Simplified constellation figures: chains of star ids. */
+export const FIGURES: { name: string; lines: string[][] }[] = [
+  { name: 'Ursa Major (Big Dipper)', lines: [['dubhe', 'merak', 'phecda', 'megrez', 'dubhe'], ['megrez', 'alioth', 'mizar', 'alkaid']] },
+  { name: 'Cassiopeia', lines: [['caph', 'schedar', 'navi', 'ruchbah', 'segin']] },
+  { name: 'Orion', lines: [['betelgeuse', 'bellatrix'], ['betelgeuse', 'alnitak'], ['bellatrix', 'mintaka'], ['alnitak', 'alnilam', 'mintaka'], ['alnitak', 'saiph'], ['mintaka', 'rigel']] },
+  { name: 'Cygnus', lines: [['deneb', 'sadr', 'albireo'], ['deltacyg', 'sadr', 'gienah']] },
+  { name: 'Lyra', lines: [['vega', 'sheliak', 'sulafat', 'vega']] },
+  { name: 'Summer Triangle', lines: [['vega', 'deneb', 'altair', 'vega']] },
+  { name: 'Scorpius', lines: [['graffias', 'dschubba', 'antares', 'epssco', 'sargas', 'kappasco', 'shaula', 'lesath']] },
+  { name: 'Leo', lines: [['regulus', 'etaleo', 'algieba', 'muleo', 'epsleo'], ['algieba', 'zosma', 'denebola']] },
+  { name: 'Crux (Southern Cross)', lines: [['acrux', 'gacrux'], ['mimosa', 'deltacru']] },
+  { name: 'Pegasus (Great Square)', lines: [['markab', 'scheat', 'alpheratz', 'algenib', 'markab']] },
+  { name: 'Andromeda', lines: [['alpheratz', 'mirach', 'almach']] },
+  { name: 'Gemini', lines: [['castor', 'pollux']] },
+]

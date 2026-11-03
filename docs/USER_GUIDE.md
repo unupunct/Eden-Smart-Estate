@@ -161,6 +161,41 @@ Draw the **Pond**, depth zones (**Pond zone**: swimming, regeneration, plant fil
 - **Aquatic plants:** place them from the library into the pond area; any invasive species is flagged.
 - **Water-quality log:** enter temperature, pH, dissolved oxygen, ammonia, nitrite and nitrate by hand. EDEN charts the trend and warns when the latest reading is outside general ranges. The ranges are general guidance and no sensor is connected.
 
+## 17. Sun & Shadows
+
+Open **Sun & Shadows** in the menu. The map shows the shadows cast by every **visible** building, greenhouse, solar installation, fence, hedge, tree and bush (hide a layer and its shadows disappear). The same **Shadows** switch and a time slider are in the Property Editor's floating bar.
+
+**Controls (right panel)**
+- **Date** and **time of day** (slider, with the daylight part highlighted), a **play** button that sweeps through the day, **Now**, and quick jumps to the March and September equinox and June and December solstice.
+- **Time zone:** defaults to your browser's zone and is remembered per property. Change it if the property is somewhere else.
+- **Tree and hedge foliage:** *automatic by month* (leaves May–September in the northern hemisphere, half in April and October, reversed in the south), or force *leaves on* / *leaves off*. Evergreens in the library (spruce, fir, Scots pine, yew) keep shading in winter.
+- **Sun-hours map:** colours the whole property by the hours of direct sun on the selected date (purple/blue = shade, green = part sun, orange/red = long hours).
+
+**Readouts:** azimuth and elevation, the shadow length of a 1 m post, sunrise, solar noon (with its altitude), sunset, day length and civil twilight. Where the sun never rises or never sets (polar night, midnight sun) EDEN says so instead of showing times.
+
+**Sun path:** a plan view with north up. The white arc is the selected day with local hours marked, the coloured arcs are the four season days, and the yellow dot is the sun now.
+
+**Direct sun table:** for each garden bed, greenhouse, greenhouse bed, orchard area and pond: average hours of direct sun on the selected date and on the four season days, and a *growing season* figure (the three seasons without the winter solstice). The bar colour shows full sun (6 h+), part sun (4–6), part shade (2–4) or shade (under 2); hover for the range across the area. Click a row to select it on the map.
+
+**Light needs vs. what the beds get:** if a bed lists library plants, EDEN warns when a plant's light need (full sun 6 h+, full/part 4 h+, part sun 3 h+) is above the bed's growing-season average, or when a shade-lover sits in strong sun.
+
+**How to use it:** to place a new bed, switch on the sun-hours map on a June date and on a March date: sites that are bright in both are good for sun-lovers; spots that are shaded in March but bright in June suit late crops. Drag a building, hedge or tree in the map and watch the numbers update.
+
+**What it does not know:** terrain (a hill or a neighbour's house outside your drawing casts no shade), pitched roofs (a gable is treated as a box of the entered height), exact crown shapes (cylinders from 30 % of the height up) and real leaf density. Foliage is assumed to block about 75 % of light in leaf, 20 % bare and 85 % for evergreens; greenhouse glazing is assumed to pass 60 %. Treat results as planning estimates.
+
+## 18. Night Sky
+
+Open **Night Sky**. The chart looks straight up from the property: the **zenith is in the centre, north at the top and east on the left** (as when you hold a star map over your head), with rings at 30° and 60°.
+
+- **Sky colour** follows the sun: daylight, civil, nautical and astronomical twilight, night. Stars fade in through twilight; tick *Show stars in daylight* to see them anyway.
+- **Stars:** about 100 of the brightest, with simplified constellation figures (Big Dipper, Cassiopeia, Orion, Cygnus, Lyra, the Summer Triangle, Scorpius, Leo, the Southern Cross, the Great Square, Andromeda, Gemini). Switch figures and names off if you like. Hover a star, planet, the Moon or the Sun for its name and altitude.
+- **Planets:** Mercury, Venus, Mars, Jupiter and Saturn, accurate to roughly 1°. The table says whether each is above the horizon and whether it is likely visible (not in twilight or daylight).
+- **Moon:** phase and percentage lit, position, moonrise and moonset for the date, distance, and the next full and new moon. The moon icon shows the lit fraction; its orientation is simplified.
+- **Dark window with no moon:** the longest stretch between astronomical dusk and dawn with the moon below the horizon, a good time for faint objects. If there is none EDEN says why.
+- Time controls are shared with the Sun page; the animation speed goes from 1 minute to 6 hours per second.
+
+EDEN does not know the **cloud cover** or your local **light pollution**, and does not draw deep-sky objects, comets or satellites. The sky chart has no connection to weather data yet (Phase 6).
+
 ## Keyboard shortcuts
 
 | Key | Action |

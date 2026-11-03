@@ -2,8 +2,8 @@
 
 **A digital twin of your land.** Open a satellite image of your real property, trace its boundary, and gradually turn it into an editable, measured, geographic model — buildings, fences, trees, garden beds with companion-planting checks, an orchard, a greenhouse and a natural swimming pond — stored on your own computer, no cloud subscription required.
 
-> **Status: v0.2.0 — Phases 1–3 (property editor, landscape design, plant library).**
-> The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) now come with garden-bed planting plans, evidence-labelled companion planting, orchard records and pollination checks, greenhouse and natural-pond planning, and a plant / aquatic / fish / mushroom library. Sun & shadows, night sky, smart home, cameras, tasks and weather are on the [roadmap](#roadmap) and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
+> **Status: v0.3.0 — Phases 1–4 (property editor, landscape design, plant library, sun & shadows, night sky).**
+> The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) come with garden-bed planting plans, evidence-labelled companion planting, orchard records, greenhouse and natural-pond planning, a plant library (v0.2), and now **real sun positions, cast shadows, sun-hours per bed and a night-sky chart** (v0.3). Smart home, cameras, tasks and weather are on the [roadmap](#roadmap) and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
 
 ![Property editor with the demo estate](docs/screenshots/02-property-editor.png)
 
@@ -39,9 +39,14 @@
 | ![Plant library](docs/screenshots/14-plant-library.png) | ![Mushroom safety](docs/screenshots/15-mushroom-safety.png) |
 | **Natural pond: fish and water quality** | **Projected mature canopy** |
 | ![Pond panel](docs/screenshots/13-pond-panel.png) | ![Mature canopy](docs/screenshots/11-mature-canopy.png) |
+| **Cast shadows and sun hours per bed** | **Sun-hours map for the whole property** |
+| ![Sun and shadows](docs/screenshots/20-sun-shadows.png) | ![Sun-hours map](docs/screenshots/22-sun-hours-map.png) |
+| **Midwinter shadows (same estate, 21 December)** | **Night sky** |
+| ![Winter shadows](docs/screenshots/23-winter-shadows.png) | ![Night sky](docs/screenshots/24-night-sky.png) |
 
 <details><summary>More screenshots</summary>
 
+![Season comparison table](docs/screenshots/21-sun-seasons.png)
 ![Orchard page](docs/screenshots/17-orchard-page.png)
 ![Greenhouse page](docs/screenshots/18-greenhouse-page.png)
 ![Pond page](docs/screenshots/19-pond-page.png)
@@ -56,6 +61,14 @@
 </details>
 
 > The screenshots show the fictional **demo estate** placed on a random open meadow. It is not a real property. The demo's garden bed 5 deliberately pairs potato with tomato, and its pond holds a goldfish, to show the warnings.
+
+**Sun, shadows and sky (new in v0.3)**
+- **Sun position** for your exact coordinates, any date and time, in any time zone: azimuth, elevation, sunrise, solar noon, sunset, day length, civil/nautical/astronomical twilight, and the length of a 1 m post's shadow. Standard astronomical formulas (sun to about 0.01°); tested against almanac values.
+- **Cast shadows on the map** from every visible building, greenhouse, fence, hedge, tree and bush, with a time-of-day slider and an animated day. Drag a building and watch its shadow move. Trees cast lighter shadows when bare and denser ones in leaf; evergreens shade all year.
+- **Sun hours** for every garden bed, greenhouse bed, orchard area and pond on the selected date and on the four season days (March/September equinox, June/December solstice), plus a **whole-property sun-hours map**. Library plants are checked against their light needs ("tomato wants 6 h+, this bed gets 4.3 h").
+- **Sun-path diagram** (looking down on the property, north up) with the four season arcs and the day's hours marked.
+- **Night sky:** an all-sky chart for your location and time — about 100 bright stars with simplified constellation figures, the five naked-eye planets, the Moon with phase, and the twilight colour of the sky. Moonrise/moonset, next full and new moon, and the **moon-free dark window** for stargazing. Hover anything for its name.
+- Honest limits are shown in the app: flat ground (no terrain), roofs as boxes, foliage transmission is an estimate, planets are accurate to about 1°, and EDEN does not know the cloud cover.
 
 ## About the plant data
 
@@ -81,14 +94,14 @@ The complete guide — release zip, LAN/tablet access, autostart, updating, back
 | | |
 |---|---|
 | [Installation guide](docs/INSTALL.md) | Step by step, plus LAN access, autostart, updates, troubleshooting |
-| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, planting plans, orchard, pond, library, shortcuts |
+| [User guide](docs/USER_GUIDE.md) | Drawing, editing, layers, measuring, planting plans, orchard, pond, library, sun & shadows, night sky, shortcuts |
 | [Architecture & data model](docs/ARCHITECTURE.md) | Object model, coordinates, autosave/undo design, library data model, database schema |
 | [API & integrations](docs/API.md) | REST endpoints, import/export formats, imagery providers, key handling |
 | [Development](docs/DEVELOPMENT.md) | Build, test, extend (object kinds, plant data, migrations, providers) |
 
 ## Tech
 
-React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 62 frontend unit tests, 34 backend tests and two browser end-to-end suites (35 + 34 checks).
+React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 119 frontend unit tests, 35 backend tests and three browser end-to-end suites (33 + 34 + 23 checks).
 
 ## Data, privacy and imagery
 
@@ -104,12 +117,12 @@ React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastA
 | 1 | Foundation: architecture, database, navigation, property creation, imagery, image calibration | ✅ done (v0.1) |
 | 2 | Property editor: boundary, measurements, layers, objects, buildings, fences, notes, undo/redo, autosave | ✅ done (v0.1) |
 | 3 | Landscape design: bed planting plans, orchard records, greenhouse, pond, plant library, sourced companion planting | ✅ done (v0.2) |
-| 4 | Environment: sun position, real shadow projection, seasonal comparison, night sky | planned |
+| 4 | Environment: sun position, real shadow projection, seasonal comparison, night sky | ✅ done (v0.3) |
 | 5 | Smart home: Home Assistant, MQTT, outlets, sensors, cameras, automation editor | planned |
 | 6 | Management: tasks, maintenance, documents, photos, weather, reports | planned |
 | 7 | Polish: performance, installer, further docs | planned |
 
-Known limitations of v0.2.0: roofs in 3D are flat extrusions (no gable geometry yet); no terrain elevation; shade from trees and buildings is not simulated yet (Phase 4); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
+Known limitations of v0.3.0: roofs in 3D and in the shadow model are flat boxes (no gable geometry); there is no terrain elevation, so hills and neighbouring buildings outside your property cast no shade; foliage light transmission and greenhouse glazing are estimates; the night sky shows about 100 stars and five planets (no deep-sky objects, satellites or cloud forecast; planets ±1°); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); single user, no authentication; touch use is supported but has only been tested with emulated input.
 
 ## License
 

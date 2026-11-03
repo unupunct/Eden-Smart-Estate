@@ -1,5 +1,8 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Camera, CloudSun, Droplets, FlaskConical, Map as MapIcon, Plug, Sprout, Thermometer, Trash2, Upload } from 'lucide-react'
+import { moonPosition, sunEvents } from '../sun/astro'
+import { loadZone } from '../sun/store'
+import { dayStart, fmtClock, fmtDuration } from '../sun/tz'
 import { api } from '../api/client'
 import { fmtArea, fmtLength } from '../geo/measure'
 import { useApp } from '../model/app'
@@ -14,6 +17,13 @@ export function Overview() {
   const [err, setErr] = useState('')
   const proj = useRef<HTMLInputElement>(null)
   const st = estateStats(doc)
+  const sky = useMemo(() => {
+    if (!property) return null
+    const tz = loadZone(property.id)
+    const now = Date.now()
+    const ev = sunEvents(dayStart(now, tz), property.center[1], property.center[0])
+    return { tz, ev, moon: moonPosition(now, property.center[1], property.center[0]) }
+  }, [property?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const demo = async () => {
     setBusy(true)
@@ -107,6 +117,17 @@ export function Overview() {
                 <Stat label="Greenhouses" value={`${st.counts.greenhouse ?? 0}`} />
                 <Stat label="Pond surface" value={fmtArea(st.pondArea)} />
               </div>
+              {sky && (
+                <>
+                  <h2 className="sect">Sun and moon today <small className="muted">(calculated for the property's location)</small></h2>
+                  <div className="stats">
+                    <Stat label="Sunrise" value={sky.ev.polar === 'night' ? 'does not rise' : sky.ev.polar === 'day' ? 'stays up' : fmtClock(sky.ev.sunrise, sky.tz)} sub={sky.tz} />
+                    <Stat label="Sunset" value={sky.ev.polar ? '—' : fmtClock(sky.ev.sunset, sky.tz)} />
+                    <Stat label="Daylight" value={fmtDuration(sky.ev.dayLengthH)} sub={`noon sun ${sky.ev.noonAlt.toFixed(0)}° high`} />
+                    <Stat label="Moon" value={sky.moon.phaseName} sub={`${Math.round(sky.moon.illumination * 100)}% lit`} />
+                  </div>
+                </>
+              )}
               <h2 className="sect">Live data</h2>
               <p className="muted">These tiles stay empty until the matching integration exists. EDEN never shows invented sensor values or camera pictures.</p>
               <div className="stats">

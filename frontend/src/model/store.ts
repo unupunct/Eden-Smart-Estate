@@ -251,3 +251,5 @@ export const useEditor = create<EditorState>((set, get) => ({
   setCalibration: (calibration) => set({ calibration }),
   requestFocus: (id) => set((s) => ({ focusRequest: { id, n: (s.focusRequest?.n ?? 0) + 1 }, selection: [id] })),
 }))
+
+if (typeof window !== 'undefined') (window as unknown as { __edenStore?: unknown }).__edenStore = useEditor // handle for the e2e tests
