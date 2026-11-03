@@ -1,0 +1,13 @@
+data/
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.vite/
+*.log
+.tools/
+frontend/tsconfig.tsbuildinfo
+.claude/
+release/

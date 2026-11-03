@@ -1,0 +1,71 @@
+import { KIND_MAP, kindDef } from '../model/kinds'
+import { fmtArea, fmtLength, measureGeom } from '../geo/measure'
+import { useApp, type Route } from '../model/app'
+import { useEditor } from '../model/store'
+
+interface ModuleInfo {
+  title: string
+  phase: string
+  blurb: string
+  planned: string[]
+  kinds?: string[] // module lists the matching objects already on the map
+}
+
+export const MODULES: Partial<Record<Route, ModuleInfo>> = {
+  buildings: { title: 'Buildings', phase: 'Phase 2 (list) · detail pages later', kinds: ['building'], blurb: 'Every building drawn in the Property Editor. Click “Show on map” to edit its footprint, height, roof and services.', planned: ['Building detail page with floors, doors, windows and equipment', 'Associated devices, cameras and maintenance records', 'Roof geometry in 3D beyond simple extrusion'] },
+  garden: { title: 'Garden & Permaculture', phase: 'Phase 3', kinds: ['zone', 'garden_bed', 'plant'], blurb: 'Zones, beds and plants placed so far. The full bed designer and companion-planting checks come in Phase 3.', planned: ['Row and spacing designer with plant counts', 'Companion-planting database with sourced relationships', 'Planting dates and harvest windows'] },
+  orchard: { title: 'Orchard', phase: 'Phase 3', kinds: ['tree', 'orchard_area'], blurb: 'Trees and orchard areas on the property. Pollination partners, pruning history and yield tracking arrive in Phase 3.', planned: ['Per-tree records (variety, rootstock, pruning, fertilising, pests)', 'Mature canopy and shade projection', 'Pollination-partner finder and orchard statistics'] },
+  greenhouse: { title: 'Greenhouse', phase: 'Phase 3 / 5', kinds: ['greenhouse'], blurb: 'Greenhouse footprints. Interior layout and monitoring need the smart-home integrations.', planned: ['Interior beds, shelving, irrigation and equipment', 'Target ranges and alerts', 'Automation rules with safety checks'] },
+  pond: { title: 'Natural Swimming Pond', phase: 'Phase 3', kinds: ['pond', 'pond_zone', 'water_pipe'], blurb: 'Pond outlines and zones drawn on the map.', planned: ['Depth zones, filtration and circulation planning', 'Aquatic plant and fish databases with suitability warnings', 'Water-quality log (manual or sensor)'] },
+  library: { title: 'Plants & Mushrooms Library', phase: 'Phase 3', blurb: 'A sourced botanical and mycological knowledge base. It needs vetted data, so it is not filled with placeholder entries.', planned: ['Native and medicinal plants, trees, edible wild plants, mushrooms', 'Clear separation of traditional use from clinical evidence', 'Never presents a photo as proof a mushroom is edible', '“Add to property” placement'] },
+  smart: { title: 'Smart Home', phase: 'Phase 5', kinds: ['outlet', 'light', 'sensor'], blurb: 'Outlets, lights and sensors that have been positioned on the map. None is connected: no state or energy values are shown.', planned: ['Home Assistant and MQTT integration', 'Outlet control, schedules, energy history', 'Visual automation editor with confirmation for risky actions'] },
+  security: { title: 'Security & Cameras', phase: 'Phase 5', kinds: ['camera'], blurb: 'Camera positions and coverage as drawn. No live streams exist yet and none are simulated.', planned: ['ONVIF / RTSP / Home Assistant streams', 'Camera grid and fullscreen view', 'Credentials stored server-side only'] },
+  sun: { title: 'Sun & Shadows', phase: 'Phase 4', blurb: 'Astronomical sun position and geometric shadows for every building, tree and fence.', planned: ['Sunrise, sunset, azimuth and elevation for your coordinates', 'Shadow projection onto garden beds and the greenhouse', 'Summer vs. winter comparison'] },
+  sky: { title: 'Night Sky', phase: 'Phase 4', blurb: 'Stars, planets and the Moon for your exact location and time.', planned: ['Constellations, planets, Moon phase and twilight', 'Animated time controls'] },
+  tasks: { title: 'Tasks & Maintenance', phase: 'Phase 6', blurb: 'Recurring tasks, reminders and completion history linked to objects.', planned: ['Due dates, priorities, recurrence', 'Link tasks to trees, beds, fences and devices'] },
+  notes: { title: 'Notes & Documents', phase: 'Phase 6', kinds: ['note'], blurb: 'Map notes placed so far. Every object also carries its own notes field. Photo and document attachments come in Phase 6.', planned: ['Photos, PDFs and documents attached to any object', 'Tags, categories and global search'] },
+}
+
+export function ModulePage({ route }: { route: Route }) {
+  const info = MODULES[route]
+  const doc = useEditor((s) => s.doc)
+  const property = useEditor((s) => s.property)
+  const focus = useEditor((s) => s.requestFocus)
+  const go = useApp((s) => s.go)
+  if (!info) return null
+  const objs = info.kinds ? Object.values(doc.objects).filter((o) => info.kinds!.includes(o.kind)) : []
+  return (
+    <div className="page">
+      <div className="pagehead">
+        <div><h1>{info.title}</h1><p>{info.blurb}</p></div>
+        <span className="badge">{info.phase}</span>
+      </div>
+      {info.kinds && (
+        <div className="glass tablewrap">
+          <table>
+            <thead><tr><th>Name</th><th>Type</th><th>Size</th><th>Key facts</th><th /></tr></thead>
+            <tbody>
+              {objs.map((o) => {
+                const m = measureGeom(o.geometry)
+                const def = kindDef(o.kind)
+                const facts = def.fields.slice(0, 4).map((f) => (o.props[f.key] !== undefined && o.props[f.key] !== '' ? `${f.label}: ${String(o.props[f.key])}${f.unit ? ' ' + f.unit : ''}` : '')).filter(Boolean).join(' · ')
+                return (
+                  <tr key={o.id}>
+                    <td><span className="swatch" style={{ background: def.color }} /> {o.name || def.label}</td>
+                    <td>{KIND_MAP[o.kind]?.label ?? o.kind}</td>
+                    <td>{o.geometry.type === 'Polygon' ? fmtArea(m.area) : o.geometry.type === 'LineString' ? fmtLength(m.perimeter) : '—'}</td>
+                    <td className="muted">{facts || '—'}</td>
+                    <td><button onClick={() => { focus(o.id); go('editor') }}>Show on map</button></td>
+                  </tr>
+                )
+              })}
+              {!objs.length && <tr><td colSpan={5} className="empty">{property ? 'Nothing of this kind on the property yet. Draw some in the Property Editor.' : 'Open or create a property first.'}</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <h2 className="sect">On the roadmap</h2>
+      <ul className="roadmap glass">{info.planned.map((p) => <li key={p}>{p}</li>)}</ul>
+    </div>
+  )
+}
