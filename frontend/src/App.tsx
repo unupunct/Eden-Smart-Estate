@@ -1,32 +1,39 @@
-import { useEffect } from 'react'
-import { Bell, BookOpen, Box, Camera, ChevronsLeft, ChevronsRight, ClipboardList, CloudSun, Cpu, FileBarChart, Droplets, FileText, Flower2, Home, LayoutDashboard, Map as MapIcon, Moon, Settings, Sprout, Sun, TreeDeciduous, Warehouse, Zap } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Bell, BookOpen, Box, Camera, ChevronsLeft, ChevronsRight, ClipboardList, CloudSun, Cpu, FileBarChart, Droplets, FileText, Flower2, Home, LayoutDashboard, LogOut, Map as MapIcon, Moon, Settings, Sprout, Sun, TreeDeciduous, Warehouse, Zap } from 'lucide-react'
 import { startAutosave } from './model/autosave'
 import { useLibrary } from './library/store'
 import { useApp, type Route } from './model/app'
-import { ImageImportDialog } from './panels/ImageImport'
 import { NewPropertyDialog } from './panels/NewProperty'
-import { EditorPage } from './pages/EditorPage'
-import { GardenPage, GreenhousePage, OrchardPage, PondPage } from './pages/Design'
-import { LibraryPage } from './pages/Library'
-import { ModulePage } from './pages/Modules'
 import { Overview } from './pages/Overview'
-import { AutomationsPage } from './pages/Automations'
-import { DocumentsPage } from './pages/Documents'
-import { ReportsPage } from './pages/Reports'
-import { TasksPage } from './pages/Tasks'
-import { WeatherPage } from './pages/Weather'
+import { Suspense, lazy } from 'react'
+const ImageImportDialog = lazy(() => import('./panels/ImageImport').then((m) => ({ default: m.ImageImportDialog })))
+const EditorPage = lazy(() => import('./pages/EditorPage').then((m) => ({ default: m.EditorPage })))
+const GardenPage = lazy(() => import('./pages/Design').then((m) => ({ default: m.GardenPage })))
+const GreenhousePage = lazy(() => import('./pages/Design').then((m) => ({ default: m.GreenhousePage })))
+const OrchardPage = lazy(() => import('./pages/Design').then((m) => ({ default: m.OrchardPage })))
+const PondPage = lazy(() => import('./pages/Design').then((m) => ({ default: m.PondPage })))
+const LibraryPage = lazy(() => import('./pages/Library').then((m) => ({ default: m.LibraryPage })))
+const BuildingsPage = lazy(() => import('./pages/Buildings').then((m) => ({ default: m.BuildingsPage })))
+const SettingsPage = lazy(() => import('./pages/Settings').then((m) => ({ default: m.SettingsPage })))
+const SunPage = lazy(() => import('./pages/Sun').then((m) => ({ default: m.SunPage })))
+const SkyPage = lazy(() => import('./pages/Sky').then((m) => ({ default: m.SkyPage })))
+const SmartHomePage = lazy(() => import('./pages/SmartHome').then((m) => ({ default: m.SmartHomePage })))
+const SecurityPage = lazy(() => import('./pages/Security').then((m) => ({ default: m.SecurityPage })))
+const AutomationsPage = lazy(() => import('./pages/Automations').then((m) => ({ default: m.AutomationsPage })))
+const TasksPage = lazy(() => import('./pages/Tasks').then((m) => ({ default: m.TasksPage })))
+const DocumentsPage = lazy(() => import('./pages/Documents').then((m) => ({ default: m.DocumentsPage })))
+const WeatherPage = lazy(() => import('./pages/Weather').then((m) => ({ default: m.WeatherPage })))
+const ReportsPage = lazy(() => import('./pages/Reports').then((m) => ({ default: m.ReportsPage })))
+
+import { ErrorBoundary } from './ErrorBoundary'
+import { LoginScreen } from './Login'
 import { useManage } from './manage/store'
-import { SecurityPage } from './pages/Security'
-import { SettingsPage } from './pages/Settings'
-import { SmartHomePage } from './pages/SmartHome'
 import { useSmart } from './smart/store'
-import { SkyPage } from './pages/Sky'
-import { SunPage } from './pages/Sun'
 
 const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean }[] = [
   { route: 'overview', label: 'Estate Overview', icon: <LayoutDashboard size={18} />, live: true },
   { route: 'editor', label: 'Property Editor', icon: <MapIcon size={18} />, live: true },
-  { route: 'buildings', label: 'Buildings', icon: <Warehouse size={18} /> },
+  { route: 'buildings', label: 'Buildings', icon: <Warehouse size={18} />, live: true },
   { route: 'garden', label: 'Garden & Permaculture', icon: <Flower2 size={18} />, live: true },
   { route: 'orchard', label: 'Orchard', icon: <TreeDeciduous size={18} />, live: true },
   { route: 'greenhouse', label: 'Greenhouse', icon: <Sprout size={18} />, live: true },
@@ -47,12 +54,22 @@ const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean 
 export default function App() {
   const { route, go, collapsed, toggleSidebar, booting, serverError, dialog, boot } = useApp()
   const currentId = useApp((s) => s.currentId)
+  const [auth, setAuth] = useState<'checking' | 'login' | 'ok'>('checking')
+  const [authRequired, setAuthRequired] = useState(false)
   useEffect(() => {
+    fetch('/api/auth/status').then((r) => r.json()).then((st: { required: boolean; authenticated: boolean }) => {
+      setAuthRequired(st.required)
+      setAuth(st.required && !st.authenticated ? 'login' : 'ok')
+    }).catch(() => setAuth('ok')) // server unreachable: the normal error screen explains it
+  }, [])
+  useEffect(() => {
+    if (auth !== 'ok') return
     void useManage.getState().load(currentId)
     const h = setInterval(() => void useManage.getState().load(currentId), 30000)
     return () => clearInterval(h)
-  }, [currentId])
+  }, [currentId, auth])
   useEffect(() => {
+    if (auth !== 'ok') return
     void boot()
     void useLibrary.getState().load()
     void useSmart.getState().load()
@@ -62,7 +79,10 @@ export default function App() {
       clearInterval(poll)
       stop()
     }
-  }, [boot])
+  }, [boot, auth])
+
+  if (auth === 'login') return <LoginScreen onDone={() => location.reload()} />
+  if (auth === 'checking') return null
 
   return (
     <div className={`shell ${collapsed ? 'collapsed' : ''}`}>
@@ -80,11 +100,14 @@ export default function App() {
             </button>
           ))}
         </div>
+        {authRequired && <button className="navitem" title="Sign out" onClick={() => void fetch('/api/auth/logout', { method: 'POST' }).then(() => location.reload())}><LogOut size={18} />{!collapsed && <span>Sign out</span>}</button>}
         <button className="navitem collapse" onClick={toggleSidebar} title={collapsed ? 'Expand menu' : 'Collapse menu'}>
           {collapsed ? <ChevronsRight size={18} /> : <><ChevronsLeft size={18} /><span>Collapse</span></>}
         </button>
       </nav>
       <main className="main">
+        <ErrorBoundary key={route} onHome={() => go('overview')}>
+        <Suspense fallback={<div className="emptystate"><Box className="spin" /><p>Loading…</p></div>}>
         {booting ? (
           <div className="emptystate"><Box className="spin" /><p>Loading…</p></div>
         ) : serverError ? (
@@ -112,10 +135,13 @@ export default function App() {
           : route === 'notes' ? <DocumentsPage />
           : route === 'weather' ? <WeatherPage />
           : route === 'reports' ? <ReportsPage />
-          : <ModulePage route={route} />}
+          : route === 'buildings' ? <BuildingsPage />
+          : <Overview />}
+        </Suspense>
+        </ErrorBoundary>
       </main>
       {dialog === 'new-property' && <NewPropertyDialog />}
-      {dialog === 'image-import' && <ImageImportDialog />}
+      {dialog === 'image-import' && <Suspense fallback={null}><ImageImportDialog /></Suspense>}
     </div>
   )
 }

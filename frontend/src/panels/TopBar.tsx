@@ -73,7 +73,7 @@ export function TopBar() {
   return (
     <header className="topbar glass">
       <div className="group">
-        <select className="propselect" value={currentId ?? ''} onChange={(e) => void open(e.target.value)} title="Switch property">
+        <select className="propselect" aria-label="Property" value={currentId ?? ''} onChange={(e) => void open(e.target.value)} title="Switch property">
           {properties.map((p) => <option key={p.id} value={p.id}>{p.isDemo ? '[DEMO] ' : ''}{p.name}</option>)}
         </select>
         <button className="tb" onClick={() => setDialog('new-property')} title="Create a new property"><Plus size={16} /><span>New</span></button>

@@ -177,6 +177,10 @@ try {
   await sleep(1200)
   await shot('24-night-sky')
 
+  await page.locator('.navitem', { hasText: 'Buildings' }).click()
+  await page.waitForSelector('text=Floor area')
+  await sleep(500)
+  await shot('34-buildings')
   await page.locator('.navitem', { hasText: 'Settings' }).click()
   await sleep(600)
   await shot('08-settings')

@@ -12,7 +12,7 @@ type Tab = 'draw' | 'layers' | 'images'
 export function LeftPanel() {
   const [tab, setTab] = useState<Tab>('draw')
   return (
-    <aside className="leftpanel glass">
+    <aside className="leftpanel glass" aria-label="Tools, layers and images">
       <div className="tabs">
         {(['draw', 'layers', 'images'] as Tab[]).map((t) => (
           <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>

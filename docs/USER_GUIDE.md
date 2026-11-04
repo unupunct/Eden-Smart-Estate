@@ -272,6 +272,18 @@ Everything shows **when it was fetched**. The forecast is cached for 20 minutes.
 
 Open **Reports**, tick the sections you want (summary, inventory, beds and plantings with the companion check, orchard, ponds, tasks, documents, weather) and press **Print / save as PDF**: the menu is hidden in the printout. The weather section appears only when weather is on and loaded. The page also links the task CSV, the object CSV and the GeoJSON export. A report built from the demo estate says **DEMO DATA** at the top.
 
+## 26. Buildings
+
+*Buildings* lists every building and greenhouse: footprint area, floors and height, **floor area** (footprint × floors), roof, services (electricity, water, heating, internet), how many smart devices, lights, sensors or cameras are placed inside the outline and how many of them report live data, open tasks and attached files. *Show on map* selects the building; edit its details in the properties panel. The totals are planning figures from the drawn outlines.
+
+## 27. Password, sign-in and sign-out
+
+When EDEN is started with a password (`start.ps1 -Lan`, `-Password …`, or the `EDEN_PASSWORD` variable) the app shows a **sign-in screen**. Sessions last 30 days on that browser; *Sign out* is at the bottom of the menu. After five wrong passwords the address is locked out for five minutes. Changing the password signs everybody out. The password protects the app and everything it can control, but the connection is plain HTTP: use it on a trusted network or behind a VPN, and read [SECURITY.md](../SECURITY.md).
+
+## 28. Keyboard, zoom and screen readers
+
+Menus, forms, tables and dialogs can be used with the keyboard (a visible outline shows where you are); `Esc` leaves the current tool; the shortcuts are listed below. Drawing and editing shapes on the map needs a mouse or touch. You can zoom the whole page with the browser. Pages have headings and labelled regions, and the information on the map or in the sky chart is also available as text in the panels and tables. If you find something you cannot use, please report it.
+
 ## Keyboard shortcuts
 
 | Key | Action |

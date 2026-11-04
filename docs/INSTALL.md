@@ -6,57 +6,63 @@ EDEN runs as a small local web server (Python) that serves the web app (React). 
 
 | | Needed for | Where to get it |
 |---|---|---|
-| Windows 11 (Windows 10 also works) | the provided scripts | – |
-| **Python 3.11 or newer** | running EDEN | <https://www.python.org/downloads/> — during setup tick **"Add python.exe to PATH"** |
+| Windows 11 (Windows 10 also works) | the provided installer and scripts | – |
+| **Python 3.11 or newer** | running EDEN | <https://www.python.org/downloads/>: during setup tick **"Add python.exe to PATH"** |
 | Node.js 20+ | *only* when building from source | <https://nodejs.org/> |
 | Git | *only* when cloning | <https://git-scm.com/> |
 | A modern browser (Edge, Chrome, Firefox) | using EDEN | – |
-| Internet | map imagery and place search (editing stored data works offline) | – |
+| Internet | the first install (Python packages), map imagery, place search, and the optional weather forecast | – |
 
 Check Python: open PowerShell and run `py -3 --version` (or `python --version`). You should see 3.11 or higher.
 
-## 2. Install
+## 2. Install (recommended: the installer)
 
-### Option A — from GitHub (source)
+1. Download `EdenSmartEstate-1.0.0.zip` from the project's **Releases** page.
+2. Right-click → *Extract All…* (any temporary folder is fine, for example Downloads).
+3. Double-click **`Install-EDEN.cmd`**.
+
+It needs **no administrator rights**. It:
+
+- copies the program to `%LOCALAPPDATA%\EDEN\app` and creates its private Python environment (internet needed this first time);
+- keeps **your data in `%LOCALAPPDATA%\EDEN\data`**, separate from the program, so updates and re-installs never touch it;
+- adds a Start Menu folder *EDEN Smart Estate* (start, data folder, uninstall) and an entry in Windows *Settings → Apps → Installed apps*;
+- offers to start EDEN right away.
+
+Options (run in PowerShell from the extracted folder):
 
 ```powershell
-git clone https://github.com/unupunct/Eden-Smart-Estate.git
-cd Eden-Smart-Estate
-powershell -ExecutionPolicy Bypass -File scripts\install.ps1
+powershell -ExecutionPolicy Bypass -File scripts\setup.ps1 -Autostart          # also start EDEN when you sign in
+powershell -ExecutionPolicy Bypass -File scripts\setup.ps1 -DesktopShortcut    # add a desktop icon
+powershell -ExecutionPolicy Bypass -File scripts\setup.ps1 -InstallDir D:\EDEN # another folder
+powershell -ExecutionPolicy Bypass -File scripts\setup.ps1 -Portable           # copy only: no shortcuts, no registry entries
 ```
 
-`install.ps1` creates a private Python environment in `backend\.venv`, installs the backend dependencies, and builds the web app (needs Node.js; takes about a minute).
+> **Why `-ExecutionPolicy Bypass`?** Windows blocks unsigned scripts by default. This flag allows just that one run and changes no system setting. The scripts in `scripts\` are short: read them first if you like. `Install-EDEN.cmd` simply runs `scripts\setup.ps1` this way.
 
-### Option B — release zip (no Node.js needed)
+If you used EDEN straight from an unzipped folder before (data in its `data` folder), the installer copies that data into the new data folder once.
 
-1. Download `EdenSmartEstate-0.5.0.zip` from the project's **Releases** page.
-2. Right-click → *Extract All…* into a folder you will keep, for example `C:\Eden`.
-3. Open PowerShell in that folder and run:
+### Alternative: run from the folder, without installing
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\install.ps1
-```
-
-The zip already contains the built web app, so only Python is required.
-
-> **Why `-ExecutionPolicy Bypass`?** Windows blocks unsigned scripts by default. This flag allows just that one run; it changes no system setting. You can read the scripts in `scripts\` first — they are short.
-
-## 3. Start EDEN
-
-```powershell
+powershell -ExecutionPolicy Bypass -File scripts\install.ps1   # once: creates the Python environment (builds the web app too if you cloned the source)
 powershell -ExecutionPolicy Bypass -File scripts\start.ps1
 ```
 
-Your browser opens at **<http://127.0.0.1:8787>**. Leave the PowerShell window open while you use EDEN; press **Ctrl+C** in it to stop.
+From GitHub: `git clone https://github.com/unupunct/Eden-Smart-Estate.git`, then the same two commands (Node.js is needed for the build).
 
-Options:
+## 3. Start EDEN
+
+From the Start Menu: **EDEN Smart Estate**. A small console window opens (minimised): it *is* the server, so leave it open while you use EDEN and close it to stop. The browser opens at **<http://127.0.0.1:8787>**.
+
+Options for `start.ps1` / `EDEN.cmd`:
 
 | Command | Effect |
 |---|---|
-| `scripts\start.ps1 -Port 9000` | use another port |
-| `scripts\start.ps1 -NoBrowser` | do not open the browser |
-| `scripts\start.ps1 -DataDir D:\EdenData` | keep your data in another folder (for example a synced or backed-up drive) |
-| `scripts\start.ps1 -Lan` | also reachable from phones/tablets/PCs on your network (see below) |
+| `-Port 9000` | use another port |
+| `-NoBrowser` | do not open the browser |
+| `-DataDir D:\EdenData` | keep your data in another folder (for example a synced or backed-up drive) |
+| `-Password …` | protect the estate with a password, also on this computer only |
+| `-Lan` | also reachable from phones/tablets/PCs on your network: **asks you for a password** (see section 6) |
 
 ## 4. First steps
 
@@ -69,18 +75,20 @@ Delete the demo whenever you like: *Estate Overview → trash icon on the demo c
 
 ## 5. Where your data lives
 
-By default in the `data` folder inside the EDEN folder:
+With the installer: `%LOCALAPPDATA%\EDEN\data` (Start Menu → *EDEN data folder*). Running from a folder: the `data` folder inside it.
 
 ```
 data/
-  eden.db        your whole model (SQLite)
-  uploads/       images you imported
+  eden.db        your whole model: properties, objects, tasks, devices, automations, settings (SQLite)
+  uploads/       imported images, photos and documents
   backups/       automatic safety copies made before a restore
 ```
 
-Updating EDEN never touches `data/`. Database changes are applied automatically at start-up by numbered migrations, and your existing data is kept.
+Database changes are applied automatically at start-up by numbered migrations; your data is kept.
 
-**Back up** from *Settings → Backup and restore → Download full backup* (one .zip with the database and every image), or simply copy the `data` folder while EDEN is stopped. **Restore** from the same screen; a safety copy of the current state is saved first.
+**Back up** from *Settings → Backup and restore → Download full backup* (one .zip with the database and every file), or copy the `data` folder while EDEN is stopped. **Restore** from the same screen; a safety copy of the current state is saved first.
+
+> A backup contains everything, **including stored credentials** (Home Assistant token, MQTT and camera passwords, imagery keys). Keep backups private.
 
 ## 6. Use from a tablet or another computer (LAN)
 
@@ -88,23 +96,17 @@ Updating EDEN never touches `data/`. Database changes are applied automatically 
 powershell -ExecutionPolicy Bypass -File scripts\start.ps1 -Lan
 ```
 
-The script prints addresses such as `http://192.168.1.20:8787`; open one on the other device (same Wi-Fi/network).
+EDEN asks you to choose a **password** (at least 8 characters) and prints addresses such as `http://192.168.1.20:8787`. Open one on the other device (same Wi-Fi/network) and sign in. Without `-Lan`, EDEN listens on this computer only.
 
-- **EDEN has no login yet.** In LAN mode anyone on your network can view *and change* your estate. Use only at home on a trusted network, never on public Wi-Fi, and never forward the port to the internet.
-- Windows Firewall asks whether to allow Python on private networks — allow **private** only.
-- Stop LAN mode by closing the window and starting normally without `-Lan`.
+- LAN mode lets other devices **operate your connected devices**, so a password is required. `-NoPassword` skips it: only for a network you fully trust.
+- The password protects the app and its API (cookie sessions, lock-out after repeated wrong tries). It travels **unencrypted over your network (plain HTTP)**: use it at home, never on public Wi-Fi, and **never forward the port to the internet**. For remote access use a VPN.
+- To set a password permanently without typing it each time, set the `EDEN_PASSWORD` environment variable before starting.
+- Windows Firewall asks whether to allow Python on private networks: allow **private** only.
+- See [SECURITY.md](../SECURITY.md) for the details and limits.
 
-## 7. Start automatically at sign-in (optional)
+## 7. Start automatically at sign-in
 
-Create a scheduled task that runs EDEN hidden when you log in (adjust the path):
-
-```powershell
-$a = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\Eden\scripts\start.ps1" -NoBrowser'
-$t = New-ScheduledTaskTrigger -AtLogOn
-Register-ScheduledTask -TaskName 'EDEN Smart Estate' -Action $a -Trigger $t -Description 'Starts the EDEN server'
-```
-
-Then open <http://127.0.0.1:8787> any time. Remove it with `Unregister-ScheduledTask -TaskName 'EDEN Smart Estate' -Confirm:$false`.
+Install with `-Autostart` (section 2), or re-run setup with it later: it only adds a Startup shortcut. To stop autostarting, run setup again without `-Autostart`.
 
 ## 8. Choose your imagery provider (optional)
 
@@ -112,38 +114,23 @@ Out of the box EDEN uses **Esri World Imagery** with attribution and needs no ke
 
 - Add a **MapTiler** key (free tier at maptiler.com) for higher zoom levels and your own usage quota. The key is stored in the local database and used only by the server.
 - Use any **custom XYZ tile server** (for example your own drone imagery host).
-- Lower Esri's *deepest zoom level* if you see grey “Map data not yet available” tiles (coverage depth varies by region).
+- Lower Esri's *deepest zoom level* if you see grey "Map data not yet available" tiles (coverage depth varies by region).
 
-If no suitable imagery exists, import your own aerial photo or plan and calibrate it — see the user guide.
+If no suitable imagery exists, import your own aerial photo or plan and calibrate it: see the user guide.
 
 ## 9. Update
 
-Source install:
+**Installed version:** extract the new zip and double-click `Install-EDEN.cmd` again. It stops EDEN if it is running, replaces the program, keeps the Python environment and **all your data**, and runs database migrations at the next start.
 
-```powershell
-git pull
-powershell -ExecutionPolicy Bypass -File scripts\install.ps1
-```
-
-Release zip: extract the new version into a *new* folder, run `install.ps1`, then copy your old `data` folder into the new one (or start with `-DataDir` pointing at it). Your data is migrated automatically on first start.
+**Run-from-folder / source:** `git pull` (or extract the new zip into a *new* folder), run `scripts\install.ps1`, and start with `-DataDir` pointing at your old data folder (or copy `data` across).
 
 ## 10. Uninstall
 
-Close EDEN, make a backup if you want to keep your work, then delete the EDEN folder (and the scheduled task if you created one). EDEN installs nothing system-wide.
+Start Menu → *EDEN Smart Estate → Uninstall EDEN* (or *Installed apps → EDEN Smart Estate → Uninstall*). It removes the program, shortcuts and registry entry, and asks whether to delete your data as well (default: **keep**; deleting needs you to type `DELETE`). Make a backup first if you are unsure. EDEN installs nothing system-wide and needs no administrator rights to remove.
 
 ## 11. Troubleshooting
 
-| Symptom | Fix |
-|---|---|
-| *"Python 3.11 or newer was not found"* | Install Python from python.org with *Add to PATH*, then open a **new** PowerShell window. |
-| *"running scripts is disabled on this system"* | Use the `powershell -ExecutionPolicy Bypass -File …` form shown above. |
-| *"Cannot reach the EDEN server"* in the browser | The server window was closed. Run `scripts\start.ps1` again. |
-| Port already in use | `scripts\start.ps1 -Port 8788` |
-| Grey tiles with "Map data not yet available" | Settings → lower the Esri deepest zoom (e.g. 16 or 17), or add a MapTiler key. |
-| Map is blank / dark | You are offline or the provider blocked the request. Switch to *Blank grid* in the layer menu and use an imported image, or check your connection. |
-| Place search says "Geocoder unavailable" | Enter coordinates as `lat, lng` instead. |
-| `npm ci` fails | Use Node.js 20 or newer. |
-| Want to see errors | Start with `scripts\start.ps1` and read the PowerShell window; the browser console (F12) shows front-end errors. |
+See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for symptoms and fixes (Python not found, scripts blocked, port in use, grey map tiles, devices that do not connect, and more).
 
 ## 12. macOS / Linux (manual, untested by the author)
 
@@ -153,7 +140,7 @@ The Windows scripts are conveniences; EDEN itself is cross-platform Python + Nod
 git clone https://github.com/unupunct/Eden-Smart-Estate.git && cd Eden-Smart-Estate
 python3 -m venv backend/.venv && backend/.venv/bin/pip install -r backend/requirements.txt
 (cd frontend && npm ci && npm run build)
-cd backend && .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8787
+cd backend && EDEN_PASSWORD='choose-a-password' .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8787
 ```
 
-Then open <http://127.0.0.1:8787>.
+Then open <http://127.0.0.1:8787>. (Omit `EDEN_PASSWORD` to run without a login on this computer only.)

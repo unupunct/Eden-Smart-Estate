@@ -86,7 +86,7 @@ The undoable document is `{ layers, objects }`. Updates are immutable, so histor
 
 - Binds to `127.0.0.1` by default. There is **no authentication** yet; `-Lan` exposes full edit access to the network (documented prominently).
 - API keys, Home Assistant tokens, MQTT and camera passwords are stored in the local database (`secrets` table) and used only server-side; they are never returned by the API nor logged. **They are included in a full backup file**, so treat backups as private.
-- With no login, **anyone who can reach the server can operate the connected devices** (including risky ones, which only ask the browser for a confirmation flag). Keep EDEN on `127.0.0.1` unless the whole network is trusted.
+- Without a password, **anyone who can reach the server can operate the connected devices**: EDEN therefore listens on `127.0.0.1` by default and `-Lan` requires a password. With `EDEN_PASSWORD` set, `auth.py` guards every `/api` route (signed HttpOnly SameSite=Strict session cookie, HMAC key derived from the password, per-address lock-out, `Origin` check on writes). Traffic is still plain HTTP: see `SECURITY.md`.
 - Uploads: image MIME whitelist, size limit (40 MB), server-generated file names (no path traversal). Backup restore validates the archive, verifies the database opens, takes a safety copy first, and only extracts files directly under `uploads/`.
 - The tile proxy only forwards requests to the provider URL configured by the user.
 
@@ -166,14 +166,18 @@ Server side (migration `0003_manage.sql`, module `manage.py`):
 - **Weather:** opt-in setting (`weather_enabled`), fixed provider URL (overridable by `EDEN_WEATHER_URL` for tests), 20-minute cache, stale fallback flagged `stale: true` with the original fetch time, `502` when nothing real exists. Only the parts EDEN shows are stored.
 - Frontend: `manage/logic.ts` (urgency, due wording, WMO weather codes, facts derived from forecast numbers), `manage/store.ts`, `reports/build.ts` (a pure function from the data to report sections, so honest "nothing to report" wording is unit-tested); pages `Tasks`, `Documents`, `Weather`, `Reports`; `ObjectManage` shows tasks and attachments in an object's panel.
 
+## Startup performance and resilience (v1.0)
+
+The first-load script is about 190 kB: pages are `React.lazy` chunks and the map engine (MapLibre) is only fetched when a map page opens, so the overview, tasks, documents, weather and reports pages appear without it. A page that throws is caught by an error boundary (message + *Reload*) keyed to the route, so the menu keeps working. `src/perf.test.ts` builds a 3000-object estate and asserts generous time limits for map features, 3D extrusions, the autosave diff, shadow projection, sun hours and the heat map.
+
 ## Where the 28-section specification stands
 
 | Spec section | State |
 |---|---|
 | 2 Platform/tech, 20 data model (core entities), 22 import/export (GeoJSON, KML, CSV, JSON, images, backup) | ✅ implemented |
-| 3 Control Center (navigation, overview) | ✅ shell, overview with real statistics; widgets customisation planned |
+| 3 Control Center (navigation, overview) | ✅ shell, overview with real statistics, sun/moon, tasks, weather, devices; no customisable widgets |
 | 4 Property editor, 4.1 imagery + calibration, 4.2 boundary/measurements, 4.3 layers, 5 object editor | ✅ implemented (photos/documents/maintenance schedules planned with Phase 6) |
-| 5.1/5.2 building editor and 3D | ✅ footprints, properties, extrusion; detail page and roof geometry planned |
+| 5.1/5.2 building editor and 3D | ✅ footprints, properties, extrusion, Buildings page (floors, floor area, services, devices inside, tasks, files); no roof geometry, no interior floor plans |
 | 6 Fences & infrastructure | ✅ fences, gates, roads, paths, pipes, cables; sections computed |
 | 7–10 Garden, orchard, greenhouse, pond | ✅ planting plans, companion checks, orchard records/pollination/grid, greenhouse layout and targets, pond planning with fish and water-quality log (live monitoring/automation planned, Phase 5) |
 | 11 Plant & mushroom library | ◐ curated starter set (100 plants, 25 aquatic, 10 fish, 26 mushrooms, 49 relationships) with evidence levels; no photographs; broader sourced data welcome |

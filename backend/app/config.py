@@ -12,6 +12,7 @@ FRONTEND_DIST = ROOT / "frontend" / "dist"
 GEOCODER_URL = os.environ.get("EDEN_GEOCODER_URL", "https://nominatim.openstreetmap.org/search")
 USER_AGENT = "EdenSmartEstate/0.1 (self-hosted property editor)"
 MAX_UPLOAD_BYTES = 40 * 1024 * 1024
+PASSWORD = os.environ.get("EDEN_PASSWORD", "")  # empty = no login (local-only default)
 WEATHER_URL = os.environ.get("EDEN_WEATHER_URL", "https://api.open-meteo.com/v1/forecast")
 POLL_SECONDS = float(os.environ.get("EDEN_POLL_SECONDS", "15"))  # 0 disables the background poller
 

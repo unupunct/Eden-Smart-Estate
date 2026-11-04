@@ -94,6 +94,18 @@ Keys are **write-only**: `GET /api/settings` only reports `hasMaptilerKey: true/
 
 Rule JSON: triggers `{"type":"state","deviceId","to"|"above"|"below"}` or `{"type":"time","at":"07:30","days":[0..6]}`; conditions `{"type":"state","deviceId","op":"eq|ne|gt|lt","value"}` or `{"type":"time","after","before"}`; actions `{"type":"device","deviceId","service"}` or `{"type":"log","message"}`.
 
+## Authentication (v1.0)
+
+Off unless the server was started with `EDEN_PASSWORD` (or `start.ps1 -Password`/`-Lan`). When on, every `/api` request except `/api/health` and `/api/auth/*` needs the session cookie and otherwise answers `401 {"detail":"Login required"}`.
+
+| Method & path | Purpose |
+|---|---|
+| `GET /api/auth/status` | `{required, authenticated}` |
+| `POST /api/auth/login` | `{password}`: `200` + HttpOnly SameSite=Strict cookie; `401` wrong password; `429` locked out for 5 minutes after 5 failures |
+| `POST /api/auth/logout` | clears the cookie |
+
+Writes carrying a foreign `Origin` header are refused (`403`) while protection is on.
+
 ## Management endpoints (v0.5)
 
 | Method & path | Purpose |

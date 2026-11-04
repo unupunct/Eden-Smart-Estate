@@ -41,7 +41,7 @@ export function GardenPage() {
       <h2 className="sect">Garden beds</h2>
       <div className="glass tablewrap">
         <table>
-          <thead><tr><th>Bed</th><th>Area</th><th>Plantings</th><th>Plants</th><th>Companion check</th><th /></tr></thead>
+          <thead><tr><th>Bed</th><th>Area</th><th>Plantings</th><th>Plants</th><th>Companion check</th><th><span className="sr-only">Actions</span></th></tr></thead>
           <tbody>
             {beds.map((b) => {
               const plantings: Planting[] = Array.isArray(b.props.plantings) ? (b.props.plantings as Planting[]) : []
@@ -117,7 +117,7 @@ export function OrchardPage() {
       </div>
       <h2 className="sect">Trees</h2>
       <div className="glass tablewrap">
-        <table><thead><tr><th>Tree</th><th>Variety</th><th>Age</th><th>Canopy now / mature</th><th>Pollination</th><th /></tr></thead>
+        <table><thead><tr><th>Tree</th><th>Variety</th><th>Age</th><th>Canopy now / mature</th><th>Pollination</th><th><span className="sr-only">Actions</span></th></tr></thead>
           <tbody>{trees.map((t) => {
             const sp = typeof t.props.speciesId === 'string' ? ix.plants.get(t.props.speciesId) : undefined
             const age = treeAge(t.props.plantedYear)

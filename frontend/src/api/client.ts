@@ -13,6 +13,10 @@ async function req<T>(path: string, init?: RequestInit): Promise<T> {
   } catch {
     throw new ApiError(0, 'Cannot reach the EDEN server. Is it running?')
   }
+  if (res.status === 401 && path !== '/api/auth/login') {
+    location.reload() // the session ended: the app shows the sign-in screen
+    throw new ApiError(401, 'Login required')
+  }
   if (!res.ok) {
     let msg = res.statusText
     try {

@@ -71,6 +71,7 @@ function SkyInner({ property }: { property: PropertyMeta }) {
 
   return (
     <div className="skypage">
+      <h1 className="sr-only">Night sky</h1>
       <div className="skywrap glass">
         <SkyCanvas sky={sky} colors={colors} lines={lines} names={names} daylight={daylight} southern={lat < 0} onHover={setHover} />
         <div className="skyhud">

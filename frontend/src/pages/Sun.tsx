@@ -152,6 +152,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
 
   return (
     <div className="sunpage">
+      <h1 className="sr-only">Sun and shadows</h1>
       <div className="center"><MapView property={property} /></div>
       <aside className="sidepanel glass">
         <div className="objhead"><Sun size={18} /><h3>Sun &amp; Shadows</h3></div>

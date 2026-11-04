@@ -101,7 +101,7 @@ export function SettingsPage() {
 
       <section className="glass formcard">
         <h2>About</h2>
-        <p><strong>EDEN — Smart Estate</strong> v0.5.0 · Phases 1–6: map, property editor, landscape design, plant library, sun and shadows, night sky, smart home, cameras, automations, tasks, documents, weather and reports.</p>
+        <p><strong>EDEN — Smart Estate</strong> v1.0.0 · map, property editor, landscape design, plant library, sun and shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports and optional password protection.</p>
         <p className="note">Units are metric. Areas and distances are geodesic (on the WGS84 sphere), so they stay correct at any zoom and map layer.</p>
       </section>
     </div>

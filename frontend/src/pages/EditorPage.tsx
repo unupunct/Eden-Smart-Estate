@@ -30,6 +30,7 @@ export function EditorPage() {
   }
   return (
     <div className="editor">
+      <h1 className="sr-only">Property editor: {property.name}</h1>
       <TopBar />
       <div className="editor-body">
         <LeftPanel />

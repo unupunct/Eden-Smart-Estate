@@ -93,7 +93,7 @@ export function SmartHomePage() {
       <h2 className="sect">Devices</h2>
       <div className="glass tablewrap">
         <table>
-          <thead><tr><th>Device</th><th>Type</th><th>Reported state</th><th>Map object</th><th>Controls</th><th /></tr></thead>
+          <thead><tr><th>Device</th><th>Type</th><th>Reported state</th><th>Map object</th><th>Controls</th><th><span className="sr-only">Actions</span></th></tr></thead>
           <tbody>
             {devices.map((d) => <DeviceRow key={d.id} d={d} onChange={() => void load()} onErr={setErr} />)}
             {!devices.length && <tr><td colSpan={6} className="empty">No devices yet. Connect an integration above{hasMqtt ? ' and add MQTT topics below' : ''}.</td></tr>}
