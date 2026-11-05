@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { polygonArea } from '../geo/measure'
 import { fromLocal, toLocal } from '../geo/transform'
 import type { Doc, EdenObject, Geom, Pos } from '../model/types'
-import { buildCasters, foliageDensity, growingSeasonKeys, heatGrid, leafFactor, lightAt, lightClass, possibleHours, samplePolygon, shadowFeatures, sunHours, sunVector, sweepAll, type Caster, type XY } from './shadows'
+import { buildCasters, foliageDensity, growingSeasonKeys, heatGrid, leafFactor, lightAt, lightClass, longAxisBearing, possibleHours, samplePolygon, shadowFeatures, sunHours, sunVector, sweepAll, type Caster, type XY } from './shadows'
 import { fromWall } from './tz'
 
 const O: Pos = [24.05, 46.05]
@@ -176,5 +176,51 @@ describe('sun hours', () => {
     expect(g.cells.length).toBeGreaterThan(100)
     const under = g.cells.reduce((m, c) => Math.min(m, c.hours), 99)
     expect(under).toBeLessThan(possibleHours(a, b, O))
+  })
+})
+
+describe('pitched roofs', () => {
+  const house = (props: Record<string, unknown>) => casters(docOf(obj('h', 'building', poly(box(0, 0, 10, 6)), { height: 7, ...props })))
+  const v = sunVector(180, 30)! // sun due south, 30 deg: shadow factor 1.732 to the north
+
+  it('a gable roof casts a shorter shadow than the same building as a box', () => {
+    const flat = house({ roofType: 'flat' })
+    const gable = house({ roofType: 'gable' }) // wall height defaults to 7 - 0.25 x 6 = 5.5; ridge along the long (east-west) side
+    expect(lit(flat, v, [0, 14])).toBe(0) // box: 3 + 7 x 1.732 = 15.1 m
+    expect(lit(gable, v, [0, 14])).toBe(1) // gable: tip at 3 + 5.5 x 1.732 = 12.5 m
+    expect(lit(gable, v, [0, 11])).toBe(0)
+    expect(lit(gable, v, [0, 3.5])).toBe(0)
+  })
+  it('splits into walls and a roof volume, and the merged shadow polygon is smaller than the box one', () => {
+    const area = (cs: Caster[]) => shadowFeatures(cs, v, O).dense.reduce((s, x) => s + polygonArea((x.geometry as GeoJSON.Polygon).coordinates as Pos[][]), 0)
+    const gable = house({ roofType: 'gable' })
+    expect(gable.map((c) => c.shape.type).sort()).toEqual(['hull3', 'poly'])
+    expect(area(gable)).toBeLessThan(area(house({ roofType: 'flat' })) - 10)
+    expect(area(gable)).toBeGreaterThan(100)
+  })
+  it('uses the wall height when given', () => {
+    const tall = house({ roofType: 'gable', eaveHeight: 6.5 }) // rise 0.5: nearly a box
+    expect(lit(tall, v, [0, 14])).toBe(0)
+    expect(house({ roofType: 'gable', eaveHeight: 7 })[0].shape.type).toBe('poly') // no rise: a box
+  })
+  it('hip roofs and ridge direction work; a shed roof needs its direction or stays a box', () => {
+    expect(lit(house({ roofType: 'hip' }), v, [0, 14])).toBe(1)
+    expect(house({ roofType: 'shed' }).map((c) => c.shape.type)).toEqual(['poly']) // direction unknown: safe overestimate
+    const shed = house({ roofType: 'shed', roofOrientation: 90 })
+    expect(shed.map((c) => c.shape.type).sort()).toEqual(['hull3', 'poly'])
+    // ridge across the house (bearing 0, north-south): the shadow to the north is then the full short end, like a box edge
+    const across = house({ roofType: 'gable', roofOrientation: 0 })
+    expect(lit(across, v, [0, 14])).toBe(0)
+  })
+  it('long-axis detection follows the footprint', () => {
+    expect(longAxisBearing(box(0, 0, 12, 4))).toBe(90) // long side east-west
+    expect(longAxisBearing(box(0, 0, 4, 12))).toBe(0) // long side north-south
+  })
+  it('a pitched house gives the ground behind it more winter sun than a box would', () => {
+    const start = fromWall({ y: 2025, mo: 12, d: 21, h: 0, mi: 0 }, 'Europe/Bucharest')
+    const end = fromWall({ y: 2025, mo: 12, d: 22, h: 0, mi: 0 }, 'Europe/Bucharest')
+    const [boxH] = sunHours(house({ roofType: 'flat' }), [[0, 19]], start, end, O)
+    const [gableH] = sunHours(house({ roofType: 'gable' }), [[0, 19]], start, end, O)
+    expect(gableH).toBeGreaterThan(boxH)
   })
 })

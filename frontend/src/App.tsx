@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Bell, BookOpen, Box, Camera, ChevronsLeft, ChevronsRight, ClipboardList, CloudSun, Cpu, FileBarChart, Droplets, FileText, Flower2, Home, LayoutDashboard, LogOut, Map as MapIcon, Moon, Settings, Sprout, Sun, TreeDeciduous, Warehouse, Zap } from 'lucide-react'
+import { Bell, BookOpen, Box, Camera, ChevronsLeft, ChevronsRight, ClipboardList, CloudSun, Cpu, FileBarChart, Droplets, FileText, Flower2, Home, LayoutDashboard, LogOut, Search, Map as MapIcon, Moon, Settings, Sprout, Sun, TreeDeciduous, Warehouse, Zap } from 'lucide-react'
 import { startAutosave } from './model/autosave'
 import { useLibrary } from './library/store'
 import { useApp, type Route } from './model/app'
@@ -28,6 +28,8 @@ const ReportsPage = lazy(() => import('./pages/Reports').then((m) => ({ default:
 import { ErrorBoundary } from './ErrorBoundary'
 import { LoginScreen } from './Login'
 import { useManage } from './manage/store'
+import { useReminders } from './manage/reminders'
+import { SearchPalette } from './search/SearchPalette'
 import { useSmart } from './smart/store'
 
 const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean }[] = [
@@ -54,6 +56,18 @@ const NAV: { route: Route; label: string; icon: React.ReactNode; live?: boolean 
 export default function App() {
   const { route, go, collapsed, toggleSidebar, booting, serverError, dialog, boot } = useApp()
   const currentId = useApp((s) => s.currentId)
+  useReminders()
+  const [searching, setSearching] = useState(false)
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setSearching((s) => !s)
+      }
+    }
+    window.addEventListener('keydown', h)
+    return () => window.removeEventListener('keydown', h)
+  }, [])
   const [auth, setAuth] = useState<'checking' | 'login' | 'ok'>('checking')
   const [authRequired, setAuthRequired] = useState(false)
   useEffect(() => {
@@ -91,6 +105,7 @@ export default function App() {
           <span className="logo"><Home size={18} /></span>
           {!collapsed && <div><strong>EDEN</strong><small>Smart Estate</small></div>}
         </div>
+        <button className="navitem" onClick={() => setSearching(true)} title="Search everything (Ctrl+K)"><Search size={18} />{!collapsed && <><span>Search</span><i className="soon">Ctrl K</i></>}</button>
         <div className="navlist">
           {NAV.map((n) => (
             <button key={n.route} className={`navitem ${route === n.route ? 'on' : ''}`} onClick={() => go(n.route)} title={n.label}>
@@ -140,6 +155,7 @@ export default function App() {
         </Suspense>
         </ErrorBoundary>
       </main>
+      <SearchPalette open={searching} onClose={() => setSearching(false)} />
       {dialog === 'new-property' && <NewPropertyDialog />}
       {dialog === 'image-import' && <Suspense fallback={null}><ImageImportDialog /></Suspense>}
     </div>

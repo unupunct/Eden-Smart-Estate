@@ -19,6 +19,7 @@ export type XY = [number, number]
 export type Shape =
   | { type: 'poly'; ring: XY[] } // convex or concave footprint, open ring
   | { type: 'disk'; c: XY; r: number }
+  | { type: 'hull3'; pts: [number, number, number][] } // convex volume given by its corner points (pitched roofs)
 
 export interface Caster {
   id: string
@@ -62,6 +63,64 @@ function bboxOf(pts: XY[]): Caster['bbox'] {
   return [a, b, c, d]
 }
 
+const toFinite = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null)
+
+/** Direction of the longest side of the footprint's smallest enclosing rectangle, as a compass bearing in [0, 180). */
+export function longAxisBearing(ring: XY[]): number {
+  let best = { area: Infinity, bearing: 0 }
+  for (let deg = 0; deg < 180; deg += 1) {
+    const a = (deg * Math.PI) / 180
+    const c = Math.cos(a), s = Math.sin(a)
+    const us = ring.map(([x, y]) => x * c + y * s), vs = ring.map(([x, y]) => -x * s + y * c)
+    const w = Math.max(...us) - Math.min(...us), h = Math.max(...vs) - Math.min(...vs)
+    if (w * h < best.area - 1e-9) {
+      const ang = w >= h ? deg : deg + 90
+      best = { area: w * h, bearing: (((90 - ang) % 180) + 180) % 180 }
+    }
+  }
+  return best.bearing
+}
+
+/**
+ * A pitched roof as a convex volume. \`height\` is the overall height (to the ridge). The wall (eave) height is
+ * \`eaveHeight\` if given, otherwise the roof rise is assumed: 25 % of the building's width for gable/hip, 30 % for mansard.
+ * The ridge runs along \`roofOrientation\` (a compass bearing) or the long side. A shed roof is only modelled when its direction
+ * is given (otherwise the building stays a box, which is the safe overestimate). Returns null for flat or unknown roofs.
+ */
+export function pitchedRoof(ring: XY[], height: number, props: Record<string, unknown>): { eave: number; pts: [number, number, number][] } | null {
+  const type = typeof props.roofType === 'string' ? props.roofType : 'flat'
+  if (!['gable', 'hip', 'mansard', 'shed'].includes(type) || height < 1.5 || ring.length < 3) return null
+  const bearingProp = toFinite(props.roofOrientation)
+  if (type === 'shed' && bearingProp === null) return null
+  const b = (((bearingProp ?? longAxisBearing(ring)) % 360) * Math.PI) / 180
+  const ux = Math.sin(b), uy = Math.cos(b) // ridge direction (x east, y north)
+  const vx = Math.cos(b), vy = -Math.sin(b) // across the ridge
+  const us = ring.map(([x, y]) => x * ux + y * uy), vs = ring.map(([x, y]) => x * vx + y * vy)
+  const umin = Math.min(...us), umax = Math.max(...us), vmin = Math.min(...vs), vmax = Math.max(...vs)
+  const span = vmax - vmin
+  if (span < 1) return null
+  const eaveGiven = toFinite(props.eaveHeight)
+  const factor = type === 'shed' ? 0.15 : type === 'mansard' ? 0.3 : 0.25
+  let rise = eaveGiven !== null ? height - Math.min(Math.max(eaveGiven, 0.3), height) : span * factor
+  rise = Math.max(0, Math.min(rise, height * 0.6))
+  if (rise < 0.2) return null
+  const eave = height - rise
+  const at = (u: number, v: number): XY => [u * ux + v * vx, u * uy + v * vy]
+  const pts: [number, number, number][] = []
+  if (type === 'shed') {
+    ring.forEach(([x, y], i) => pts.push([x, y, eave + (rise * (vs[i] - vmin)) / span]))
+  } else {
+    ring.forEach(([x, y]) => pts.push([x, y, eave]))
+    const inset = type === 'gable' ? 0 : Math.min(span / 2, (umax - umin) / 2)
+    const vm = (vmin + vmax) / 2
+    for (const u of [umin + inset, umax - inset]) {
+      const [x, y] = at(u, vm)
+      pts.push([x, y, height])
+    }
+  }
+  return { eave, pts }
+}
+
 export interface CasterOptions {
   leaf: number // 0..1 foliage state for the date being analysed
   ix: LibraryIndex | null
@@ -82,7 +141,13 @@ export function buildCasters(doc: Doc, origin: Pos, opts: CasterOptions): Caster
       const ring = g.coordinates[0].slice(0, -1).map(local)
       if (ring.length < 3) continue
       const density = o.kind === 'greenhouse' ? GLAZING_DENSITY : 1
-      out.push({ id: o.id, kind: o.kind, density, shape: { type: 'poly', ring }, zb: def.extrude.base ?? 0, zt, bbox: bboxOf(ring) })
+      const roof = o.kind === 'building' ? pitchedRoof(ring, zt, o.props) : null
+      if (roof) {
+        out.push({ id: o.id, kind: o.kind, density, shape: { type: 'poly', ring }, zb: 0, zt: roof.eave, bbox: bboxOf(ring) })
+        out.push({ id: o.id, kind: o.kind, density, shape: { type: 'hull3', pts: roof.pts }, zb: roof.eave, zt, bbox: bboxOf(ring) })
+      } else {
+        out.push({ id: o.id, kind: o.kind, density, shape: { type: 'poly', ring }, zb: def.extrude.base ?? 0, zt, bbox: bboxOf(ring) })
+      }
     } else if (def.extrude && g.type === 'Point' && def.radiusProp) {
       const zt = num(o.props[def.extrude.heightProp], def.extrude.fallback)
       const r = Math.max(0.3, num(o.props[def.radiusProp], 2) / 2)
@@ -154,18 +219,25 @@ export interface Swept {
   bx: number
   by: number
   box: [number, number, number, number] // bbox of the whole swept shadow
+  hull?: XY[] // projected outline of a convex 3D shape (pitched roofs)
 }
 
 function sweep(c: Caster, v: SunVector): Swept {
+  if (c.shape.type === 'hull3') {
+    const proj = hull(c.shape.pts.map(([x, y, z]) => [x + z * v.fx, y + z * v.fy] as XY))
+    return { c, ax: 0, ay: 0, bx: 0, by: 0, box: bboxOf(proj), hull: proj }
+  }
   const ax = c.zb * v.fx, ay = c.zb * v.fy, bx = c.zt * v.fx, by = c.zt * v.fy
   const [x0, y0, x1, y1] = c.bbox
   return { c, ax, ay, bx, by, box: [Math.min(x0 + ax, x0 + bx), Math.min(y0 + ay, y0 + by), Math.max(x1 + ax, x1 + bx), Math.max(y1 + ay, y1 + by)] }
 }
 
 function pointShadedBy(p: XY, s: Swept): boolean {
+  if (s.hull) return inPoly(p, s.hull)
   const q0: XY = [p[0] - s.ax, p[1] - s.ay]
   const q1: XY = [p[0] - s.bx, p[1] - s.by]
   const sh = s.c.shape
+  if (sh.type === 'hull3') return false
   if (sh.type === 'disk') return segDist(sh.c, q0, q1) <= sh.r
   if (inPoly(q0, sh.ring) || inPoly(q1, sh.ring)) return true
   const r = sh.ring
@@ -225,8 +297,10 @@ const circlePts = (c: XY, r: number, n = 20): XY[] =>
 
 /** Polygons (open rings) whose union is the swept shadow of a caster. */
 function pieces(s: Swept): XY[][] {
+  if (s.hull) return [s.hull]
   const sh = s.c.shape
   const moved = (ring: XY[], dx: number, dy: number) => ring.map((p) => [p[0] + dx, p[1] + dy] as XY)
+  if (sh.type === 'hull3') return []
   if (sh.type === 'disk') return [hull([...moved(circlePts(sh.c, sh.r), s.ax, s.ay), ...moved(circlePts(sh.c, sh.r), s.bx, s.by)])]
   const ring = sh.ring
   if (isConvex(ring)) return [hull([...moved(ring, s.ax, s.ay), ...moved(ring, s.bx, s.by)])]

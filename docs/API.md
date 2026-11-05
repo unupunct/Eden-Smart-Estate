@@ -114,7 +114,8 @@ Writes carrying a foreign `Origin` header are refused (`403`) while protection i
 | `POST /api/tasks/{id}/complete` | `{note?, completedOn?}`: records history; repeating tasks move to the next date, others become `done` |
 | `GET /api/tasks-history?propertyId=&objectId=&limit=` | completions |
 | `GET /api/properties/{id}/tasks.csv` | CSV export (formula-safe) |
-| `POST /api/documents` (multipart: `file`, `propertyId`, `objectId?`, `title?`, `tags?`, `note?`, `takenAt?`) | upload; `415` wrong type or content, `413` too large, `422` empty/bad date |
+| `GET /api/properties/{id}/tasks.ics` | calendar file: open dated tasks as all-day events with a 09:00 alarm, `RRULE` for repeats that follow the due date |
+| `POST /api/documents` (multipart: `file`, `propertyId`, `objectId?`, `title?`, `tags?`, `note?`, `takenAt?`, `stripMetadata?` default `true`) | upload; JPEG/PNG metadata is removed unless `stripMetadata=false`; the answer lists `metadataRemoved`; `415` wrong type or content, `413` too large, `422` empty/bad date |
 | `GET /api/documents?propertyId=&objectId=&q=&kind=photo\|document` · `PATCH/DELETE /api/documents/{id}` | list/search, edit metadata, delete (removes the file) |
 | `GET /api/documents/{id}/file[?download=true]` | the file, with `nosniff` and a sandbox CSP |
 | `GET/PUT /api/weather/settings` | `{enabled}`: weather is off by default |

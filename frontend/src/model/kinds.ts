@@ -121,7 +121,8 @@ export const KINDS: KindDef[] = [
     fields: [
       { key: 'buildingType', label: 'Type', type: 'select', section: 'Building', options: opts(['main_house'], ['old_house'], ['guest_house'], ['workshop'], ['garage'], ['storage'], ['barn'], ['chicken_coop'], ['animal_shelter'], ['tool_shed'], ['utility'], ['custom']) },
       { key: 'floors', label: 'Floors', type: 'number', min: 1, max: 10, step: 1, section: 'Building' },
-      { key: 'height', label: 'Height', type: 'number', unit: 'm', min: 0.5, step: 0.1, section: 'Building' },
+      { key: 'height', label: 'Height (to the ridge / top)', type: 'number', unit: 'm', min: 0.5, step: 0.1, section: 'Building' },
+      { key: 'eaveHeight', label: 'Wall (eave) height, optional', type: 'number', unit: 'm', min: 0.3, step: 0.1, section: 'Building' },
       { key: 'roofType', label: 'Roof type', type: 'select', options: ROOFS, section: 'Building' },
       { key: 'roofOrientation', label: 'Roof ridge bearing', type: 'number', unit: '°', min: 0, max: 360, section: 'Building' },
       { key: 'material', label: 'Exterior material', type: 'text', section: 'Building' },

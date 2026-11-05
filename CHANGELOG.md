@@ -2,6 +2,19 @@
 
 All notable changes. Versions follow the build phases of the project; 1.0.0 completes the original plan.
 
+## 1.1.0: MIT licence, privacy and fewer limits
+
+- **MIT licence** (`LICENSE`) and `THIRD_PARTY_NOTICES.md` (libraries, data services and their terms).
+- **Photo privacy:** GPS position, camera and date details, XMP/IPTC and comments are removed from JPEG and PNG photos on upload (the picture is not re-encoded; orientation is kept). Switchable per upload.
+- **HTTPS:** `start.ps1 -Https` serves EDEN over TLS with a self-signed certificate made on your computer (covers localhost, the computer's name and its LAN addresses, renews itself, fingerprint shown at start-up); the session cookie becomes `Secure`. Resolves the plain-HTTP limit of 1.0.
+- **Global search (Ctrl+K):** one search over pages, map objects, the plant library (Romanian names without diacritics work), tasks, documents, devices, automations, cameras and integrations.
+- **Calendar and reminders:** export open tasks as a calendar file (`.ics`, with repeats and a 09:00 alarm) for your phone's calendar, and optional browser notifications for overdue and due-today tasks.
+- **More accurate shadows:** gable, hip and mansard roofs (and shed roofs once their direction is set) now cast their real shape instead of a box; new optional *wall (eave) height* field on buildings.
+- **Real-broker MQTT test:** the MQTT integration is now tested against an actual broker with the real client, not only fakes.
+- **Setup:** offers to install Python through winget when it is missing.
+- With a password set, the interactive API documentation (`/docs`, `/redoc`, `/openapi.json`) needs the session as well.
+- Search palette and documents/library pages accept hints from search results; the start script prints the HTTPS fingerprint; tests grew to cover all of the above.
+
 ## 1.0.0: polish, security and installer (Phase 7)
 
 - **Windows installer:** `Install-EDEN.cmd` installs for the current user without administrator rights: program and Python environment in `%LOCALAPPDATA%\EDEN\app`, **data kept separately** in `...\EDEN\data`, Start Menu entries, an entry in *Installed apps*, optional autostart and desktop icon. Re-running it updates and keeps data. An uninstaller (keeps data unless you type `DELETE`) and an automated setup test (`scripts\test-setup.ps1`) are included.

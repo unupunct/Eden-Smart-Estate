@@ -253,7 +253,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
           <ul className="assume">
             <li>Sun and moon positions: standard astronomical formulas (sun to about 0.01°). Sunrise and sunset use the usual −0.833° (refraction and the sun's radius). Times follow the time zone chosen above.</li>
             <li>Ground is treated as flat: there is no terrain model, so a hill or a neighbour's house outside your property does not cast shade in this view.</li>
-            <li>Buildings and solar panels are boxes at the height you entered; pitched roofs therefore give slightly longer shadows than reality. Fences and hedges are walls of their entered height.</li>
+            <li>Buildings are walls plus a pitched roof (gable, hip, mansard; a shed roof once its direction is set): the height is to the ridge, the wall (eave) height is the optional field or, if empty, a roof rise of about a quarter of the building's width is assumed. Flat roofs, greenhouses and solar panels are boxes. Fences and hedges are walls of their entered height.</li>
             <li>Tree and bush crowns are cylinders from 30 % of the height up. Foliage blocks about {Math.round(0.75 * 100)} % of light in leaf, 20 % when bare; evergreens 85 % all year. Greenhouse glazing is assumed to pass 60 %. These are estimates, not measurements.</li>
             <li>Sun hours count direct light above 3° elevation, sampled every 15 minutes at a grid of points in each area.</li>
           </ul>

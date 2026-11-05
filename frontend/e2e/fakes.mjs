@@ -20,7 +20,7 @@ const chunk = (type, data) => {
 }
 
 /** A deliberately synthetic picture (colour bars and a diagonal), so nobody mistakes it for a real camera. */
-export function testPicture(w = 320, h = 180) {
+export function testPicture(w = 320, h = 180, comment = '') {
   const raw = Buffer.alloc((w * 3 + 1) * h)
   for (let y = 0; y < h; y++) {
     raw[y * (w * 3 + 1)] = 0
@@ -33,7 +33,7 @@ export function testPicture(w = 320, h = 180) {
     }
   }
   const ihdr = Buffer.alloc(13); ihdr.writeUInt32BE(w, 0); ihdr.writeUInt32BE(h, 4); ihdr[8] = 8; ihdr[9] = 2
-  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', ihdr), chunk('IDAT', deflateSync(raw)), chunk('IEND', Buffer.alloc(0))])
+  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', ihdr), ...(comment ? [chunk('tEXt', Buffer.from(`Comment\0${comment}`, 'latin1'))] : []), chunk('IDAT', deflateSync(raw)), chunk('IEND', Buffer.alloc(0))])
 }
 
 export async function startFakeHA(port, token = 'e2e-token') {

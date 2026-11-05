@@ -11,6 +11,8 @@
 | *"Cannot reach the EDEN server"* in the browser | The server window was closed. Start EDEN again from the Start Menu. |
 | The console window shows an error on start | Run `scripts\start.ps1` from PowerShell and read the message. A missing component usually means setup did not finish: run it again (your data is not affected). |
 | Setup says *"This folder does not contain the built web app"* | You ran it from a source checkout. Use the release zip, or run `scripts\install.ps1` (needs Node.js 20+). |
+| The browser warns about the certificate with `-Https` | Expected: the certificate is self-signed. Compare its SHA-256 fingerprint with the one printed in the console, then continue; or import `data\tls\eden-cert.pem` into the device's trusted certificates. After you add a new network address EDEN issues a new certificate (new fingerprint). |
+| Python is missing and winget did not install it | Install Python 3.11+ from python.org (tick *Add python.exe to PATH*), open a new window and run the installer again. |
 | Forgot the password | Stop EDEN and start it without `-Password`/`EDEN_PASSWORD` (this computer only), or with a new password: the password is never stored in the data. Your data is not affected. |
 
 ## Map and imagery
@@ -41,6 +43,7 @@
 |---|---|
 | Weather page says it is switched off | Weather is opt-in (it sends the rounded coordinates to Open-Meteo). Enable it on the Weather page. |
 | Weather shows "last real forecast … old" | The service could not be reached; EDEN keeps showing the last real answer with its time instead of guessing. |
+| A photo still shows its location somewhere | Only JPEG and PNG are cleaned, and only when *Remove location data from photos* was ticked at upload. Upload the photo again with it ticked (delete the old copy), or remove the metadata with another tool. |
 | An upload is refused | Only the listed file types are accepted, and the content must match the extension (a renamed file is rejected). Maximum 40 MB. |
 | I want to move my data to another computer | Download a full backup (*Settings*), install EDEN there, and restore it in *Settings*. |
 | I want to start over | Delete the properties from the Overview, or stop EDEN and delete the `data` folder (make a backup first). |

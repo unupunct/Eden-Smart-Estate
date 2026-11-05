@@ -1,6 +1,6 @@
 <# Builds release\EdenSmartEstate-<version>.zip: built web app + backend source + scripts + docs.
    The zip needs only Python 3.11+ on the target PC (no Node.js). #>
-param([string]$Version = '1.0.0')
+param([string]$Version = '1.1.0')
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 Push-Location (Join-Path $root 'frontend')
@@ -20,7 +20,7 @@ Copy-Item -Recurse -Force (Join-Path $root 'scripts') (Join-Path $stage 'scripts
 Copy-Item -Recurse -Force (Join-Path $root 'docs') (Join-Path $stage 'docs')
 Copy-Item (Join-Path $root 'README.md') $stage
 Copy-Item (Join-Path $root 'Install-EDEN.cmd') $stage
-foreach ($f in 'CHANGELOG.md', 'SECURITY.md') { if (Test-Path (Join-Path $root $f)) { Copy-Item (Join-Path $root $f) $stage } }
+foreach ($f in 'CHANGELOG.md', 'SECURITY.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md') { if (Test-Path (Join-Path $root $f)) { Copy-Item (Join-Path $root $f) $stage } }
 Set-Content -Path (Join-Path $stage 'VERSION') -Value $Version -Encoding ASCII
 Get-ChildItem -Recurse -Directory -Filter '__pycache__' $stage | Remove-Item -Recurse -Force
 Remove-Item -Force (Join-Path $stage 'scripts\dev.ps1'), (Join-Path $stage 'scripts\package.ps1'), (Join-Path $stage 'scripts\test.ps1'), (Join-Path $stage 'scripts\test-setup.ps1')

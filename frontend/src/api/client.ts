@@ -147,13 +147,14 @@ export const manageApi = {
   completeTask: (id: string, note = '', completedOn?: string) => req<Task>(`/api/tasks/${id}/complete`, json('POST', { note, completedOn })),
   history: (propertyId: string, limit = 200) => req<HistoryEntry[]>(`/api/tasks-history?propertyId=${propertyId}&limit=${limit}`),
   tasksCsvUrl: (propertyId: string) => `/api/properties/${propertyId}/tasks.csv`,
+  tasksIcsUrl: (propertyId: string) => `/api/properties/${propertyId}/tasks.ics`,
   documents: (propertyId: string) => req<DocumentInfo[]>(`/api/documents?propertyId=${propertyId}`),
-  upload: (propertyId: string, file: File, extra: { objectId?: string; title?: string; tags?: string; note?: string; takenAt?: string } = {}) => {
+  upload: (propertyId: string, file: File, extra: { objectId?: string; title?: string; tags?: string; note?: string; takenAt?: string; stripMetadata?: string } = {}) => {
     const f = new FormData()
     f.append('file', file)
     f.append('propertyId', propertyId)
     for (const [k, v] of Object.entries(extra)) if (v) f.append(k, v)
-    return req<DocumentInfo>('/api/documents', { method: 'POST', body: f })
+    return req<DocumentInfo & { metadataRemoved: string[] }>('/api/documents', { method: 'POST', body: f })
   },
   patchDocument: (id: string, b: Partial<{ title: string; tags: string; note: string; objectId: string | null; takenAt: string | null }>) => req<DocumentInfo>(`/api/documents/${id}`, json('PATCH', b)),
   deleteDocument: (id: string) => req<void>(`/api/documents/${id}`, { method: 'DELETE' }),

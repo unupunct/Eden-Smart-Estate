@@ -7,7 +7,7 @@ import csv
 import io
 import json
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Literal
 
@@ -16,7 +16,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
-from . import config, db, recurrence
+from . import config, db, privacy, recurrence
 
 router = APIRouter(prefix="/api")
 
@@ -199,6 +199,68 @@ def tasks_csv(pid: str):
     return Response(out.getvalue(), media_type="text/csv", headers={"Content-Disposition": 'attachment; filename="tasks.csv"'})
 
 
+def _ics_escape(v: str) -> str:
+    """RFC 5545 text escaping."""
+    v = v.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,")
+    return v.replace("\r\n", "\\n").replace("\n", "\\n").replace("\r", "\\n")
+
+
+def _ics_fold(line: str) -> str:
+    """RFC 5545: lines longer than 75 octets are folded (continuation lines start with a space)."""
+    if len(line.encode("utf-8")) <= 75:
+        return line
+    parts: list[bytes] = []
+    cur = b""
+    for ch in line:
+        b = ch.encode("utf-8")
+        limit = 75 if not parts else 74
+        if len(cur) + len(b) > limit:
+            parts.append(cur)
+            cur = b""
+        cur += b
+    parts.append(cur)
+    return "\r\n ".join(x.decode("utf-8") for x in parts)
+
+
+RRULE_FREQ = {"day": "DAILY", "week": "WEEKLY", "month": "MONTHLY", "year": "YEARLY"}
+
+
+def build_ics(property_name: str, rows, names: dict[str, str]) -> str:
+    """Open tasks with a due date as all-day calendar events (repeats that follow the due date become RRULEs)."""
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//EDEN Smart Estate//Tasks//EN", "CALSCALE:GREGORIAN", f"X-WR-CALNAME:{_ics_escape('EDEN: ' + property_name)}"]
+    for r in rows:
+        if r["status"] != "open" or not r["due"]:
+            continue
+        d = date.fromisoformat(r["due"])
+        desc = [r["notes"]] if r["notes"] else []
+        if r["object_id"] and names.get(r["object_id"]):
+            desc.append(f"About: {names[r['object_id']]}")
+        if r["repeat_every"] and r["repeat_from"] == "completion":
+            desc.append(f"Repeats {r['repeat_every']} {r['repeat_unit']}(s) after completion (shown once: it moves when you finish it in EDEN).")
+        lines += ["BEGIN:VEVENT", f"UID:{r['id']}@eden-smart-estate", f"DTSTAMP:{stamp}", f"DTSTART;VALUE=DATE:{d.strftime('%Y%m%d')}",
+                  f"DTEND;VALUE=DATE:{(d + timedelta(days=1)).strftime('%Y%m%d')}", f"SUMMARY:{_ics_escape(r['title'])}"]
+        if desc:
+            lines.append(f"DESCRIPTION:{_ics_escape(chr(10).join(desc))}")
+        if r["category"]:
+            lines.append(f"CATEGORIES:{_ics_escape(r['category'])}")
+        if r["repeat_every"] and r["repeat_unit"] and r["repeat_from"] == "due":
+            lines.append(f"RRULE:FREQ={RRULE_FREQ[r['repeat_unit']]};INTERVAL={r['repeat_every']}")
+        lines.append({"high": "PRIORITY:1", "low": "PRIORITY:9"}.get(r["priority"], "PRIORITY:5"))
+        lines += ["BEGIN:VALARM", "ACTION:DISPLAY", f"DESCRIPTION:{_ics_escape(r['title'])}", "TRIGGER;RELATED=START:PT9H", "END:VALARM", "END:VEVENT"]
+    lines.append("END:VCALENDAR")
+    return "\r\n".join(_ics_fold(x) for x in lines) + "\r\n"
+
+
+@router.get("/properties/{pid}/tasks.ics")
+def tasks_ics(pid: str):
+    with db.session() as conn:
+        prop = _need(conn, "properties", pid, "Property")
+        rows = conn.execute("SELECT * FROM tasks WHERE property_id=? ORDER BY due", (pid,)).fetchall()
+        names = {r["id"]: r["name"] for r in conn.execute("SELECT id,name FROM map_objects WHERE property_id=?", (pid,))}
+    return Response(build_ics(prop["name"], rows, names), media_type="text/calendar", headers={"Content-Disposition": 'attachment; filename="eden-tasks.ics"'})
+
+
 def _csv_safe(v: str) -> str:
     """Stop spreadsheet formula injection: text starting with = + - @ is prefixed with an apostrophe."""
     return "'" + v if v[:1] in ("=", "+", "-", "@", "\t", "\r") else v
@@ -244,7 +306,7 @@ def _tags(s: str) -> str:
 
 @router.post("/documents", status_code=201)
 async def upload_document(file: UploadFile = File(...), propertyId: str = Form(...), objectId: str = Form(""), title: str = Form(""),
-                          tags: str = Form(""), note: str = Form(""), takenAt: str = Form("")):
+                          tags: str = Form(""), note: str = Form(""), takenAt: str = Form(""), stripMetadata: str = Form("true")):
     name = Path(file.filename or "file").name
     ext = Path(name).suffix.lower()
     if ext not in ALLOWED:
@@ -257,6 +319,9 @@ async def upload_document(file: UploadFile = File(...), propertyId: str = Form(.
     if not sniff_ok(ext, data[:16]):
         raise HTTPException(415, f"The content of {name} does not look like a {ext} file.")
     _day(takenAt, "date taken")
+    removed: list[str] = []
+    if stripMetadata.lower() not in ("false", "0", "no", "off"):
+        data, removed = privacy.strip_metadata(ext, data)
     did = db.new_id()
     stored = f"doc_{did}{ext}"
     with db.session() as conn:
@@ -265,7 +330,7 @@ async def upload_document(file: UploadFile = File(...), propertyId: str = Form(.
         (config.UPLOAD_DIR / stored).write_bytes(data)
         conn.execute("INSERT INTO documents(id,property_id,object_id,title,filename,original_name,mime,size,tags,note,taken_at,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                      (did, propertyId, objectId or None, (title.strip() or Path(name).stem)[:200], stored, name[:200], ALLOWED[ext], len(data), _tags(tags), note[:2000], takenAt or None, db.now()))
-        return _doc(_need(conn, "documents", did, "Document"))
+        return {**_doc(_need(conn, "documents", did, "Document")), "metadataRemoved": removed}
 
 
 @router.get("/documents")

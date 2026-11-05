@@ -12,6 +12,7 @@ jobs:
       - name: Backend tests
         run: |
           pip install -r backend/requirements.txt
+          pip install -r backend/requirements-dev.txt || echo 'amqtt unavailable: the real-broker MQTT test will be skipped'
           cd backend && python -m pytest -q
       - name: Frontend type check, unit tests and build
         working-directory: frontend

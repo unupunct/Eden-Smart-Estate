@@ -24,6 +24,7 @@ SESSION_SECONDS = 30 * 24 * 3600
 MAX_FAILS = 5
 LOCKOUT_SECONDS = 300
 OPEN_PATHS = ("/api/health", "/api/auth/")
+DOC_PATHS = ("/docs", "/redoc", "/openapi.json")  # the API description needs the session too
 
 _fails: dict[str, list[float]] = {}
 
@@ -85,7 +86,7 @@ def login(body: Login, request: Request, response: Response):
         _fails.setdefault(ip, []).append(now)
         raise HTTPException(401, "Wrong password.")
     _fails.pop(ip, None)
-    response.set_cookie(COOKIE, make_token(), max_age=SESSION_SECONDS, httponly=True, samesite="strict", path="/")
+    response.set_cookie(COOKIE, make_token(), max_age=SESSION_SECONDS, httponly=True, samesite="strict", secure=request.url.scheme == "https", path="/")
     return {"ok": True, "required": True}
 
 
@@ -98,7 +99,7 @@ def logout(response: Response):
 async def guard(request: Request, call_next):
     """HTTP middleware: block the API without a valid session, and cross-site writes."""
     path = request.url.path
-    if required() and path.startswith("/api/") and not path.startswith(OPEN_PATHS):
+    if required() and ((path.startswith("/api/") and not path.startswith(OPEN_PATHS)) or path.startswith(DOC_PATHS)):
         if not valid_token(request.cookies.get(COOKIE)):
             return JSONResponse({"detail": "Login required"}, status_code=401)
     if required() and request.method not in ("GET", "HEAD", "OPTIONS"):

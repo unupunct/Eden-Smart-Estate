@@ -14,7 +14,8 @@ param(
     [switch]$Autostart,
     [switch]$DesktopShortcut,
     [switch]$Portable,
-    [switch]$NoLaunch
+    [switch]$NoLaunch,
+    [switch]$Yes
 )
 $ErrorActionPreference = 'Stop'
 $src = Split-Path -Parent $PSScriptRoot
@@ -37,9 +38,24 @@ Write-Host "EDEN Smart Estate $version - setup" -ForegroundColor Green
 if (-not (Test-Path (Join-Path $src 'frontend\dist\index.html'))) { Write-Host 'This folder does not contain the built web app. Use the release package (EdenSmartEstate-x.y.z.zip) or run scripts\install.ps1 from a source checkout.' -ForegroundColor Red; exit 1 }
 $py = Find-Python
 if (-not $py) {
-    Write-Host 'Python 3.11 or newer was not found.' -ForegroundColor Red
-    Write-Host 'Install it from https://www.python.org/downloads/ (tick "Add python.exe to PATH") and run setup again.'
-    exit 1
+    Write-Host 'Python 3.11 or newer was not found.' -ForegroundColor Yellow
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        $a = if ($Yes) { 'y' } else { Read-Host 'Install Python 3.12 for your user account now with Windows Package Manager (winget)? [Y/n]' }
+        if ($a -ne 'n' -and $a -ne 'N') {
+            winget install -e --id Python.Python.3.12 --scope user --accept-package-agreements --accept-source-agreements
+            # pick up the new PATH without restarting this window
+            $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
+            $py = Find-Python
+            if (-not $py) {
+                $direct = Join-Path $env:LOCALAPPDATA 'Programs\Python\Python312\python.exe'
+                if (Test-Path $direct) { $py = @{ exe = $direct; args = @() } }
+            }
+        }
+    }
+    if (-not $py) {
+        Write-Host 'Install Python 3.11 or newer from https://www.python.org/downloads/ (tick "Add python.exe to PATH") and run setup again.' -ForegroundColor Red
+        exit 1
+    }
 }
 
 $appDir = Join-Path $InstallDir 'app'

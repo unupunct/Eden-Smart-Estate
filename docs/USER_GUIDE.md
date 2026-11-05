@@ -181,7 +181,9 @@ Open **Sun & Shadows** in the menu. The map shows the shadows cast by every **vi
 
 **How to use it:** to place a new bed, switch on the sun-hours map on a June date and on a March date: sites that are bright in both are good for sun-lovers; spots that are shaded in March but bright in June suit late crops. Drag a building, hedge or tree in the map and watch the numbers update.
 
-**What it does not know:** terrain (a hill or a neighbour's house outside your drawing casts no shade), pitched roofs (a gable is treated as a box of the entered height), exact crown shapes (cylinders from 30 % of the height up) and real leaf density. Foliage is assumed to block about 75 % of light in leaf, 20 % bare and 85 % for evergreens; greenhouse glazing is assumed to pass 60 %. Treat results as planning estimates.
+**Roofs:** a building with a **gable, hip or mansard** roof casts the shape of its walls plus the sloping roof. *Height* is to the ridge; give the optional **wall (eave) height** for an exact roof rise, otherwise a rise of about a quarter of the building's width is assumed. The ridge follows *Roof ridge bearing* if set, otherwise the long side. A **shed** roof is modelled only when its bearing is set (otherwise the building stays a box, which overstates the shadow). Flat roofs, greenhouses and solar panels are boxes; the 3D view still draws every building as a box.
+
+**What it does not know:** terrain (a hill or a neighbour's house outside your drawing casts no shade), roof details such as dormers and chimneys, exact crown shapes (cylinders from 30 % of the height up) and real leaf density. Foliage is assumed to block about 75 % of light in leaf, 20 % bare and 85 % for evergreens; greenhouse glazing is assumed to pass 60 %. Treat results as planning estimates.
 
 ## 18. Night Sky
 
@@ -250,11 +252,11 @@ Rules run on the EDEN server **only while it is running**. Automations are a con
 - **On an object:** select a tree or bed in the Property Editor and its panel shows the open tasks, when it was last maintained, a quick *Add a task* box and its attachments.
 - **Export:** *Export CSV* for a spreadsheet (text that starts with `=`, `+`, `-` or `@` is neutralised so it cannot run as a formula).
 
-Reminders appear only inside EDEN: there is no push notification, e-mail or calendar sync.
+**Reminders:** tick *Browser notifications* to get one notification a day for overdue and due-today tasks while EDEN is open in a browser tab (the browser asks for permission once). *Calendar file (.ics)* downloads your open dated tasks as all-day events with a 09:00 alarm and, for tasks that repeat on their due date, the repeat rule: open it with your calendar app (Outlook, Google Calendar, Apple Calendar…) to see them on your phone. It is a snapshot, not a live feed: download it again after changes. There is no push to a closed browser and no e-mail.
 
 ## 23. Notes & Documents
 
-*Add files* (JPG, PNG, WebP, GIF, PDF, TXT, CSV, MD, DOCX, XLSX, ODT, ODS, up to 40 MB). Choose first whether the files belong to the **whole property** or to a specific object. For each file you can set a title, **tags**, a note and a date (when the photo was taken or the document is dated), change which object it belongs to, download it or delete it. Photos open in a viewer; other files download or open in the browser's own viewer.
+*Add files* (JPG, PNG, WebP, GIF, PDF, TXT, CSV, MD, DOCX, XLSX, ODT, ODS, up to 40 MB). Choose first whether the files belong to the **whole property** or to a specific object. For each file you can set a title, **tags**, a note and a date (when the photo was taken or the document is dated), change which object it belongs to, download it or delete it. Photos open in a viewer; other files download or open in the browser's own viewer. **Remove location data from photos** (on by default) strips the GPS position, camera and date details, XMP/IPTC data and comments from JPEG and PNG photos as they are uploaded: the picture itself is copied unchanged and its orientation is kept, and the page tells you what was removed. Untick it to keep a file exactly as it is. Other file types are stored unchanged.
 
 *Search* looks at title, tags, note, file name and the object's name; *Show* limits the list to photos or documents. Map notes pinned in the Property Editor are listed below the files.
 
@@ -284,10 +286,19 @@ When EDEN is started with a password (`start.ps1 -Lan`, `-Password …`, or the 
 
 Menus, forms, tables and dialogs can be used with the keyboard (a visible outline shows where you are); `Esc` leaves the current tool; the shortcuts are listed below. Drawing and editing shapes on the map needs a mouse or touch. You can zoom the whole page with the browser. Pages have headings and labelled regions, and the information on the map or in the sky chart is also available as text in the panels and tables. If you find something you cannot use, please report it.
 
+## 29. Search everything (Ctrl+K)
+
+Press **Ctrl+K** (or click *Search* at the top of the menu) from any page. One box searches pages, map objects, plants, trees, fish and mushrooms of the library, tasks, documents and photos, devices, automations, cameras and integrations. Every word you type has to match; capital letters and accents do not matter, so `ceapa` finds *Ceapă* and `rosie` finds *Roșie*. Results are grouped by kind with the best title matches first. Use **↑ ↓** and **Enter** (or click) to open one: an object is selected on the map, a plant opens the library filtered to it, a document opens the documents page filtered to it, other results open their page. **Esc** closes the search.
+
+## 30. Secure connections (HTTPS)
+
+`start.ps1 -Lan -Https` serves EDEN over an encrypted connection. The first time a device opens it the browser warns about an unknown certificate issuer, because the certificate is made by EDEN on your computer. Compare the fingerprint in the browser's certificate details with the one printed in the console, then continue; or import `data\tls\eden-cert.pem` into the device's trusted certificates to stop the warning. See [SECURITY.md](../SECURITY.md).
+
 ## Keyboard shortcuts
 
 | Key | Action |
 |---|---|
+| **Ctrl+K** | Search everything |
 | Esc | Cancel drawing → leave tool → deselect |
 | Enter | Finish line/polygon |
 | Backspace | Remove last drawn point |

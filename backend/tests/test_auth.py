@@ -83,3 +83,13 @@ def test_cross_site_writes_are_refused_when_protected(make_client):
     assert r.status_code == 403
     r = c.post("/api/properties", json={"name": "x", "center": [24, 45]}, headers={"Origin": "http://testserver"})
     assert r.status_code == 201
+
+
+def test_the_api_documentation_is_protected_too(make_client):
+    c = make_client("s3cret")
+    for path in ("/docs", "/redoc", "/openapi.json"):
+        assert c.get(path).status_code == 401
+    c.post("/api/auth/login", json={"password": "s3cret"})
+    assert c.get("/openapi.json").status_code == 200
+    open_client = make_client("")
+    assert open_client.get("/openapi.json").status_code == 200

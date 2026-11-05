@@ -38,6 +38,14 @@ try {
   page.on('console', (m) => m.type() === 'error' && !/Failed to load resource/.test(m.text()) && errors.push(m.text()))
   page.on('pageerror', (e) => errors.push('PAGEERROR ' + e.message))
   page.on('dialog', (d) => d.accept())
+  // record browser notifications instead of showing them (the Notification API is replaced in the page, the logic under test is EDEN's)
+  await page.addInitScript(() => {
+    window.__notes = []
+    function N(title, opts) { window.__notes.push({ title, body: opts && opts.body }) }
+    N.permission = 'granted'
+    N.requestPermission = async () => 'granted'
+    window.Notification = N
+  })
   const nav = (name) => page.locator('.navitem', { hasText: name }).first().click()
   const api = async (path) => (await fetch(`${base}${path}`)).json()
   const shot = async (name) => { if (out) await page.screenshot({ path: `${out}/${name}.png` }) }
@@ -133,6 +141,65 @@ try {
   await page.getByPlaceholder('title, tag, note, file name, object…').fill('')
   await sleep(300)
   await shot('31-documents')
+
+  // ---------- photo metadata is removed on upload (unless switched off)
+  const secretPng = join(files, 'gate-photo.png'); writeFileSync(secretPng, testPicture(64, 36, 'GPS 46.0486N 24.0526E lives-at-12-Oak-Lane'))
+  await page.locator('.filters input[type=file]').setInputFiles(secretPng)
+  await page.waitForSelector('.notice.ok:has-text("removed")')
+  check('uploading a photo reports what was removed from it', /text and time details/.test(await page.locator('.notice.ok').innerText()))
+  const gate = (await api(`/api/documents?propertyId=${demo.id}&q=gate-photo`))[0]
+  const cleaned = Buffer.from(await (await fetch(`${base}${gate.url}`)).arrayBuffer())
+  check('the stored file no longer contains the location text, and is still a valid PNG', !cleaned.includes('Oak-Lane') && cleaned.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])))
+  await page.getByLabel('Remove location data from photos').uncheck()
+  const secretPng2 = join(files, 'kept-photo.png'); writeFileSync(secretPng2, testPicture(64, 36, 'kept-comment-text'))
+  await page.locator('.filters input[type=file]').setInputFiles(secretPng2)
+  await page.waitForSelector('.doccard:has-text("kept-photo")')
+  const kept = Buffer.from(await (await fetch(`${base}${(await api(`/api/documents?propertyId=${demo.id}&q=kept-photo`))[0].url}`)).arrayBuffer())
+  check('with the option switched off the file is stored unchanged', kept.includes('kept-comment-text'))
+  await page.getByLabel('Remove location data from photos').check()
+
+  // ---------- global search (Ctrl+K)
+  await page.keyboard.press('Control+k')
+  await page.waitForSelector('.palette')
+  await page.keyboard.type('ceapa')
+  await page.waitForSelector('.palette-item:has-text("Onion")')
+  check('Ctrl+K opens the search and finds a plant by its Romanian name written without accents', true)
+  await page.keyboard.press('Enter')
+  await page.waitForSelector('text=Plants & Mushrooms Library')
+  check('choosing a plant opens the library already filtered to it', await until(async () => /Onion/.test(await page.locator('.liblist').innerText())) && (await page.locator('.liblist .item').count()) <= 3)
+  await page.keyboard.press('Control+k')
+  await page.keyboard.type('frost')
+  await page.waitForSelector('.palette-item:has-text("Protect tender plants from frost")')
+  const palette = await page.locator('.palette').innerText()
+  check('one query finds a page, a task and more at once', /Weather/.test(palette) && /Protect tender plants from frost/.test(palette) && /Pages/i.test(palette) && /Tasks/i.test(palette))
+  await page.keyboard.press('Escape')
+  check('Escape closes the search', (await page.locator('.palette').count()) === 0)
+  await page.keyboard.press('Control+k')
+  await page.keyboard.type('greenhouse-manual')
+  await page.waitForSelector('.palette-item:has-text("greenhouse-manual")')
+  await page.keyboard.press('Enter')
+  await page.waitForSelector('.doccard')
+  check('choosing a document opens the documents page filtered to it', await until(async () => (await page.locator('.doccard').count()) === 1))
+  await page.locator('.search input').fill('')
+  await page.locator('.navitem', { hasText: 'Search' }).first().click()
+  check('the sidebar search button opens it too', (await page.locator('.palette').count()) === 1)
+  await page.keyboard.press('Escape')
+
+  // ---------- browser notifications and calendar file
+  await nav('Tasks & Maintenance'); await page.waitForSelector('text=Maintenance history')
+  await fetch(`${base}/api/tasks`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propertyId: demo.id, title: 'Service the pump', due: dayOffset(-1) }) })
+  await page.evaluate((id) => window.__edenManage.getState().load(id), demo.id)
+  check('nothing is announced before notifications are switched on', (await page.evaluate(() => window.__notes.length)) === 0)
+  await page.getByLabel('Browser notifications').check()
+  check('switching browser notifications on announces what is due, once', await until(async () => (await page.evaluate(() => window.__notes.length)) === 1))
+  const note = await page.evaluate(() => window.__notes[0])
+  check('the notification names the due tasks', /EDEN/.test(note.title) && /Service the pump/.test(note.body) && /1 overdue/.test(note.body), JSON.stringify(note))
+  await page.evaluate(() => window.dispatchEvent(new Event('eden-reminders')))
+  await sleep(500)
+  check('the same tasks are not announced again the same day', (await page.evaluate(() => window.__notes.length)) === 1)
+  const ics = await (await fetch(`${base}/api/properties/${demo.id}/tasks.ics`)).text()
+  check('the calendar file lists the open tasks with their repeats and an alarm', /BEGIN:VCALENDAR/.test(ics) && /SUMMARY:Mow the orchard/.test(ics) && /RRULE:FREQ=WEEKLY;INTERVAL=1/.test(ics) && /BEGIN:VALARM/.test(ics))
+  check('the page offers the calendar file', (await page.locator('a', { hasText: 'Calendar file' }).getAttribute('href')).endsWith('/tasks.ics'))
 
   // ---------- reports
   await nav('Reports'); await page.waitForSelector('article.report')

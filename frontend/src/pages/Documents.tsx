@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useIntent } from '../search/intent'
 import { FileText, Image as ImageIcon, Paperclip, Search, Trash2, Upload } from 'lucide-react'
 import { manageApi } from '../api/client'
 import { fmtSize, useManage } from '../manage/store'
@@ -16,13 +17,16 @@ export function DocumentsPage() {
   const property = useEditor((s) => s.property)
   const focus = useEditor((s) => s.requestFocus)
   const go = useApp((s) => s.go)
-  const [q, setQ] = useState('')
+  const [q, setQ] = useState(() => useIntent.getState().documentsQ ?? '')
+  useEffect(() => { useIntent.getState().set({ documentsQ: null }) }, [])
   const [kind, setKind] = useState<'all' | 'photo' | 'document'>('all')
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
   const [edit, setEdit] = useState<DocumentInfo | null>(null)
   const [view, setView] = useState<DocumentInfo | null>(null)
   const [objectId, setObjectId] = useState('')
+  const [strip, setStrip] = useState(true)
+  const [info, setInfo] = useState('')
   const input = useRef<HTMLInputElement>(null)
   if (!property || !pid) return <div className="emptystate"><h2>No property open</h2><p>Open or create a property first.</p></div>
 
@@ -37,14 +41,18 @@ export function DocumentsPage() {
     if (!files?.length) return
     setBusy(true)
     setErr('')
+    setInfo('')
+    const cleaned: string[] = []
     for (const f of Array.from(files)) {
       try {
-        await manageApi.upload(pid, f, { objectId })
+        const d = await manageApi.upload(pid, f, { objectId, stripMetadata: strip ? 'true' : 'false' })
+        if (d.metadataRemoved.length) cleaned.push(`${f.name}: removed ${d.metadataRemoved.join(', ')}`)
       } catch (e) {
         setErr(`${f.name}: ${(e as Error).message}`)
       }
     }
     setBusy(false)
+    if (cleaned.length) setInfo(cleaned.join(' · '))
     await load(pid)
   }
 
@@ -56,10 +64,12 @@ export function DocumentsPage() {
       </div>
       {error && <div className="notice err">{error}</div>}
       {err && <div className="notice err">{err}</div>}
+      {info && <div className="notice ok">{info}</div>}
       <div className="filters">
         <label style={{ flex: 2 }}>Search<div className="search" style={{ margin: 0 }}><Search size={14} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="title, tag, note, file name, object…" /></div></label>
         <label>Show<select value={kind} onChange={(e) => setKind(e.target.value as 'all')}><option value="all">Photos and documents</option><option value="photo">Photos only</option><option value="document">Documents only</option></select></label>
         <label>Attach new files to<select value={objectId} onChange={(e) => setObjectId(e.target.value)}><option value="">the whole property</option>{linkable.map((o) => <option key={o.id} value={o.id}>{o.name || kindDef(o.kind).label} ({kindDef(o.kind).label})</option>)}</select></label>
+        <label className="check" title="Removes GPS position and camera details from JPEG and PNG pictures; the picture itself is not changed"><input type="checkbox" checked={strip} onChange={(e) => setStrip(e.target.checked)} /> Remove location data from photos</label>
         <button className="primary" disabled={busy} onClick={() => input.current?.click()}><Upload size={14} /> {busy ? 'Uploading…' : 'Add files'}</button>
         <input ref={input} type="file" multiple hidden accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.txt,.csv,.md,.docx,.xlsx,.odt,.ods" onChange={(e) => { void send(e.target.files); e.target.value = '' }} />
       </div>
@@ -82,7 +92,7 @@ export function DocumentsPage() {
         ))}
         {!shown.length && loaded && <div className="card glass dashed"><div className="cardtop"><Paperclip size={18} /><h3>{documents.length ? 'Nothing matches' : 'No files yet'}</h3></div><p className="muted">{documents.length ? 'Try a different search.' : 'Add photos of trees and beds over the seasons, the greenhouse manual, a pump warranty, a permit…'}</p></div>}
       </div>
-      <small className="muted">Allowed: JPG, PNG, WebP, GIF, PDF, TXT, CSV, MD, DOCX, XLSX, ODT, ODS, up to 40 MB each. Photos keep their own metadata (including GPS position, if the camera recorded it): remove it before sharing a backup or file.</small>
+      <small className="muted">Allowed: JPG, PNG, WebP, GIF, PDF, TXT, CSV, MD, DOCX, XLSX, ODT, ODS, up to 40 MB each. By default the GPS position and camera details of JPEG and PNG photos are removed on upload (the picture is not changed; orientation is kept). Other file types are stored as they are.</small>
 
       <h2 className="sect">Map notes</h2>
       <p className="muted">Notes pinned on the map in the Property Editor. Every object also has its own notes field.</p>

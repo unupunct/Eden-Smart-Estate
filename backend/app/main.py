@@ -25,7 +25,7 @@ async def lifespan(_app: FastAPI):
         smart_mqtt.stop_all()
 
 
-app = FastAPI(title="EDEN Smart Estate", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="EDEN Smart Estate", version="1.1.0", lifespan=lifespan)
 app.include_router(auth.router)
 app.include_router(router)
 app.include_router(providers_router)

@@ -17,11 +17,11 @@ Check Python: open PowerShell and run `py -3 --version` (or `python --version`).
 
 ## 2. Install (recommended: the installer)
 
-1. Download `EdenSmartEstate-1.0.0.zip` from the project's **Releases** page.
+1. Download `EdenSmartEstate-1.1.0.zip` from the project's **Releases** page.
 2. Right-click → *Extract All…* (any temporary folder is fine, for example Downloads).
 3. Double-click **`Install-EDEN.cmd`**.
 
-It needs **no administrator rights**. It:
+It needs **no administrator rights**. If Python is missing and Windows Package Manager (winget) is available, it offers to install Python 3.12 for you first. It:
 
 - copies the program to `%LOCALAPPDATA%\EDEN\app` and creates its private Python environment (internet needed this first time);
 - keeps **your data in `%LOCALAPPDATA%\EDEN\data`**, separate from the program, so updates and re-installs never touch it;
@@ -63,6 +63,7 @@ Options for `start.ps1` / `EDEN.cmd`:
 | `-DataDir D:\EdenData` | keep your data in another folder (for example a synced or backed-up drive) |
 | `-Password …` | protect the estate with a password, also on this computer only |
 | `-Lan` | also reachable from phones/tablets/PCs on your network: **asks you for a password** (see section 6) |
+| `-Https` | serve over HTTPS with a self-signed certificate (section 6) |
 
 ## 4. First steps
 
@@ -98,8 +99,16 @@ powershell -ExecutionPolicy Bypass -File scripts\start.ps1 -Lan
 
 EDEN asks you to choose a **password** (at least 8 characters) and prints addresses such as `http://192.168.1.20:8787`. Open one on the other device (same Wi-Fi/network) and sign in. Without `-Lan`, EDEN listens on this computer only.
 
+**Encrypt it with `-Https` (recommended on any shared network):**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\start.ps1 -Lan -Https
+```
+
+EDEN creates a self-signed certificate on your computer (in `data\tls`, valid for a year, renewed automatically, covering `localhost`, the computer's name and its network addresses) and prints its **fingerprint**. The first time a device opens `https://…` the browser warns that the certificate is not from a known authority: compare the fingerprint shown in the browser's certificate details with the one in the console, then continue. To avoid the warning, import `data\tls\eden-cert.pem` into the device's trusted certificates.
+
 - LAN mode lets other devices **operate your connected devices**, so a password is required. `-NoPassword` skips it: only for a network you fully trust.
-- The password protects the app and its API (cookie sessions, lock-out after repeated wrong tries). It travels **unencrypted over your network (plain HTTP)**: use it at home, never on public Wi-Fi, and **never forward the port to the internet**. For remote access use a VPN.
+- The password protects the app and its API (cookie sessions, lock-out after repeated wrong tries). Without `-Https` it travels **unencrypted over your network (plain HTTP)**: add `-Https`, or use it at home only, never on public Wi-Fi. **Never forward the port to the internet**; for remote access use a VPN.
 - To set a password permanently without typing it each time, set the `EDEN_PASSWORD` environment variable before starting.
 - Windows Firewall asks whether to allow Python on private networks: allow **private** only.
 - See [SECURITY.md](../SECURITY.md) for the details and limits.

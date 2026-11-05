@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Check, Download, Pencil, Plus, Repeat, Trash2 } from 'lucide-react'
+import { CalendarPlus, Check, Download, Pencil, Plus, Repeat, Trash2 } from 'lucide-react'
 import { manageApi } from '../api/client'
+import { remindersEnabled, remindersSupported, setReminders } from '../manage/reminders'
 import { dueLabel, repeatLabel, summariseTasks, todayISO, urgency, type Urgency } from '../manage/logic'
 import { useManage } from '../manage/store'
 import type { Priority, RepeatUnit, Task } from '../manage/types'
@@ -50,6 +51,7 @@ export function TasksPage() {
   const [cat, setCat] = useState('')
   const [err, setErr] = useState('')
   const [flash, setFlash] = useState('')
+  const [notify, setNotify] = useState(remindersEnabled())
   const today = todayISO()
 
   if (!property || !pid) {
@@ -95,7 +97,7 @@ export function TasksPage() {
   return (
     <div className="page">
       <div className="pagehead">
-        <div><h1>Tasks &amp; Maintenance</h1><p>Reminders for the land: prune, feed, service, inspect. Link a task to a tree, bed, fence or building, and let it repeat. Reminders live in EDEN only: nothing is sent to your phone.</p></div>
+        <div><h1>Tasks &amp; Maintenance</h1><p>Reminders for the land: prune, feed, service, inspect. Link a task to a tree, bed, fence or building, and let it repeat. Get reminders as browser notifications while EDEN is open, or export a calendar file (.ics) to see the due dates in your phone's calendar.</p></div>
         <span className="badge">Phase 6</span>
       </div>
       {error && <div className="notice err">{error}</div>}
@@ -112,6 +114,8 @@ export function TasksPage() {
         <div className="seg"><button className={show === 'open' ? 'on' : ''} onClick={() => setShow('open')}>Open</button><button className={show === 'done' ? 'on' : ''} onClick={() => setShow('done')}>Done</button></div>
         {cats.length > 0 && <select style={{ width: 'auto' }} value={cat} onChange={(e) => setCat(e.target.value)}><option value="">All categories</option>{cats.map((c) => <option key={c}>{c}</option>)}</select>}
         <a className="btn" href={manageApi.tasksCsvUrl(pid)}><Download size={14} /> Export CSV</a>
+        <a className="btn" href={manageApi.tasksIcsUrl(pid)} title="Open the file in your calendar app (Outlook, Google Calendar, Apple Calendar…) to get the due dates and reminders there"><CalendarPlus size={14} /> Calendar file (.ics)</a>
+        {remindersSupported() && <label className="check" title="While EDEN is open in a browser tab, show one notification a day for overdue and due-today tasks"><input type="checkbox" checked={notify} onChange={(e) => void setReminders(e.target.checked).then(setNotify)} /> Browser notifications</label>}
       </div>
       {draft && <TaskForm draft={draft} onCancel={() => setDraft(null)} onSave={(d) => wrap(async () => {
         const b = { title: d.title, notes: d.notes, category: d.category, priority: d.priority, due: d.due || null, objectId: d.objectId || null, repeatFrom: d.repeatFrom,

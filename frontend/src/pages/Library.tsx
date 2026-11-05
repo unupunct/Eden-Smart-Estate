@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useIntent } from '../search/intent'
 import { MapPin } from 'lucide-react'
 import { companionsOf, monthRange } from '../library/logic'
 import { placementFor, startPlacing } from '../library/place'
@@ -18,7 +19,8 @@ const NSP_LABEL: Record<string, string> = { suitable: 'Suitable', conditional: '
 
 export function LibraryPage() {
   const { lib, ix, error } = useLibrary()
-  const [tab, setTab] = useState<Tab>('plants')
+  const [tab, setTab] = useState<Tab>(() => useIntent.getState().library?.tab ?? 'plants')
+  useEffect(() => () => useIntent.getState().set({ library: null }), []) // a search hint is used once, when the page opens
   if (error) return <div className="page"><div className="notice err">{error}</div></div>
   if (!lib || !ix) return <div className="page"><p>Loading the library…</p></div>
   return (
@@ -42,7 +44,7 @@ export function LibraryPage() {
 // ---------------------------------------------------------------------------------------------- plants
 function PlantsTab() {
   const { lib, ix } = useLibrary()
-  const [q, setQ] = useState('')
+  const [q, setQ] = useState(() => useIntent.getState().library?.q ?? '')
   const [cat, setCat] = useState('')
   const [native, setNative] = useState('')
   const [sun, setSun] = useState('')
@@ -161,7 +163,7 @@ function PlantDetail({ p, onSelect }: { p: Plant; onSelect: (id: string) => void
 function MushroomsTab() {
   const { lib } = useLibrary()
   const [status, setStatus] = useState('')
-  const [q, setQ] = useState('')
+  const [q, setQ] = useState(() => useIntent.getState().library?.q ?? '')
   const [sel, setSel] = useState('chanterelle')
   const [cult, setCult] = useState(false)
   if (!lib) return null

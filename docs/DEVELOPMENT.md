@@ -14,6 +14,7 @@ backend/            FastAPI app (app/), SQL migrations, pytest suite
   app/smart*.py      Home Assistant client, MQTT hub, automation rules, smart-home routes and poller
   app/manage.py      tasks, documents/photos, weather proxy; recurrence.py: repeat maths
   app/auth.py        optional password protection (middleware + sign-in routes)
+  app/privacy.py     photo metadata removal;  app/tls.py: self-signed HTTPS certificate
   migrations/        0001_init.sql, …
 frontend/           React + TypeScript + Vite
   src/model/         types, kind catalog, store (undo/redo), autosave, app state
@@ -25,6 +26,7 @@ frontend/           React + TypeScript + Vite
   src/smart/         smart-home types and store (devices, cameras, automations)
   src/manage/        tasks, documents, weather: types, logic, store
   src/reports/       report builder (pure)
+  src/search/        global search (pure function + Ctrl+K palette)
   src/library/       library types, logic (companions, beds, orchard, pond)
   src/pages/         overview, module pages, settings
   e2e/               Playwright tests and the screenshot generator
@@ -50,10 +52,10 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -SkipE2E   # no browse
 
 | Suite | Command | Covers |
 |---|---|---|
-| Backend | `backend\.venv\Scripts\python -m pytest` (in `backend/`) | CRUD, validation, change sets, **optional password protection (sessions, forged/expired tokens, lock-out, cross-site writes), tasks, recurrence, documents (type/content/size checks, safe serving, backup round trip), weather (opt-in, cache, stale fallback), smart home (fake Home Assistant/MQTT/cameras: state truthfulness, secrets, risky confirmation, automations engine)**, import/export round trips, overlays, backup/restore, settings & key secrecy, migrations, **plant-library integrity** (ids, references, evidence labels, warnings, demo contract) |
+| Backend | `backend\.venv\Scripts\python -m pytest` (in `backend/`) | CRUD, validation, change sets, **photo metadata removal, calendar export, self-signed HTTPS (including a real TLS handshake), MQTT against a real in-process broker (needs `pip install -r requirements-dev.txt`; skipped otherwise), optional password protection (sessions, forged/expired tokens, lock-out, cross-site writes), tasks, recurrence, documents (type/content/size checks, safe serving, backup round trip), weather (opt-in, cache, stale fallback), smart home (fake Home Assistant/MQTT/cameras: state truthfulness, secrets, risky confirmation, automations engine)**, import/export round trips, overlays, backup/restore, settings & key secrecy, migrations, **plant-library integrity** (ids, references, evidence labels, warnings, demo contract) |
 | Frontend unit | `npx vitest run` (in `frontend/`) | measurements, transforms, vertex editing, calibration maths, undo/redo, layers, autosave diff, feature building, catalog ↔ backend consistency, **companion levels, bed analysis, neighbour checks, pollination, orchard grid, greenhouse box, pond volume, fish verdicts, water ranges, sun/moon/planet positions against almanac values, sunrise/sunset, polar day/night, time zones and DST, shadow geometry, foliage density, sun hours, heat grid, star list, sky projection, moon-free window** |
 | Type check | `npx tsc --noEmit` | strict TypeScript |
-| End-to-end | `npm run build && npm run e2e` | real Edge/Chrome via `playwright-core`; each suite starts its own server on a temp data dir. `e2e/interact.mjs`: draws, edits, drags, undoes, calibrates an image, switches 2D/3D, reloads and checks persistence. `e2e/design.mjs`: planting conflicts, library → Add to property, companion links, orchard grid + undo, pollination, pond warnings, module pages, mushroom safety. `e2e/auth.mjs`: sign-in screen, wrong password, session cookie flags, sign out, lock-out. `e2e/a11y.mjs`: axe-core on every page (fails on serious/critical). `src/perf.test.ts`: 3000-object benchmark. `e2e/manage.mjs`: weather off by default and opt-in (fake forecast server), frost note and reminder, caching, tasks (overdue, repeat, complete, history), tasks and photos from an object's panel, document upload rules, search, safe serving headers, report content and print view. `e2e/smart.mjs` (with the fixtures in `e2e/fakes.mjs`): connect a fake Home Assistant, wrong token, devices and units, commands and risky confirmation, linking to the map, a rule firing on a real value change, dry run, cooldown, risky-rule acknowledgement, cameras (picture, unreachable, ffmpeg missing), integration going offline. `e2e/sun.mjs`: sun readouts, shadow direction morning/afternoon, no shadows at night, season table, foliage, sun-hours map, editor shadow chip, night-sky chart by night and day, moon facts. Needs Microsoft Edge (or change `channel` in the script). |
+| End-to-end | `npm run build && npm run e2e` | real Edge/Chrome via `playwright-core`; each suite starts its own server on a temp data dir. `e2e/interact.mjs`: draws, edits, drags, undoes, calibrates an image, switches 2D/3D, reloads and checks persistence. `e2e/design.mjs`: planting conflicts, library → Add to property, companion links, orchard grid + undo, pollination, pond warnings, module pages, mushroom safety. `e2e/manage.mjs` also covers photo cleaning, Ctrl+K search, browser notifications and the calendar file. `e2e/auth.mjs`: sign-in screen, wrong password, session cookie flags, sign out, lock-out. `e2e/a11y.mjs`: axe-core on every page (fails on serious/critical). `src/perf.test.ts`: 3000-object benchmark. `e2e/manage.mjs`: weather off by default and opt-in (fake forecast server), frost note and reminder, caching, tasks (overdue, repeat, complete, history), tasks and photos from an object's panel, document upload rules, search, safe serving headers, report content and print view. `e2e/smart.mjs` (with the fixtures in `e2e/fakes.mjs`): connect a fake Home Assistant, wrong token, devices and units, commands and risky confirmation, linking to the map, a rule firing on a real value change, dry run, cooldown, risky-rule acknowledgement, cameras (picture, unreachable, ffmpeg missing), integration going offline. `e2e/sun.mjs`: sun readouts, shadow direction morning/afternoon, no shadows at night, season table, foliage, sun-hours map, editor shadow chip, night-sky chart by night and day, moon facts. Needs Microsoft Edge (or change `channel` in the script). |
 
 ## Screenshots
 
@@ -61,7 +63,7 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -SkipE2E   # no browse
 
 ## Release package
 
-`scripts\package.ps1 -Version 1.0.0` builds `release\EdenSmartEstate-1.0.0.zip` (built web app + backend source + scripts + docs + `Install-EDEN.cmd` + `VERSION`). `scripts\test-setup.ps1` installs that zip into a temporary folder (`-Portable`), starts it, updates it over itself (data must survive) and uninstalls it; it needs internet for pip and a few minutes, so it is a local check rather than part of CI.
+`scripts\package.ps1 -Version 1.1.0` builds `release\EdenSmartEstate-1.1.0.zip` (built web app + backend source + scripts + docs + `Install-EDEN.cmd` + `VERSION`). `scripts\test-setup.ps1` installs that zip into a temporary folder (`-Portable`), starts it, updates it over itself (data must survive) and uninstalls it; it needs internet for pip and a few minutes, so it is a local check rather than part of CI.
 
 ## Extending
 

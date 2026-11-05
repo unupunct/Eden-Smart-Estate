@@ -12,14 +12,14 @@ EDEN is a **self-hosted, single-user** application. It is designed to run on you
 
 - `scripts\start.ps1 -Lan` makes EDEN reachable from your network and **requires a password** (`-NoPassword` overrides this: only for a network you fully trust).
 - With a password every `/api` request needs a signed session cookie (HttpOnly, SameSite=Strict). Tokens are HMAC-signed with a key derived from the password, so changing the password signs everyone out. Five wrong passwords lock an address out for five minutes. Cross-site writes (a foreign `Origin`) are refused.
-- **There is no encryption (plain HTTP).** On a shared or untrusted network the password and your data can be read by others. Use it at home only, **never expose the port to the internet** and never port-forward it. For remote access use a VPN (for example WireGuard or Tailscale).
+- **Encryption is optional: add `-Https`.** EDEN then serves TLS with a self-signed certificate created on your computer (`data\tls`, EC P-256, one year, renewed automatically, subject alternative names for localhost, the computer name and its LAN addresses) and the session cookie is marked `Secure`. Browsers warn once about the unknown issuer: compare the SHA-256 fingerprint printed at start-up. Without `-Https` the password and your data travel as plain HTTP and can be read by others on the network. Either way **never expose the port to the internet** and never port-forward it; for remote access use a VPN (for example WireGuard or Tailscale).
 - Anyone who is signed in can do everything, including commanding devices marked *risky*: the confirmation is a precaution against mistakes, not a permission system. There are no separate users or roles.
 
 ## Credentials
 
 - Home Assistant tokens, MQTT and camera passwords, imagery keys are stored in the local database (`secrets` table) and used **only by the server**. The API never returns them, they are never written to logs, and camera credentials typed into an address are moved out of it.
 - They are not encrypted at rest. A **backup file contains them**; so does the data folder. Keep both private, and use a Home Assistant token with only the access you need (you can revoke it any time in Home Assistant).
-- Photos you upload keep their own metadata (including GPS position).
+- Uploaded JPEG and PNG photos are stripped of GPS position, camera and date details, XMP/IPTC data and comments by default (the image data is copied byte for byte; the orientation tag is kept). You can switch this off per upload. Other file types (WebP, GIF, PDF, Office files) are stored unchanged and may carry their own metadata.
 
 ## Uploads
 
@@ -34,8 +34,7 @@ Documents and photos are accepted by extension **and** content (magic bytes), li
 ## Known limits
 
 - Single user; no per-user accounts, two-factor login or audit trail beyond the automation log.
-- Plain HTTP only (no built-in TLS). Put a reverse proxy with TLS in front if you must use it beyond a trusted LAN.
-- The interactive API documentation (`/docs`) stays reachable without a login; it exposes the API's shape but no data.
+- The built-in certificate is self-signed (no certificate authority), so every new device must be told to trust it. For a properly trusted certificate put a reverse proxy in front. Do not use EDEN beyond a trusted LAN.
 
 ## Reporting a vulnerability
 
