@@ -4,7 +4,9 @@ import { MapPin } from 'lucide-react'
 import { companionsOf, monthRange } from '../library/logic'
 import { placementFor, startPlacing } from '../library/place'
 import { useLibrary } from '../library/store'
-import type { AquaticPlant, Fish, Mushroom, Plant } from '../library/types'
+import { usePictures } from '../library/pictures'
+import { familyLine, gbifUrl, nameLine, romaniaLine, wikipediaUrl } from '../library/taxon'
+import type { AquaticPlant, Fish, Mushroom, Plant, Taxon } from '../library/types'
 import { LEGEND, LevelChip } from '../panels/DesignSections'
 
 type Tab = 'plants' | 'mushrooms' | 'aquatic' | 'fish'
@@ -27,9 +29,10 @@ export function LibraryPage() {
     <div className="page">
       <div className="pagehead">
         <div><h1>Plants &amp; Mushrooms Library</h1><p>{lib.plants.length} plants and trees, {lib.aquatic.length} aquatic plants, {lib.fish.length} pond fish, {lib.mushrooms.length} mushrooms, {lib.companions.length} companion relationships. Romania-focused.</p></div>
-        <span className="badge">Starter data set</span>
+        <span className="badge" title="Scientific names and native/introduced status are checked against GBIF; growing advice is hand-curated.">Names checked · starter data</span>
       </div>
       <div className="notice">{lib.disclaimers.data}</div>
+      <PicturesToggle />
       <div className="seg" style={{ marginBottom: 14 }}>
         {([['plants', 'Plants & trees'], ['mushrooms', 'Mushrooms'], ['aquatic', 'Aquatic plants'], ['fish', 'Pond fish']] as [Tab, string][]).map(([t, l]) => <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{l}</button>)}
       </div>
@@ -38,6 +41,60 @@ export function LibraryPage() {
       {tab === 'aquatic' && <AquaticTab />}
       {tab === 'fish' && <FishTab />}
     </div>
+  )
+}
+
+// ---------------------------------------------------------------------------------------------- pictures and sources
+/** The opt-in for pictures from Wikipedia / Wikimedia Commons. */
+function PicturesToggle() {
+  const p = usePictures()
+  const [err, setErr] = useState('')
+  useEffect(() => { void usePictures.getState().loadSettings() }, [])
+  return (
+    <div className="infobox" style={{ marginBottom: 12 }}>
+      <label className="check"><input type="checkbox" checked={p.enabled} onChange={(e) => void p.setEnabled(e.target.checked).catch((er) => setErr((er as Error).message))} /> <strong>Show pictures of plants</strong> from Wikipedia and Wikimedia Commons</label>
+      <small className="muted"> Off by default. When on, opening a plant sends its scientific name to wikipedia.org and commons.wikimedia.org and saves one small picture on this computer. Only freely licensed pictures (public domain, CC0, CC BY, CC BY-SA) are used, always with the author and licence. There are never pictures of mushrooms: a photo is not a safe way to identify one.</small>
+      {p.enabled && <> <button className="chip" onClick={() => void p.forget()}>Delete saved pictures</button></>}
+      {err && <p className="warn" role="alert">{err}</p>}
+    </div>
+  )
+}
+
+function PlantPicture({ kind, id }: { kind: 'plants' | 'aquatic'; id: string }) {
+  const enabled = usePictures((s) => s.enabled)
+  const pic = usePictures((s) => s.cache[`${kind}/${id}`])
+  useEffect(() => { if (enabled) void usePictures.getState().fetchPicture(kind, id) }, [enabled, kind, id])
+  if (!enabled) return null
+  if (!pic || pic.status === 'loading') return <p className="note">Looking for a picture…</p>
+  if (pic.status === 'error') return <p className="note">No picture just now ({pic.why}).</p>
+  if (pic.status === 'none') return <p className="note">No freely licensed picture found.</p>
+  const c = pic.credit
+  return (
+    <figure className="plantpic">
+      <img src={pic.url} alt={`Picture of ${c.title}`} loading="lazy" />
+      <figcaption>
+        Photo: {c.artist} · <a href={c.licenceUrl || c.page} target="_blank" rel="noreferrer noopener">{c.licence}</a> · <a href={c.page} target="_blank" rel="noreferrer noopener">{c.source}</a>
+        {c.article && <> · <a href={c.article} target="_blank" rel="noreferrer noopener">Wikipedia</a></>}
+      </figcaption>
+    </figure>
+  )
+}
+
+/** What is known for sure about the entry and where from: what GBIF confirmed, and what is hand-curated. */
+function SourcesBlock({ sci, family, native, taxon, kind }: { sci: string; family: string; native?: string; taxon: Taxon | null | undefined; kind: 'plant' | 'mushroom' | 'other' }) {
+  const ro = kind === 'plant' ? romaniaLine(taxon, native ?? '') : null
+  const fam = familyLine(family, taxon)
+  return (
+    <details className="sources">
+      <summary>Sources and what was checked</summary>
+      <ul>
+        <li><strong>Name:</strong> {nameLine(taxon)}{fam && ` ${fam}`}{taxon && <> <a href={gbifUrl(taxon)} target="_blank" rel="noreferrer noopener">GBIF record</a> (checked {taxon.checked}).</>}</li>
+        {ro && <li><strong>In Romania:</strong> {ro.text}{ro.note && <> <small className="muted">{ro.note}</small></>}</li>}
+        {kind === 'plant' && !ro && <li><strong>In Romania:</strong> no Romanian checklist record was found; the library’s own “{native}” stays unchecked.</li>}
+        <li><strong>Growing data</strong> (size, spacing, months, soil, uses): hand-curated from general horticultural knowledge for a continental temperate climate, not cited value by value. {kind === 'mushroom' ? 'Never rely on it to eat a mushroom.' : 'Check locally.'}</li>
+        <li><a href={wikipediaUrl(sci)} target="_blank" rel="noreferrer noopener">Read more on Wikipedia</a> (opens a new page).</li>
+      </ul>
+    </details>
   )
 }
 
@@ -122,6 +179,7 @@ function PlantDetail({ p, onSelect }: { p: Plant; onSelect: (id: string) => void
     <div className="detail glass">
       <h2>{p.name}</h2>
       <div className="sci">{p.sci} · {p.family}{p.ro ? ` · ro: ${p.ro}` : ''}</div>
+      <PlantPicture kind="plants" id={p.id} />
       <div>{p.cats.map((c) => <span key={c} className={`pill ${c === 'native' ? 'native' : c === 'toxic' ? 'toxic' : ''}`}>{CAT_LABEL[c] ?? c}</span>)}<span className="pill">{{ native: 'Native', naturalised: 'Naturalised', introduced: 'Introduced' }[p.native]}</span></div>
       {p.tox && <div className="dangerbox" style={p.cats.includes('toxic') ? undefined : { borderColor: 'rgba(244,193,93,.6)', background: 'rgba(244,193,93,.08)' }}>⚠ {p.tox}</div>}
       <button className="primary wide" disabled={!placementFor(ix, p.id)} onClick={add}><MapPin size={15} /> ADD TO PROPERTY</button>
@@ -143,6 +201,7 @@ function PlantDetail({ p, onSelect }: { p: Plant; onSelect: (id: string) => void
       {p.pollination && <p><strong>Pollination:</strong> {p.pollination.selfFertile === 'yes' ? 'self-fertile. ' : p.pollination.selfFertile === 'no' ? 'needs a partner. ' : `${p.pollination.selfFertile}. `}{p.pollination.note}</p>}
       {p.notes && <p>{p.notes}</p>}
       {p.med && <div className="infobox"><strong>Traditional use only</strong><p>{p.med}</p><small className="muted">{lib.disclaimers.medicinal}</small></div>}
+      <SourcesBlock sci={p.sci} family={p.family} native={p.native} taxon={p.taxon} kind="plant" />
       <h4>Companion planting</h4>
       {comps.length === 0 ? <p className="empty">No relationships recorded. That does not mean it has no companions or conflicts.</p> : (
         <>
@@ -211,6 +270,7 @@ function MushroomDetail({ m }: { m: Mushroom }) {
       </dl>
       <p><strong>Look-alikes:</strong> {m.lookalikes}</p>
       {m.cultivationNote && <p><strong>Growing:</strong> {m.cultivationNote}</p>}
+      <SourcesBlock sci={m.sci} family="" taxon={m.taxon} kind="mushroom" />
       <p className="note">No photograph is shown on purpose: a picture must never be used to decide a mushroom is safe.</p>
     </div>
   )
@@ -247,6 +307,7 @@ function AquaticDetail({ a }: { a: AquaticPlant }) {
     <div className="detail glass">
       <h2>{a.name}</h2>
       <div className="sci">{a.sci}</div>
+      <PlantPicture kind="aquatic" id={a.id} />
       <span className="pill">{a.zone}</span><span className="pill">{a.native}</span><span className="pill">vigour: {a.vigour}</span>
       {a.avoid && <div className="dangerbox">⛔ {a.avoid}</div>}
       {a.tox && <div className="dangerbox">⚠ {a.tox}</div>}
@@ -254,6 +315,7 @@ function AquaticDetail({ a }: { a: AquaticPlant }) {
       <dl className="kv"><dt>Water over crown</dt><dd>{a.depthCm[0]}–{a.depthCm[1]} cm</dd><dt>Sun</dt><dd>{a.sun}</dd><dt>Flowers</dt><dd>{monthRange(a.flower)}</dd></dl>
       <p>{a.notes}</p>
       {a.wildlife && <p><strong>Wildlife:</strong> {a.wildlife}</p>}
+      <SourcesBlock sci={a.sci} family="" native={a.native} taxon={a.taxon} kind="plant" />
     </div>
   )
 }

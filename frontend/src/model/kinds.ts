@@ -40,6 +40,7 @@ export interface KindDef {
   extrude?: { heightProp: string; fallback: number; base?: number; color?: string }
   lineExtrude?: { heightProp: string; fallback: number; widthM: number }
   hitFill?: boolean // false: polygon is selected by its outline only (boundary, big zones)
+  noTool?: boolean // not offered in the drawing palette (objects of this kind are created by an import)
   smart?: boolean // device placeholder: shows "not connected" notice
   presets?: Preset[]
   fields: FieldDef[]
@@ -101,6 +102,19 @@ export const KINDS: KindDef[] = [
   },
 
   // ------------------------------------------------------------ structures
+  {
+    // a building on someone else's land, imported from OpenStreetMap (Sun & Shadows page): it casts shade, it is not part of your property's statistics
+    kind: 'neighbour', label: 'Neighbouring building', geom: 'Polygon', layerKey: 'buildings', group: 'Structures', color: '#9ca3af', fillOpacity: 0.45, lineWidth: 1.5, noTool: true,
+    extrude: { heightProp: 'height', fallback: 6, color: '#b4b9c2' },
+    fields: [
+      { key: 'height', label: 'Height (to the ridge / top)', type: 'number', unit: 'm', min: 0.5, step: 0.1, section: 'Building' },
+      { key: 'eaveHeight', label: 'Wall (eave) height, optional', type: 'number', unit: 'm', min: 0.3, step: 0.1, section: 'Building' },
+      { key: 'roofType', label: 'Roof type', type: 'select', options: ROOFS, section: 'Building' },
+      { key: 'roofOrientation', label: 'Roof ridge bearing', type: 'number', unit: '°', min: 0, max: 360, section: 'Building' },
+      { key: 'heightBasis', label: 'Where the height comes from', type: 'text', section: 'Source' },
+      { key: 'source', label: 'Source', type: 'text', section: 'Source' },
+    ],
+  },
   {
     kind: 'building', label: 'Building', geom: 'Polygon', layerKey: 'buildings', group: 'Structures', color: '#f4a261', fillOpacity: 0.55, lineWidth: 2,
     extrude: { heightProp: 'height', fallback: 6 },

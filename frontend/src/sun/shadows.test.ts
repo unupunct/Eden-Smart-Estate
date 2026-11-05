@@ -224,3 +224,23 @@ describe('pitched roofs', () => {
     expect(gableH).toBeGreaterThan(boxH)
   })
 })
+
+describe('a neighbour next door', () => {
+  const house = (kind: string) => obj('n', kind, poly(box(0, 12, 10, 8)), { height: 9, roofType: 'gable' }) // 12 m north of the origin, ridge east-west
+  it('a neighbouring building shades a bed to its north exactly like one of your own buildings (same roof, same density)', () => {
+    const bed = [0, 22] as XY // 6 m north of the neighbour's north wall
+    const v = sunVector(180, 30)!
+    const own = casters(docOf(house('building')))
+    const theirs = casters(docOf(house('neighbour')))
+    expect(theirs.map((c) => [c.shape.type, c.zb, c.zt, c.density])).toEqual(own.map((c) => [c.shape.type, c.zb, c.zt, c.density]))
+    expect(theirs.length).toBe(2) // walls plus the roof volume
+    expect(lit(theirs, v, bed)).toBe(lit(own, v, bed))
+    expect(lit(theirs, v, bed)).toBe(0)
+  })
+  it('without the neighbour the same spot is in full sun, and a hidden neighbour layer casts nothing', () => {
+    const v = sunVector(180, 30)!
+    expect(lit(casters(docOf()), v, [0, 22])).toBe(1)
+    const hidden: Doc = { layers: [{ ...layer, visible: false }], objects: { n: house('neighbour') } }
+    expect(casters(hidden)).toHaveLength(0)
+  })
+})

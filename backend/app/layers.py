@@ -24,7 +24,7 @@ DEFAULT_LAYERS = [
 # kind -> default layer key (mirrors frontend/src/model/kinds.ts)
 KIND_LAYER = {
     "boundary": "boundary", "zone": "zones", "orchard_area": "zones", "forest": "zones", "utility_area": "zones",
-    "building": "buildings", "greenhouse": "greenhouse", "garden_bed": "garden_beds", "pond": "pond",
+    "building": "buildings", "neighbour": "buildings", "greenhouse": "greenhouse", "garden_bed": "garden_beds", "pond": "pond",
     "pond_zone": "pond", "solar": "solar",
     "fence": "fences", "hedge": "fences", "road": "roads", "path": "roads", "drainage": "water_infra",
     "water_pipe": "water_infra", "irrigation": "water_infra", "cable": "electrical",

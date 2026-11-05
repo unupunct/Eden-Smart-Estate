@@ -1,7 +1,7 @@
 <#
  Builds release\EdenSmartEstate-Setup-<version>.exe: a signed Windows installer that brings its own Python (no Python needed on the PC).
 
-   scripts\build-installer.ps1                 build (and sign) version 1.2.0 from this source tree
+   scripts\build-installer.ps1                 build (and sign) version 1.3.0 from this source tree
    scripts\build-installer.ps1 -Version 1.3.0
    scripts\build-installer.ps1 -NoSign         unsigned build (testing only)
    scripts\build-installer.ps1 -SkipPackage    reuse release\stage from a previous package.ps1 run
@@ -12,7 +12,7 @@
  signature (Python Software Foundation) before use.
 #>
 param(
-    [string]$Version = '1.2.0',
+    [string]$Version = '1.3.0',
     [switch]$NoSign,
     [switch]$SkipPackage
 )

@@ -5,6 +5,7 @@ import { useApp } from '../model/app'
 import { useEditor } from '../model/store'
 import { AccountCard } from './AccountCard'
 import { NotificationsCard } from './NotificationsCard'
+import { InstallCard } from './InstallCard'
 import { OcrCard } from './OcrCard'
 
 const PROVIDER_LABEL: Record<string, string> = {
@@ -61,6 +62,7 @@ export function SettingsPage() {
 
       <AccountCard />
       <NotificationsCard />
+      <InstallCard />
       <OcrCard />
 
       <section className="glass formcard">
@@ -108,7 +110,7 @@ export function SettingsPage() {
 
       <section className="glass formcard">
         <h2>About</h2>
-        <p><strong>EDEN — Smart Estate</strong> v1.2.0 (MIT licence) · map, property editor, landscape design, plant library, sun and shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports, terrain, notifications and an admin account.</p>
+        <p><strong>EDEN — Smart Estate</strong> v1.3.0 (MIT licence) · map, property editor, landscape design, plant library, sun and shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports, terrain, notifications and an admin account.</p>
         <p className="note">Units are metric. Areas and distances are geodesic (on the WGS84 sphere), so they stay correct at any zoom and map layer.</p>
       </section>
     </div>

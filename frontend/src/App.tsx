@@ -26,6 +26,8 @@ const WeatherPage = lazy(() => import('./pages/Weather').then((m) => ({ default:
 const ReportsPage = lazy(() => import('./pages/Reports').then((m) => ({ default: m.ReportsPage })))
 
 import { ErrorBoundary } from './ErrorBoundary'
+import { OfflineBanner } from './pages/InstallCard'
+import { forgetOfflineData } from './pwa'
 import { LoginScreen } from './Login'
 import { useManage } from './manage/store'
 import { useReminders } from './manage/reminders'
@@ -115,12 +117,13 @@ export default function App() {
             </button>
           ))}
         </div>
-        {authRequired && <button className="navitem" title="Sign out" onClick={() => void fetch('/api/auth/logout', { method: 'POST' }).then(() => location.reload())}><LogOut size={18} />{!collapsed && <span>Sign out</span>}</button>}
+        {authRequired && <button className="navitem" title="Sign out" onClick={() => { forgetOfflineData(); void fetch('/api/auth/logout', { method: 'POST' }).then(() => location.reload()) }}><LogOut size={18} />{!collapsed && <span>Sign out</span>}</button>}
         <button className="navitem collapse" onClick={toggleSidebar} title={collapsed ? 'Expand menu' : 'Collapse menu'}>
           {collapsed ? <ChevronsRight size={18} /> : <><ChevronsLeft size={18} /><span>Collapse</span></>}
         </button>
       </nav>
       <main className="main">
+        <OfflineBanner />
         <ErrorBoundary key={route} onHome={() => go('overview')}>
         <Suspense fallback={<div className="emptystate"><Box className="spin" /><p>Loading…</p></div>}>
         {booting ? (

@@ -17,9 +17,9 @@ Check Python: open PowerShell and run `py -3 --version` (or `python --version`).
 
 ## 2. Install
 
-### Option A (recommended): the installer, `EdenSmartEstate-Setup-1.2.0.exe`
+### Option A (recommended): the installer, `EdenSmartEstate-Setup-1.3.0.exe`
 
-1. Download `EdenSmartEstate-Setup-1.2.0.exe` and `SHA256SUMS.txt` from the project's **Releases** page, and compare the checksum (`Get-FileHash .\EdenSmartEstate-Setup-1.2.0.exe -Algorithm SHA256`).
+1. Download `EdenSmartEstate-Setup-1.3.0.exe` and `SHA256SUMS.txt` from the project's **Releases** page, and compare the checksum (`Get-FileHash .\EdenSmartEstate-Setup-1.3.0.exe -Algorithm SHA256`).
 2. Double-click it. It is signed, but with a **self-signed certificate**, so Windows says *Unknown publisher* / SmartScreen may say *Windows protected your PC*. Read [SIGNING.md](SIGNING.md) (what the signature does prove, the signer's fingerprint, and how a trusted one is obtained), then choose *More info → Run anyway* if you are satisfied.
 3. Follow the wizard. It needs **no administrator rights** and **no Python**: it brings its own (the official embeddable Python, checked before it was bundled).
 
@@ -31,11 +31,11 @@ Where things go: the program in `%LOCALAPPDATA%\EDEN\app`, **your data in `%LOCA
 
 **Uninstalling:** *Installed apps → EDEN Smart Estate → Uninstall*. It asks whether to also delete your data (default: keep). Silent forms: `unins000.exe /VERYSILENT` keeps the data, `unins000.exe /VERYSILENT /REMOVEDATA=1` removes it.
 
-Silent install for scripts: `EdenSmartEstate-Setup-1.2.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR="D:\EDEN" /TASKS="autostart"`.
+Silent install for scripts: `EdenSmartEstate-Setup-1.3.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR="D:\EDEN" /TASKS="autostart"`.
 
 ### Option B: zip + `Install-EDEN.cmd` (uses your own Python)
 
-1. Download `EdenSmartEstate-1.2.0.zip` from the project's **Releases** page.
+1. Download `EdenSmartEstate-1.3.0.zip` from the project's **Releases** page.
 2. Right-click → *Extract All…* (any temporary folder is fine, for example Downloads).
 3. Double-click **`Install-EDEN.cmd`**.
 
@@ -130,6 +130,10 @@ EDEN creates a self-signed certificate on your computer (in `data\tls`, valid fo
 - To set a password permanently without typing it each time, set the `EDEN_PASSWORD` environment variable before starting.
 - Windows Firewall asks whether to allow Python on private networks: allow **private** only.
 - See [SECURITY.md](../SECURITY.md) for the details and limits.
+
+### Install on a phone or tablet as an app
+
+Browsers do not allow installing or offline use over plain `http` on the network, and over `https` they require a certificate the device **trusts** (clicking through the warning is not enough). Browsers refuse to install an app or keep an offline copy over a certificate they do not trust, even after you click through the warning. EDEN's own certificate (`data\tls\eden-cert.pem`) is self-signed, so on a phone or tablet either install it on the device as a trusted certificate first, or put EDEN behind something with a real certificate (a reverse proxy, or a private network service that provides one). On the same computer, `http://localhost:8787` needs nothing. Not tested on a real phone. Then open EDEN on the device and use *Settings → Install as an app and use offline* (Android: menu → *Install app*; iPhone: Safari → *Share* → *Add to Home Screen*).
 
 ## 7. Start automatically at sign-in
 

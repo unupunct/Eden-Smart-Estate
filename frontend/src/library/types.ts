@@ -3,8 +3,21 @@ export interface Pollination {
   note: string
 }
 
+/** What was checked against GBIF (open biodiversity data) by scripts/verify-taxonomy.py. */
+export interface Taxon {
+  gbif: number
+  name: string // GBIF's name for the entry the library's name matched
+  authorship: string
+  family: string | null
+  status: string // ACCEPTED, SYNONYM, ...
+  acceptedName?: string // set when the library's name is a synonym in GBIF
+  checked: string | null
+  ro?: { verdict: 'native' | 'introduced' | 'conflict' | 'casual' | 'unknown'; native: string[]; introduced: string[] } // plants only
+}
+
 export interface Plant {
   id: string
+  taxon?: Taxon | null
   name: string
   ro: string | null
   sci: string
@@ -36,6 +49,7 @@ export interface Plant {
 
 export interface AquaticPlant {
   id: string
+  taxon?: Taxon | null
   name: string
   sci: string
   native: string
@@ -54,6 +68,7 @@ export type NspSuitability = 'suitable' | 'conditional' | 'not_recommended' | 'u
 
 export interface Fish {
   id: string
+  taxon?: Taxon | null
   name: string
   sci: string
   native: string
@@ -69,6 +84,7 @@ export type MushroomStatus = 'edible' | 'edible_cooked' | 'inedible' | 'poisonou
 
 export interface Mushroom {
   id: string
+  taxon?: Taxon | null
   name: string
   ro: string | null
   sci: string
@@ -111,6 +127,7 @@ export interface Library {
   mushrooms: Mushroom[]
   companions: Relation[]
   waterQuality: { note: string; ranges: Record<string, WaterRange> }
+  taxaSource?: { taxonomy: string; distribution: string; checkedOn: string } | null
 }
 
 export type Level = 'green' | 'yellow' | 'red'

@@ -13,8 +13,9 @@ import {
   SEASON_DAYS, seasonDayStart, SUN_NEED_HOURS, type AreaSun, type XY,
 } from '../sun/shadows'
 import { loadZone, saveZone, useSun } from '../sun/store'
-import { horizonFn, horizonAt, useTerrain } from '../terrain/terrain'
+import { horizonFn, horizonAt, surfaceFn, useTerrain } from '../terrain/terrain'
 import { TerrainCard } from './TerrainCard'
+import { NeighboursCard } from './NeighboursCard'
 import { addDays, allZones, fmtClock, fmtDate, fmtDuration, fromWall, toWall, zoneLabel } from '../sun/tz'
 
 const AREA_KINDS = new Set(['garden_bed', 'greenhouse', 'gh_bed', 'orchard_area', 'pond'])
@@ -43,7 +44,9 @@ function SunInner({ property }: { property: PropertyMeta }) {
   const terrainData = useTerrain((s) => s.data)
   const terrainBlocks = useTerrain((s) => s.blocks)
   const horizon = terrainBlocks ? horizonFn(terrainData) : undefined
-  const hKey = horizon && terrainData ? terrainData.fetchedAt : ''
+  const tiltOn = useTerrain((s) => s.tilt)
+  const surfaceAt = tiltOn ? surfaceFn(terrainData, origin) : undefined // the ground's own slope, from the terrain data
+  const hKey = terrainData ? `${horizon ? terrainData.fetchedAt : ''}|${surfaceAt ? terrainData.fetchedAt : ''}` : ''
 
   // shadows are the point of this page; the zone is remembered per property
   useEffect(() => {
@@ -104,7 +107,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
       const possibleT = {} as Record<DayKey, number>
       for (const k of DAY_KEYS) {
         const casters = buildCasters(doc, origin, { leaf: leafAt(days[k].start), ix })
-        byDay[k] = Object.fromEntries(analyseAreas(doc, areaIds, casters, days[k].start, days[k].end, origin, { stepMin: 15, horizon }).map((a) => [a.id, a]))
+        byDay[k] = Object.fromEntries(analyseAreas(doc, areaIds, casters, days[k].start, days[k].end, origin, { stepMin: 15, horizon, surfaceOf: (o, c) => (o.kind === 'pond' ? undefined : surfaceAt?.(c)) }).map((a) => [a.id, a]))
         possible[k] = possibleHours(days[k].start, days[k].end, origin, { stepMin: 15 })
         possibleT[k] = horizon ? possibleHours(days[k].start, days[k].end, origin, { stepMin: 15, horizon }) : possible[k]
       }
@@ -126,7 +129,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
     }
     const h = setTimeout(() => {
       const casters = buildCasters(doc, origin, { leaf: leafAt(dayStartMs), ix })
-      const { cells, cell } = heatGrid(casters, boundsOf(doc, origin), origin, dayStartMs, dayEndMs, 3500, { stepMin: 15, horizon })
+      const { cells, cell } = heatGrid(casters, boundsOf(doc, origin), origin, dayStartMs, dayEndMs, 3500, { stepMin: 15, horizon, surfaceAt })
       useSun.getState().set({
         heat: { type: 'FeatureCollection', features: cells.map((c) => ({ type: 'Feature', properties: { hours: c.hours }, geometry: { type: 'Polygon', coordinates: [c.ring] } })) },
       })
@@ -204,6 +207,8 @@ function SunInner({ property }: { property: PropertyMeta }) {
 
         <TerrainCard propertyId={property.id} lat={lat} lng={lng} dayStartMs={dayStartMs} />
 
+        <NeighboursCard propertyId={property.id} />
+
         <h4>Shadow settings</h4>
         <label>Tree and hedge foliage
           <select value={sun.leaf} onChange={(e) => sun.set({ leaf: e.target.value as 'auto' | 'on' | 'off' })}>
@@ -239,7 +244,9 @@ function SunInner({ property }: { property: PropertyMeta }) {
                 const g = growingMean(id)
                 return (
                   <tr key={id} className="clickrow" onClick={() => select(id)}>
-                    <td><span className="swatch" style={{ background: kindDef(o.kind).color }} /> {o.name || kindDef(o.kind).label}<small> {kindDef(o.kind).label}</small></td>
+                    <td><span className="swatch" style={{ background: kindDef(o.kind).color }} /> {o.name || kindDef(o.kind).label}<small> {kindDef(o.kind).label}</small>
+                      {table.byDay.sel[id]?.tilt && <small className="tiltnote" title="From the terrain data: the ground here is tilted, which changes how much direct sun it gets, and a slope turned away from the sun is in its own shade.">{' '}· slope {table.byDay.sel[id].tilt!.slopeDeg.toFixed(1)}° facing {compass(table.byDay.sel[id].tilt!.aspectDeg)}, {tiltText(table.byDay.sel[id].tilt!.gain)}</small>}
+                    </td>
                     <td>{fmtArea(measureGeom(o.geometry).area)}</td>
                     <td>{cell('sel')}</td>
                     {SEASON_DAYS.map((s) => <td key={s.key}>{cell(s.key)}</td>)}
@@ -272,6 +279,12 @@ function SunInner({ property }: { property: PropertyMeta }) {
       </section>
     </div>
   )
+}
+
+/** "+12 % direct light vs level ground" / "-8 % ...". */
+function tiltText(gain: number): string {
+  const d = Math.round((gain - 1) * 100)
+  return d === 0 ? 'about the same direct light as level ground' : `${d > 0 ? '+' : '−'}${Math.abs(d)} % direct light vs level ground`
 }
 
 function Hours({ h, lo, hi }: { h: number; lo?: number; hi?: number }) {

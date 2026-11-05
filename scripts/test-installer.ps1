@@ -2,11 +2,11 @@
  Tests the Windows installer (release\EdenSmartEstate-Setup-<version>.exe) for real: signature, tamper detection, silent install
  into a temporary folder, update that keeps data, the installed app starting with its bundled Python, uninstall that keeps
  (or on request removes) data.
-   scripts\test-installer.ps1 [-Version 1.2.0]
+   scripts\test-installer.ps1 [-Version 1.3.0]
  Refuses to run if EDEN is already installed through this installer (the test would replace its uninstall entry).
  Needs the .exe from build-installer.ps1. Uses port 8798.
 #>
-param([string]$Version = '1.2.0', [int]$Port = 8798)
+param([string]$Version = '1.3.0', [int]$Port = 8798)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $exe = Join-Path $root "release\EdenSmartEstate-Setup-$Version.exe"

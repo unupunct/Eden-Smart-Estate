@@ -143,6 +143,20 @@ Writes carrying a foreign `Origin` header are refused (`403`) while protection i
 | `GET /api/properties/{id}/terrain?refresh=` | `{enabled, terrain, error?}`: elevation, slope, aspect, relief, skyline profile (36 azimuths), the 5x5 and 15x15 grids, source and licence, `fetchedAt`, `stale`. Fetches only when enabled and not cached; `DELETE` on the same path forgets it |
 | automation action `{"type":"notify","message":"..."}` | sends a push notification when the rule fires (dry runs only log it) |
 
+## Library, pictures, terrain sources and neighbours (v1.3)
+
+| Method & path | Purpose |
+|---|---|
+| `GET /api/library` | now also carries `taxon` on every entry (`gbif`, `name`, `authorship`, `family`, `status`, `acceptedName?`, `checked`, `ro?` = `{verdict, native[], introduced[]}`) and `taxaSource` |
+| `GET /api/library/pictures/settings` · `PUT` | the opt-in (`{enabled}`) for plant pictures, with what is sent |
+| `GET /api/library/pictures/{plants|aquatic}/{id}` | `{status:"ok", url, credit:{title, artist, licence, licenceUrl, page, article, source}}` or `{status:"none", why}`; `403` when switched off, `404` for mushrooms and unknown entries, `502` when Wikipedia cannot be reached (nothing stored) |
+| `GET /api/library/picture-file/{name}` | a saved picture (`<40 hex>.jpg|png|webp` only) |
+| `DELETE /api/library/pictures` | delete saved pictures and remembered answers |
+| `GET /api/terrain/settings` · `PUT` | now `{enabled, provider?}` and returns `providerId`, `providers[]` (`id`, `name`, `resolutionM`, `licence`, `sends`); `provider` is `terrarium` (about 30 m) or `open-meteo` (90 m); an unknown one is `422` |
+| `POST /api/properties/{id}/neighbours/search` | `{radiusM?: 30-400}` → `{buildings:[{osmId, ring, areaM2, distanceM, height, heightBasis, roofType, eaveHeight, name, buildingTag}], radiusM, center, source, sent}` from OpenStreetMap; stores nothing; `502` when no server answers |
+
+Environment variables for your own servers: `EDEN_TERRARIUM_URL`, `EDEN_OVERPASS_URL`, `EDEN_WIKI_SUMMARY_URL`, `EDEN_COMMONS_API_URL`.
+
 ## Planned integrations (not implemented yet)
 
 ESPHome and ONVIF discovery.

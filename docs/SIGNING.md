@@ -18,13 +18,13 @@ A self-signed certificate **cannot** remove the Windows warning: Windows only tr
 1. **Checksum.** Compare with `SHA256SUMS.txt` on the release page:
 
    ```powershell
-   Get-FileHash .\EdenSmartEstate-Setup-1.2.0.exe -Algorithm SHA256
+   Get-FileHash .\EdenSmartEstate-Setup-1.3.0.exe -Algorithm SHA256
    ```
 
 2. **Signature and signer.**
 
    ```powershell
-   Get-AuthenticodeSignature .\EdenSmartEstate-Setup-1.2.0.exe | Format-List Status, StatusMessage, SignerCertificate, TimeStamperCertificate
+   Get-AuthenticodeSignature .\EdenSmartEstate-Setup-1.3.0.exe | Format-List Status, StatusMessage, SignerCertificate, TimeStamperCertificate
    ```
 
    Expect `Status: UnknownError` with the message *"A certificate chain processed, but terminated in a root certificate which is not trusted"* (that is the self-signed case; `HashMismatch` would mean the file was altered, and `NotSigned` that the signature is missing). The signer must be:

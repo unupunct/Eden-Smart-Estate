@@ -30,6 +30,18 @@
 | ONVIF says the user name or password was rejected | Use an **ONVIF user** created in the camera's own settings; some cameras do not accept their web login for ONVIF. |
 | Terrain says the service could not be reached | The elevation service needs internet. EDEN keeps showing the last real answer with its date. |
 
+## Install, offline, neighbours, pictures and the library
+
+| Symptom | Fix |
+|---|---|
+| No *Install EDEN* button, or Settings says the offline copy could not be prepared | Installing needs `localhost` on this computer, or https **with a certificate the device trusts**: EDEN's own `-Https` certificate is self-signed, which browsers refuse for installing and offline use even after you accept the warning. Install `data\tls\eden-cert.pem` on the device as a trusted certificate, or put EDEN behind a real certificate (untested on a phone). Some browsers only offer the button after you have used the page for a while; the browser's own menu (*Install app*) works too. On iPhone use Safari → *Share* → *Add to Home Screen*. |
+| EDEN does not open offline | Open it once with a connection after installing or updating, and look at the pages you need so they are saved. The card in Settings says whether the offline copy is ready. After signing out the saved data is wiped on purpose. |
+| *Find neighbouring buildings* says OpenStreetMap could not be reached | The public Overpass servers are often busy; EDEN tries three. Wait a few minutes and try again, or set `EDEN_OVERPASS_URL` to your own server. Nothing is added on an error. |
+| A neighbour's height looks wrong | OpenStreetMap heights are often missing. The list says which are *assumed*; select the building and correct *Height* and *Roof type*. |
+| No picture for a plant | Pictures are off until you tick the box; only freely licensed Wikimedia Commons pictures are used, and some plants have none ("No freely licensed picture found"). *Wikipedia could not be reached* is temporary. |
+| The library says a name is a synonym | GBIF uses another accepted name (for example pea is *Lathyrus oleraceus*); the library keeps the name gardeners know and shows both. |
+| Beds show no slope note | Terrain must be on, *Tilt beds…* ticked, and the ground flat to under 0.5° gives no note. Ponds are never tilted. |
+
 ## Map and imagery
 
 | Symptom | Fix |
@@ -37,7 +49,7 @@
 | Grey tiles with "Map data not yet available" | Settings → lower the Esri deepest zoom (16 or 17), or add a MapTiler key. |
 | Map is blank or dark | You are offline or the provider refused the request. Switch to *Blank grid* in the layer menu and use an imported image, or check your connection. |
 | Place search says "Geocoder unavailable" | Enter coordinates as `lat, lng` instead. |
-| Shadows or sun hours look wrong | Check the **time zone** on the Sun & Shadows page and that the heights of buildings, trees and fences are filled in. The model ignores terrain and neighbours' buildings (see the user guide). |
+| Shadows or sun hours look wrong | Check the **time zone** on the Sun & Shadows page and that the heights of buildings, trees and fences are filled in. The model ignores terrain unless you turn it on, and neighbours' buildings (see the user guide). |
 
 ## Smart home, cameras, automations
 

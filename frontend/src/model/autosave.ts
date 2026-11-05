@@ -142,8 +142,18 @@ export function startAutosave(): () => void {
     if (document.visibilityState === 'hidden') void flush()
   }
   document.addEventListener('visibilitychange', onHide)
+  const onOnline = () => void flush() // the connection is back: save what piled up while offline straight away
+  window.addEventListener('online', onOnline)
+  // closing the page with unsaved changes would lose them (offline edits are only kept in the open page)
+  const onLeave = (e: BeforeUnloadEvent) => {
+    const st = useEditor.getState().save.status
+    if (st === 'error' || (st === 'dirty' && !navigator.onLine)) e.preventDefault()
+  }
+  window.addEventListener('beforeunload', onLeave)
   return () => {
     unsub()
     document.removeEventListener('visibilitychange', onHide)
+    window.removeEventListener('online', onOnline)
+    window.removeEventListener('beforeunload', onLeave)
   }
 }

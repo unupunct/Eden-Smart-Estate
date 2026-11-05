@@ -105,7 +105,7 @@ The image is placed with its true scale and rotation (not stretched). Adjust **o
 
 ## 9. 2D and 3D
 
-The **2D/3D** button tilts the camera and extrudes buildings (floors/height), greenhouses, tree crowns (height and canopy), fences and hedges from the *same* objects — there is no separate 3D data. Rotate and tilt with right-mouse drag (or two fingers on a touch screen), zoom as usual; the 3D button returns to the flat 2D view. Roofs are flat extrusions in this version.
+The **2D/3D** button tilts the camera and extrudes buildings (floors/height), greenhouses, tree crowns (height and canopy), fences and hedges from the *same* objects — there is no separate 3D data. Rotate and tilt with right-mouse drag (or two fingers on a touch screen), zoom as usual; the 3D button returns to the flat 2D view. Pitched roofs are drawn as real roof shapes (section 37).
 
 ## 10. Import, export, backup
 
@@ -119,12 +119,13 @@ The top-right box searches your objects by name, type and species (click a resul
 
 ## 12. The plant library and “Add to property”
 
-*Sidebar → Plants & Mushrooms.* Four tabs: **Plants & trees** (100 entries), **Mushrooms** (26), **Aquatic plants** (25) and **Pond fish** (10).
+*Sidebar → Plants & Mushrooms.* Four tabs: **Plants & trees** (195 entries), **Mushrooms** (26), **Aquatic plants** (25) and **Pond fish** (10).
 
 - **Filter** by name (common, Latin or Romanian), category (vegetables, herbs, fruit trees, nut trees, native, medicinal, toxic…), native status, sun, water, edibility, winter hardiness zone, flowering month, harvest month, mature height and wildlife value. **Companion of…** lists only the plants that have a recorded relationship with the plant you choose.
 - Click a plant for its detail page: size, soil, spacing, sowing/flowering/harvest months, propagation, wildlife value, notes, pollination needs (fruit trees) and every companion relationship with its **evidence label**.
 - **ADD TO PROPERTY** switches to the map with that species armed: each click places one specimen (trees, bushes or plants, named after the species, linked to the library). Press **Esc** to stop. Aquatic plants and invasive-species warnings work the same way (invasive aquatic plants cannot be added).
 - Toxic plants ask for confirmation before they are placed.
+- **Sources and what was checked** (a fold-out on every entry): the scientific name against GBIF, whether the plant is native or introduced in Romania according to the GBIF checklists (for a crop this describes the wild species), and a reminder that the growing data is hand-curated. See section 39.
 - **Medicinal** entries describe *traditional* use only — not evidence, not medical advice. **Mushrooms** never claim that anything is safe because of a photo; no photos are bundled; poisonous and deadly species and look-alikes are called out first.
 
 The data is a starter set (see the README). Where the library has no record it says so — that is *not* a statement that two plants are compatible.
@@ -183,7 +184,7 @@ Open **Sun & Shadows** in the menu. The map shows the shadows cast by every **vi
 
 **Roofs:** a building with a **gable, hip or mansard** roof casts the shape of its walls plus the sloping roof. *Height* is to the ridge; give the optional **wall (eave) height** for an exact roof rise, otherwise a rise of about a quarter of the building's width is assumed. The ridge follows *Roof ridge bearing* if set, otherwise the long side. A **shed** roof is modelled only when its bearing is set (otherwise the building stays a box, which overstates the shadow). Flat roofs, greenhouses and solar panels are boxes; the 3D view still draws every building as a box.
 
-**Terrain:** with *Terrain* switched on (see section 35) hills on the skyline hide the sun when it is lower than the land, in the sun hours and in the table. **What it does not know:** terraces and garden-scale mounds (the data is 90 m), a neighbour's house outside your drawing, roof details such as dormers and chimneys, exact crown shapes (cylinders from 30 % of the height up) and real leaf density. Foliage is assumed to block about 75 % of light in leaf and 20 % when bare, and evergreens 85 %: these are estimates.
+**Terrain:** with *Terrain* switched on (see section 35) hills on the skyline hide the sun when it is lower than the land, in the sun hours and in the table. **What it does not know:** terraces and garden-scale mounds (the data is 30 m or 90 m), a neighbour's house unless you add it (section 36), roof details such as dormers and chimneys, exact crown shapes (cylinders from 30 % of the height up) and real leaf density. Foliage is assumed to block about 75 % of light in leaf and 20 % when bare, and evergreens 85 %: these are estimates.
 
 ## 18. Night Sky
 
@@ -320,9 +321,31 @@ When you add a file EDEN reads its text so *Search* finds it: text files, Word, 
 
 ## 35. Terrain
 
-On the *Sun & Shadows* page, **Turn on terrain** asks the Open-Meteo elevation service (Copernicus 90 m data) for the ground height around the property. It sends the property's location rounded to about 100 m and nothing else; it is off until you turn it on. You get the ground height, the **slope and which way it faces**, the height range nearby, and a chart of the **skyline** the surrounding land makes with the sun's path on the chosen day. With *Hills on the skyline block the sun* ticked, the sun hours drop when a hill stands in the sun's way, and *Show ground height on the map* tints the area by height.
+On the *Sun & Shadows* page, **Turn on terrain** looks up the ground height around the property. You choose the source first: **Terrain Tiles on AWS (about 30 m)**, which downloads the one to four map tiles that cover the property and reads the heights itself, so only tile numbers (5 km squares) are sent; or **Open-Meteo (Copernicus, 90 m)**, which is sent the property's location rounded to about 100 m. It is off until you turn it on, and you can switch source later (*Elevation source* on the card). There is no free national elevation service that EDEN can ask for Romania. You get the ground height, the **slope and which way it faces**, the height range nearby, and a chart of the **skyline** the surrounding land makes with the sun's path on the chosen day. With *Hills on the skyline block the sun* ticked, the sun hours drop when a hill stands in the sun's way, and *Show ground height on the map* tints the area by height.
 
-Limits, plainly: 90 m resolution means hills and valleys yes, terraces, ditches and garden mounds no; it is a surface model, so trees and buildings may show up in it; the skyline is seen from the property centre, fine for a normal plot, not for a very large one; a sloping bed is not tilted in the sun-hours calculation. The last real answer is kept with its date and shown as old if the service cannot be reached.
+Limits, plainly: 90 m resolution means hills and valleys yes, terraces, ditches and garden mounds no; it is a surface model, so trees and buildings may show up in it; the skyline is seen from the property centre, fine for a normal plot, not for a very large one; the tilt of a bed is the slope of the ground around it (30 m or 90 m), not of a raised bed or terrace you built. The last real answer is kept with its date and shown as old if the service cannot be reached.
+
+## 36. Neighbouring buildings and shade from next door
+
+*Sun & Shadows → Neighbouring buildings.* A neighbour's house can shade your garden, but it is not part of your drawing. **Find neighbouring buildings** asks an OpenStreetMap (Overpass) server for the building outlines within 60-300 m of the property. It sends the property's location rounded to about 100 m and the radius, only when you press the button. EDEN then shows how many it found, how many are on your own land or already on your map (left out), and **where each height comes from**: given in OpenStreetMap, estimated from the number of floors (3 m each, plus a pitched roof), or assumed for the building type. Nothing is added until you press **Add … to the map**.
+
+The buildings go on their own layer, *Neighbouring buildings (OpenStreetMap)*, as ordinary objects of the kind *Neighbouring building*: they cast shade (with their roof shape), appear in 3D, and are not counted in your building statistics or on the Buildings page. Select one to correct its **height**, **wall height** and **roof type**; hide or delete the layer any time. Searching again never adds the same building twice. OpenStreetMap is made by volunteers: outlines are usually good, heights often are missing, so look at the ones next to your garden. Data (c) OpenStreetMap contributors, ODbL. If the public servers are busy EDEN tries the next one and otherwise says so and adds nothing.
+
+## 37. Roofs in 3D
+
+In the 3D view, buildings with a **gable, hip, mansard or shed** roof (and neighbouring buildings) are drawn with a real roof shape: walls up to the eave and a stack of thin steps up to the ridge, the same roof the shadows use (height to the ridge, optional wall height, ridge bearing). Flat roofs, and shed roofs with no direction, stay plain boxes. It is a visual approximation: no dormers, chimneys or overhangs.
+
+## 38. Install as an app and use offline
+
+*Settings → Install as an app and use offline.* EDEN can be installed so it opens in its own window with its own icon: on Chrome or Edge use **Install EDEN** (or the browser's install icon); on Android *menu → Install app*; on iPhone or iPad open EDEN in Safari, tap *Share*, then *Add to Home Screen*. Browsers only allow this over **https** or on the same computer at `localhost`. **The certificate must be one the device trusts.** Browsers refuse to install an app or keep an offline copy over a certificate they do not trust, even after you click through the warning. EDEN's own certificate (`data\tls\eden-cert.pem`) is self-signed, so on a phone or tablet either install it on the device as a trusted certificate first, or put EDEN behind something with a real certificate (a reverse proxy, or a private network service that provides one). On the same computer, `http://localhost:8787` needs nothing. Not tested on a real phone.
+
+Once EDEN has been opened with a connection, it also opens **without** one. It then shows what it loaded last (property, plants, tasks, documents list, the map tiles you looked at) under a notice, and controlling devices, camera pictures, weather and anything else that needs the server stays unavailable. A change you make offline stays in the open page and is saved as soon as the connection returns: keep the page open (EDEN warns before you close it). What the browser keeps is stored only on that device and is **wiped when you sign out**. Sign-in data, camera pictures, documents and backups are never kept.
+
+## 39. Plants: sources, checks and pictures
+
+Every entry has a fold-out **Sources and what was checked**. Plainly: the *scientific name, accepted status and family* were checked against GBIF (the Global Biodiversity Information Facility, CC0) on the date shown; *native or introduced in Romania* comes from the Romanian checklists in GBIF (World Checklist of Vascular Plants, the checklist of introduced taxa in Romania, Catalogue of Life, DAISIE), and for a crop it describes the wild species while the library lists the cultivated plant as introduced; where a plant has no Romanian record it says so. *Everything about growing* (height, spacing, months, soil, uses) is hand-curated from general horticultural knowledge, not cited value by value: check important details locally. Where GBIF has a newer accepted name (pea is *Lathyrus oleraceus*, service tree *Cormus domestica*) both are shown and the library keeps the common one.
+
+**Pictures** are off until you tick *Show pictures of plants* on the Plants & Mushrooms page. Opening a plant then sends its scientific name to wikipedia.org and commons.wikimedia.org and saves one small picture on your computer; only freely licensed pictures are used (public domain, CC0, CC BY, CC BY-SA), shown with the author, the licence and links. Where there is no free picture it says so. **Mushrooms never get a picture.** *Delete saved pictures* removes them and the remembered answers.
 
 ## Keyboard shortcuts
 

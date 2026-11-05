@@ -1,0 +1,4496 @@
+{
+ "aquatic": {
+  "alisma": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Alismataceae",
+   "gbif": 2865100,
+   "match": "EXACT",
+   "name": "Alisma plantago-aquatica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "arrowhead": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Alismataceae",
+   "gbif": 5328882,
+   "match": "EXACT",
+   "name": "Sagittaria sagittifolia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "brooklime": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Plantaginaceae",
+   "gbif": 3172062,
+   "match": "EXACT",
+   "name": "Veronica beccabunga",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "bulrush": {
+   "authorship": "(L.) Palla",
+   "confidence": 100,
+   "family": "Cyperaceae",
+   "gbif": 2710941,
+   "match": "EXACT",
+   "name": "Schoenoplectus lacustris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "crassula": {
+   "authorship": "(Kirk) Cockayne",
+   "confidence": 99,
+   "family": "Crassulaceae",
+   "gbif": 5362054,
+   "match": "EXACT",
+   "name": "Crassula helmsii",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "duckweed": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Araceae",
+   "gbif": 2867589,
+   "match": "EXACT",
+   "name": "Lemna minor",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "elodea": {
+   "authorship": "Michx.",
+   "confidence": 100,
+   "family": "Hydrocharitaceae",
+   "gbif": 2865448,
+   "match": "EXACT",
+   "name": "Elodea canadensis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "floatingpondweed": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Potamogetonaceae",
+   "gbif": 5301147,
+   "match": "EXACT",
+   "name": "Potamogeton natans",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "floweringrush": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Butomaceae",
+   "gbif": 2864467,
+   "match": "EXACT",
+   "name": "Butomus umbellatus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "forgetmenot": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Boraginaceae",
+   "gbif": 5341184,
+   "match": "EXACT",
+   "name": "Myosotis scorpioides",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "frogbit": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Hydrocharitaceae",
+   "gbif": 5329266,
+   "match": "EXACT",
+   "name": "Hydrocharis morsus-ranae",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "hornwort": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Ceratophyllaceae",
+   "gbif": 2882398,
+   "match": "EXACT",
+   "name": "Ceratophyllum demersum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "DAISIE"
+    ],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "conflict"
+   },
+   "status": "ACCEPTED"
+  },
+  "loosestrife": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lythraceae",
+   "gbif": 3188736,
+   "match": "EXACT",
+   "name": "Lythrum salicaria",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "marshmarigold": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Ranunculaceae",
+   "gbif": 5371685,
+   "match": "EXACT",
+   "name": "Caltha palustris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "milfoil": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Haloragaceae",
+   "gbif": 5361760,
+   "match": "EXACT",
+   "name": "Myriophyllum spicatum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "parrotsfeather": {
+   "authorship": "(Vell.) Verdc.",
+   "confidence": 100,
+   "family": "Haloragaceae",
+   "gbif": 5361785,
+   "match": "EXACT",
+   "name": "Myriophyllum aquaticum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "reed": {
+   "authorship": "(Cav.) Trin. ex Steud.",
+   "confidence": 99,
+   "family": "Poaceae",
+   "gbif": 5290149,
+   "match": "EXACT",
+   "name": "Phragmites australis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "reedmace": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Typhaceae",
+   "gbif": 5289461,
+   "match": "EXACT",
+   "name": "Typha angustifolia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "starwort": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Plantaginaceae",
+   "gbif": 5372484,
+   "match": "EXACT",
+   "name": "Callitriche palustris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "sweetflag": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Acoraceae",
+   "gbif": 2873769,
+   "match": "EXACT",
+   "name": "Acorus calamus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "waterhyacinth": {
+   "acceptedFamily": "Pontederiaceae",
+   "acceptedKey": 2765942,
+   "acceptedName": "Pontederia crassipes",
+   "authorship": "(Mart.) Solms",
+   "confidence": 100,
+   "family": "Pontederiaceae",
+   "gbif": 2765940,
+   "match": "EXACT",
+   "name": "Eichhornia crassipes",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "watermint": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Lamiaceae",
+   "gbif": 2927208,
+   "match": "EXACT",
+   "name": "Mentha aquatica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "whitelily": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Nymphaeaceae",
+   "gbif": 2882437,
+   "match": "EXACT",
+   "name": "Nymphaea alba",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "yellowflag": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Iridaceae",
+   "gbif": 5298231,
+   "match": "EXACT",
+   "name": "Iris pseudacorus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "yellowlily": {
+   "authorship": "(L.) Sibth. & Sm.",
+   "confidence": 100,
+   "family": "Nymphaeaceae",
+   "gbif": 7551339,
+   "match": "EXACT",
+   "name": "Nuphar lutea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  }
+ },
+ "checkedOn": "2026-11-05",
+ "fish": {
+  "bitterling": {
+   "authorship": "(Bloch, 1782)",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 2360842,
+   "match": "EXACT",
+   "name": "Rhodeus amarus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "carp": {
+   "authorship": "Linnaeus, 1758",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 4286975,
+   "match": "EXACT",
+   "name": "Cyprinus carpio",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "gambusia": {
+   "authorship": "Girard, 1859",
+   "confidence": 100,
+   "family": "Poeciliidae",
+   "gbif": 2350570,
+   "match": "EXACT",
+   "name": "Gambusia holbrooki",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "goldfish": {
+   "authorship": "(Linnaeus, 1758)",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 4286942,
+   "match": "EXACT",
+   "name": "Carassius auratus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "grasscarp": {
+   "authorship": "(Valenciennes, 1844)",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 2362030,
+   "match": "EXACT",
+   "name": "Ctenopharyngodon idella",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "koi": {
+   "authorship": "Linnaeus, 1758",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 4286975,
+   "match": "EXACT",
+   "name": "Cyprinus carpio",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "minnow": {
+   "authorship": "(Linnaeus, 1758)",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 4409653,
+   "match": "EXACT",
+   "name": "Phoxinus phoxinus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "rudd": {
+   "authorship": "(Linnaeus, 1758)",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 2362635,
+   "match": "EXACT",
+   "name": "Scardinius erythrophthalmus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "stickleback": {
+   "authorship": "Linnaeus, 1758",
+   "confidence": 100,
+   "family": "Gasterosteidae",
+   "gbif": 4286327,
+   "match": "EXACT",
+   "name": "Gasterosteus aculeatus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "tench": {
+   "authorship": "(Linnaeus, 1758)",
+   "confidence": 100,
+   "family": "Cyprinidae",
+   "gbif": 2362524,
+   "match": "EXACT",
+   "name": "Tinca tinca",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  }
+ },
+ "mushrooms": {
+  "button": {
+   "authorship": "(J.E.Lange) Imbach",
+   "confidence": 99,
+   "family": "Agaricaceae",
+   "gbif": 5243447,
+   "match": "EXACT",
+   "name": "Agaricus bisporus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "chanterelle": {
+   "authorship": "Fr.",
+   "confidence": 100,
+   "family": "Hydnaceae",
+   "gbif": 5249504,
+   "match": "EXACT",
+   "name": "Cantharellus cibarius",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "chickenwoods": {
+   "authorship": "(Bull.) Murrill",
+   "confidence": 99,
+   "family": "Laetiporaceae",
+   "gbif": 9072021,
+   "match": "EXACT",
+   "name": "Laetiporus sulphureus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "deathcap": {
+   "authorship": "(Vaill. ex Fr.) Link",
+   "confidence": 99,
+   "family": "Amanitaceae",
+   "gbif": 5240325,
+   "match": "EXACT",
+   "name": "Amanita phalloides",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "destroyingangel": {
+   "authorship": "Bertill.",
+   "confidence": 99,
+   "family": "Amanitaceae",
+   "gbif": 5240323,
+   "match": "EXACT",
+   "name": "Amanita virosa",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "falsemorel": {
+   "authorship": "Pers. ex Fr.",
+   "confidence": 99,
+   "family": "Discinaceae",
+   "gbif": 5258510,
+   "match": "EXACT",
+   "name": "Gyromitra esculenta",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "fieldmushroom": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Agaricaceae",
+   "gbif": 5243458,
+   "match": "EXACT",
+   "name": "Agaricus campestris",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "flyagaric": {
+   "authorship": "(L.) Lam.",
+   "confidence": 99,
+   "family": "Amanitaceae",
+   "gbif": 8168319,
+   "match": "EXACT",
+   "name": "Amanita muscaria",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "galerina": {
+   "authorship": "(Batsch) Kühner",
+   "confidence": 100,
+   "family": "Hymenogastraceae",
+   "gbif": 8118872,
+   "match": "EXACT",
+   "name": "Galerina marginata",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "honeyfungus": {
+   "authorship": "(Vahl) P.Kumm.",
+   "confidence": 100,
+   "family": "Physalacriaceae",
+   "gbif": 2536891,
+   "match": "EXACT",
+   "name": "Armillaria mellea",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "inkycap": {
+   "authorship": "(Bull.) Redhead, Vilgalys & Moncalvo",
+   "confidence": 100,
+   "family": "Psathyrellaceae",
+   "gbif": 5242740,
+   "match": "EXACT",
+   "name": "Coprinopsis atramentaria",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "jackolantern": {
+   "authorship": "(DC.) Singer",
+   "confidence": 100,
+   "family": "Omphalotaceae",
+   "gbif": 2538088,
+   "match": "EXACT",
+   "name": "Omphalotus olearius",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "lionsmane": {
+   "authorship": "(Bull.) Pers.",
+   "confidence": 100,
+   "family": "Hericiaceae",
+   "gbif": 5248508,
+   "match": "EXACT",
+   "name": "Hericium erinaceus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "livident": {
+   "authorship": "(Bull.) P.Kumm.",
+   "confidence": 99,
+   "family": "Entolomataceae",
+   "gbif": 2539308,
+   "match": "EXACT",
+   "name": "Entoloma sinuatum",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "morel": {
+   "authorship": "(L.) Pers.",
+   "confidence": 100,
+   "family": "Morchellaceae",
+   "gbif": 2594602,
+   "match": "EXACT",
+   "name": "Morchella esculenta",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "orellanus": {
+   "authorship": "Fr.",
+   "confidence": 100,
+   "family": "Cortinariaceae",
+   "gbif": 2528684,
+   "match": "EXACT",
+   "name": "Cortinarius orellanus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "oyster": {
+   "authorship": "(Jacq.) P.Kumm.",
+   "confidence": 100,
+   "family": "Pleurotaceae",
+   "gbif": 2526530,
+   "match": "EXACT",
+   "name": "Pleurotus ostreatus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "panthercap": {
+   "authorship": "(DC.) Krombh.",
+   "confidence": 99,
+   "family": "Amanitaceae",
+   "gbif": 8961574,
+   "match": "EXACT",
+   "name": "Amanita pantherina",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "parasol": {
+   "authorship": "(Scop.) Singer",
+   "confidence": 100,
+   "family": "Agaricaceae",
+   "gbif": 8914748,
+   "match": "EXACT",
+   "name": "Macrolepiota procera",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "porcini": {
+   "authorship": "Bull.",
+   "confidence": 99,
+   "family": "Boletaceae",
+   "gbif": 5954958,
+   "match": "EXACT",
+   "name": "Boletus edulis",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "rollrim": {
+   "authorship": "(Batsch) Fr.",
+   "confidence": 100,
+   "family": "Paxillaceae",
+   "gbif": 5240002,
+   "match": "EXACT",
+   "name": "Paxillus involutus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "saffronmilkcap": {
+   "authorship": "(L.) Gray",
+   "confidence": 99,
+   "family": "Russulaceae",
+   "gbif": 5248629,
+   "match": "EXACT",
+   "name": "Lactarius deliciosus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "shaggymane": {
+   "authorship": "(O.F.Müll.) Pers.",
+   "confidence": 99,
+   "family": "Agaricaceae",
+   "gbif": 7987658,
+   "match": "EXACT",
+   "name": "Coprinus comatus",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "shiitake": {
+   "authorship": "(Berk.) Pegler",
+   "confidence": 99,
+   "family": "Omphalotaceae",
+   "gbif": 2537743,
+   "match": "EXACT",
+   "name": "Lentinula edodes",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "sulphurtuft": {
+   "authorship": "(Huds.) P.Kumm.",
+   "confidence": 100,
+   "family": "Strophariaceae",
+   "gbif": 3293632,
+   "match": "EXACT",
+   "name": "Hypholoma fasciculare",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  },
+  "winecap": {
+   "authorship": "Farl. ex Murrill",
+   "confidence": 99,
+   "family": "Strophariaceae",
+   "gbif": 2533347,
+   "match": "EXACT",
+   "name": "Stropharia rugosoannulata",
+   "rank": "SPECIES",
+   "status": "ACCEPTED"
+  }
+ },
+ "plants": {
+  "agastache": {
+   "authorship": "(Pursh) Kuntze",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 2926406,
+   "match": "EXACT",
+   "name": "Agastache foeniculum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "alder": {
+   "authorship": "(L.) Gaertn.",
+   "confidence": 99,
+   "family": "Betulaceae",
+   "gbif": 2876213,
+   "match": "EXACT",
+   "name": "Alnus glutinosa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "almond": {
+   "acceptedFamily": "Rosaceae",
+   "acceptedKey": 3020980,
+   "acceptedName": "Prunus amygdalus",
+   "authorship": "(Mill.) D.A.Webb",
+   "confidence": 100,
+   "family": "Rosaceae",
+   "gbif": 3022502,
+   "match": "EXACT",
+   "name": "Prunus dulcis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "apple": {
+   "authorship": "(Suckow) Borkh.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3001244,
+   "match": "EXACT",
+   "name": "Malus domestica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "apricot": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 7818643,
+   "match": "EXACT",
+   "name": "Prunus armeniaca",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "aronia": {
+   "authorship": "(Michx.) Elliott",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 5363627,
+   "match": "EXACT",
+   "name": "Aronia melanocarpa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "artichoke": {
+   "acceptedFamily": "Asteraceae",
+   "acceptedKey": 3112361,
+   "acceptedName": "Cynara scolymus",
+   "authorship": "Cynara cardunculus var. scolymus (L.) Benth.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 4241126,
+   "match": "EXACT",
+   "name": "Cynara cardunculus scolymus",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "SYNONYM"
+  },
+  "arum": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Araceae",
+   "gbif": 5330580,
+   "match": "EXACT",
+   "name": "Arum maculatum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "ash": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Oleaceae",
+   "gbif": 3172358,
+   "match": "EXACT",
+   "name": "Fraxinus excelsior",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "asparagus": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asparagaceae",
+   "gbif": 2768885,
+   "match": "EXACT",
+   "name": "Asparagus officinalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "aspen": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Salicaceae",
+   "gbif": 3040249,
+   "match": "EXACT",
+   "name": "Populus tremula",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "aubergine": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Solanaceae",
+   "gbif": 2930617,
+   "match": "EXACT",
+   "name": "Solanum melongena",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "autumncrocus": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Colchicaceae",
+   "gbif": 2739622,
+   "match": "EXACT",
+   "name": "Colchicum autumnale",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "basil": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 2927096,
+   "match": "EXACT",
+   "name": "Ocimum basilicum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "bean": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Fabaceae",
+   "gbif": 5350452,
+   "match": "EXACT",
+   "name": "Phaseolus vulgaris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "beech": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Fagaceae",
+   "gbif": 2882316,
+   "match": "EXACT",
+   "name": "Fagus sylvatica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "beetroot": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaranthaceae",
+   "gbif": 8971274,
+   "match": "EXACT",
+   "name": "Beta vulgaris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "belladonna": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Solanaceae",
+   "gbif": 3802655,
+   "match": "EXACT",
+   "name": "Atropa belladonna",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "bergamot": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 5341407,
+   "match": "EXACT",
+   "name": "Monarda didyma",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "birch": {
+   "authorship": "Roth",
+   "confidence": 100,
+   "family": "Betulaceae",
+   "gbif": 5331916,
+   "match": "EXACT",
+   "name": "Betula pendula",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "blackberry": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 8436459,
+   "match": "EXACT",
+   "name": "Rubus fruticosus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "blackcurrant": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Grossulariaceae",
+   "gbif": 2986192,
+   "match": "EXACT",
+   "name": "Ribes nigrum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "blackthorn": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3023221,
+   "match": "EXACT",
+   "name": "Prunus spinosa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "blueberry": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Ericaceae",
+   "gbif": 2882849,
+   "match": "EXACT",
+   "name": "Vaccinium corymbosum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "borage": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Boraginaceae",
+   "gbif": 2926110,
+   "match": "EXACT",
+   "name": "Borago officinalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "broadbean": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Fabaceae",
+   "gbif": 2974832,
+   "match": "EXACT",
+   "name": "Vicia faba",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "broccoli": {
+   "acceptedFamily": "Brassicaceae",
+   "acceptedKey": 3042845,
+   "acceptedName": "Brassica oleracea",
+   "authorship": "Brassica oleracea var. italica Plenck",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 3042863,
+   "match": "EXACT",
+   "name": "Brassica oleracea italica",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "brussels": {
+   "acceptedFamily": "Brassicaceae",
+   "acceptedKey": 3042845,
+   "acceptedName": "Brassica oleracea",
+   "authorship": "Brassica oleracea var. gemmifera DC.",
+   "confidence": 99,
+   "family": "Brassicaceae",
+   "gbif": 3042861,
+   "match": "EXACT",
+   "name": "Brassica oleracea gemmifera",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "buckwheat": {
+   "authorship": "Moench",
+   "confidence": 100,
+   "family": "Polygonaceae",
+   "gbif": 2889373,
+   "match": "EXACT",
+   "name": "Fagopyrum esculentum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "burdock": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 7353729,
+   "match": "EXACT",
+   "name": "Arctium lappa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "cabbage": {
+   "acceptedFamily": "Brassicaceae",
+   "acceptedKey": 3042845,
+   "acceptedName": "Brassica oleracea",
+   "authorship": "Brassica oleracea var. capitata L.",
+   "confidence": 99,
+   "family": "Brassicaceae",
+   "gbif": 3042846,
+   "match": "EXACT",
+   "name": "Brassica oleracea capitata",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "calendula": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 5391480,
+   "match": "EXACT",
+   "name": "Calendula officinalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [
+     "Catalogue of Life"
+    ],
+    "verdict": "conflict"
+   },
+   "status": "ACCEPTED"
+  },
+  "carrot": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Apiaceae",
+   "gbif": 3034742,
+   "match": "EXACT",
+   "name": "Daucus carota",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "catmint": {
+   "authorship": "Lam.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 5341497,
+   "match": "EXACT",
+   "name": "Nepeta racemosa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "catnip": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 5341499,
+   "match": "EXACT",
+   "name": "Nepeta cataria",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "cauliflower": {
+   "acceptedFamily": "Brassicaceae",
+   "acceptedKey": 7068741,
+   "acceptedName": "Brassica cretica cretica",
+   "authorship": "Brassica oleracea var. botrytis L.",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 3042854,
+   "match": "EXACT",
+   "name": "Brassica oleracea botrytis",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "SYNONYM"
+  },
+  "celeriac": {
+   "acceptedFamily": "Apiaceae",
+   "acceptedKey": 8381154,
+   "acceptedName": "Apium graveolens dulce",
+   "authorship": "Apium graveolens var. rapaceum (Mill.) DC.",
+   "confidence": 99,
+   "family": "Apiaceae",
+   "gbif": 5539782,
+   "match": "EXACT",
+   "name": "Apium graveolens rapaceum",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "DAISIE"
+    ],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "conflict"
+   },
+   "status": "SYNONYM"
+  },
+  "celery": {
+   "authorship": "Apium graveolens var. dulce (Mill.) Poir.",
+   "confidence": 99,
+   "family": "Apiaceae",
+   "gbif": 8381154,
+   "match": "EXACT",
+   "name": "Apium graveolens dulce",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "DAISIE"
+    ],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "conflict"
+   },
+   "status": "ACCEPTED"
+  },
+  "chamomile": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 8370958,
+   "match": "EXACT",
+   "name": "Matricaria chamomilla",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "chard": {
+   "authorship": "Beta vulgaris subsp. vulgaris Linnaeus, 1753",
+   "confidence": 100,
+   "family": "Amaranthaceae",
+   "gbif": 7068845,
+   "match": "EXACT",
+   "name": "Beta vulgaris vulgaris",
+   "rank": "SUBSPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "cherry": {
+   "authorship": "(L.) L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3020791,
+   "match": "EXACT",
+   "name": "Prunus avium",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "chervil": {
+   "authorship": "(L.) Hoffm.",
+   "confidence": 100,
+   "family": "Apiaceae",
+   "gbif": 5371746,
+   "match": "EXACT",
+   "name": "Anthriscus cerefolium",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "chestnut": {
+   "authorship": "Mill.",
+   "confidence": 100,
+   "family": "Fagaceae",
+   "gbif": 5333294,
+   "match": "EXACT",
+   "name": "Castanea sativa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "chicory": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 5392252,
+   "match": "EXACT",
+   "name": "Cichorium intybus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "chives": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Amaryllidaceae",
+   "gbif": 2855860,
+   "match": "EXACT",
+   "name": "Allium schoenoprasum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "clematis": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Ranunculaceae",
+   "gbif": 3033558,
+   "match": "EXACT",
+   "name": "Clematis vitalba",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "comfrey": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Boraginaceae",
+   "gbif": 7558421,
+   "match": "EXACT",
+   "name": "Symphytum officinale",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "coriander": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Apiaceae",
+   "gbif": 3034871,
+   "match": "EXACT",
+   "name": "Coriandrum sativum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "cornelian": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Cornaceae",
+   "gbif": 3082263,
+   "match": "EXACT",
+   "name": "Cornus mas",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "cornflower": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 3089561,
+   "match": "EXACT",
+   "name": "Centaurea cyanus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "cosmos": {
+   "authorship": "Cav.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 3098912,
+   "match": "EXACT",
+   "name": "Cosmos bipinnatus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "cucumber": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Cucurbitaceae",
+   "gbif": 2874569,
+   "match": "EXACT",
+   "name": "Cucumis sativus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "daffodil": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaryllidaceae",
+   "gbif": 2858244,
+   "match": "EXACT",
+   "name": "Narcissus pseudonarcissus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "dandelion": {
+   "authorship": "Weber ex F.H.Wigg.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 5394163,
+   "match": "EXACT",
+   "name": "Taraxacum officinale",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "datura": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Solanaceae",
+   "gbif": 2928751,
+   "match": "EXACT",
+   "name": "Datura stramonium",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "dill": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Apiaceae",
+   "gbif": 3034646,
+   "match": "EXACT",
+   "name": "Anethum graveolens",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "dogwood": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Cornaceae",
+   "gbif": 3082234,
+   "match": "EXACT",
+   "name": "Cornus sanguinea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "echinacea": {
+   "authorship": "(L.) Moench",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 3150935,
+   "match": "EXACT",
+   "name": "Echinacea purpurea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "echinops": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 5392950,
+   "match": "EXACT",
+   "name": "Echinops ritro",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "elder": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Viburnaceae",
+   "gbif": 2888728,
+   "match": "EXACT",
+   "name": "Sambucus nigra",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "endive": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 5392243,
+   "match": "EXACT",
+   "name": "Cichorium endivia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [],
+    "native": [],
+    "verdict": "casual"
+   },
+   "status": "ACCEPTED"
+  },
+  "fennel": {
+   "authorship": "Mill.",
+   "confidence": 99,
+   "family": "Apiaceae",
+   "gbif": 3034922,
+   "match": "EXACT",
+   "name": "Foeniculum vulgare",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "fieldmaple": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Sapindaceae",
+   "gbif": 3189863,
+   "match": "EXACT",
+   "name": "Acer campestre",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "fig": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Moraceae",
+   "gbif": 5361909,
+   "match": "EXACT",
+   "name": "Ficus carica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "fir": {
+   "authorship": "Mill.",
+   "confidence": 99,
+   "family": "Pinaceae",
+   "gbif": 2685484,
+   "match": "EXACT",
+   "name": "Abies alba",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "forsythia": {
+   "authorship": "Forsythia × intermedia Zabel",
+   "confidence": 100,
+   "family": "Oleaceae",
+   "gbif": 5415054,
+   "match": "EXACT",
+   "name": "Forsythia intermedia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "foxglove": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Plantaginaceae",
+   "gbif": 5414995,
+   "match": "EXACT",
+   "name": "Digitalis purpurea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "garlic": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaryllidaceae",
+   "gbif": 2856681,
+   "match": "EXACT",
+   "name": "Allium sativum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "garlicmustard": {
+   "authorship": "(M.Bieb.) Cavara & Grande",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 5376075,
+   "match": "EXACT",
+   "name": "Alliaria petiolata",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "goatwillow": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Salicaceae",
+   "gbif": 5372952,
+   "match": "EXACT",
+   "name": "Salix caprea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "goji": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Solanaceae",
+   "gbif": 2928835,
+   "match": "EXACT",
+   "name": "Lycium barbarum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "goodkinghenry": {
+   "authorship": "(L.) Rchb.",
+   "confidence": 99,
+   "family": "Amaranthaceae",
+   "gbif": 8044896,
+   "match": "EXACT",
+   "name": "Blitum bonus-henricus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "gooseberry": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Grossulariaceae",
+   "gbif": 2986185,
+   "match": "EXACT",
+   "name": "Ribes uva-crispa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "grape": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Vitaceae",
+   "gbif": 5372392,
+   "match": "EXACT",
+   "name": "Vitis vinifera",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "guelderrose": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Viburnaceae",
+   "gbif": 2888605,
+   "match": "EXACT",
+   "name": "Viburnum opulus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "haskap": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Caprifoliaceae",
+   "gbif": 5334269,
+   "match": "EXACT",
+   "name": "Lonicera caerulea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "hawthorn": {
+   "authorship": "Jacq.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 9220780,
+   "match": "EXACT",
+   "name": "Crataegus monogyna",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "hazelnut": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Betulaceae",
+   "gbif": 2875979,
+   "match": "EXACT",
+   "name": "Corylus avellana",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "hemlock": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Apiaceae",
+   "gbif": 3034807,
+   "match": "EXACT",
+   "name": "Conium maculatum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "henbane": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Solanaceae",
+   "gbif": 2928978,
+   "match": "EXACT",
+   "name": "Hyoscyamus niger",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "hogweed": {
+   "authorship": "Sommier & Levier",
+   "confidence": 100,
+   "family": "Apiaceae",
+   "gbif": 3034825,
+   "match": "EXACT",
+   "name": "Heracleum mantegazzianum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "holly": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Aquifoliaceae",
+   "gbif": 5414222,
+   "match": "EXACT",
+   "name": "Ilex aquifolium",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "DAISIE"
+    ],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "conflict"
+   },
+   "status": "ACCEPTED"
+  },
+  "hollyhock": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Malvaceae",
+   "gbif": 5406789,
+   "match": "EXACT",
+   "name": "Alcea rosea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "honeysuckle": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Caprifoliaceae",
+   "gbif": 5334277,
+   "match": "EXACT",
+   "name": "Lonicera periclymenum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "hop": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Cannabaceae",
+   "gbif": 2984535,
+   "match": "EXACT",
+   "name": "Humulus lupulus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "hornbeam": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Betulaceae",
+   "gbif": 2875818,
+   "match": "EXACT",
+   "name": "Carpinus betulus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "horsechestnut": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Sapindaceae",
+   "gbif": 3189815,
+   "match": "EXACT",
+   "name": "Aesculus hippocastanum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "horseradish": {
+   "authorship": "P.Gaertn., B.Mey. & Scherb.",
+   "confidence": 99,
+   "family": "Brassicaceae",
+   "gbif": 3041022,
+   "match": "EXACT",
+   "name": "Armoracia rusticana",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "hyssop": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 5341387,
+   "match": "EXACT",
+   "name": "Hyssopus officinalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "jerusalem": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 3119175,
+   "match": "EXACT",
+   "name": "Helianthus tuberosus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "juneberry": {
+   "authorship": "Medik.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3023878,
+   "match": "EXACT",
+   "name": "Amelanchier ovalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "juniper": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Cupressaceae",
+   "gbif": 2684709,
+   "match": "EXACT",
+   "name": "Juniperus communis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "kale": {
+   "acceptedFamily": "Brassicaceae",
+   "acceptedKey": 3042845,
+   "acceptedName": "Brassica oleracea",
+   "authorship": "Brassica oleracea var. sabellica L.",
+   "confidence": 99,
+   "family": "Brassicaceae",
+   "gbif": 3042870,
+   "match": "EXACT",
+   "name": "Brassica oleracea sabellica",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "kiwiberry": {
+   "authorship": "(Siebold & Zucc.) Planch. ex Miq.",
+   "confidence": 99,
+   "family": "Actinidiaceae",
+   "gbif": 3189693,
+   "match": "EXACT",
+   "name": "Actinidia arguta",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "kohlrabi": {
+   "acceptedFamily": "Brassicaceae",
+   "acceptedKey": 3042845,
+   "acceptedName": "Brassica oleracea",
+   "authorship": "Brassica oleracea var. gongylodes L.",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 3042850,
+   "match": "EXACT",
+   "name": "Brassica oleracea gongylodes",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "laburnum": {
+   "authorship": "Medik.",
+   "confidence": 100,
+   "family": "Fabaceae",
+   "gbif": 5356345,
+   "match": "EXACT",
+   "name": "Laburnum anagyroides",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "lambslettuce": {
+   "authorship": "(L.) Laterr.",
+   "confidence": 99,
+   "family": "Caprifoliaceae",
+   "gbif": 2888778,
+   "match": "EXACT",
+   "name": "Valerianella locusta",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "lavender": {
+   "authorship": "Mill.",
+   "confidence": 99,
+   "family": "Lamiaceae",
+   "gbif": 2927305,
+   "match": "EXACT",
+   "name": "Lavandula angustifolia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "leek": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Amaryllidaceae",
+   "gbif": 2856037,
+   "match": "EXACT",
+   "name": "Allium ampeloprasum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "conflict"
+   },
+   "status": "ACCEPTED"
+  },
+  "lemonbalm": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 5341501,
+   "match": "EXACT",
+   "name": "Melissa officinalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "lettuce": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 7403263,
+   "match": "EXACT",
+   "name": "Lactuca sativa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "lilac": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Oleaceae",
+   "gbif": 5415039,
+   "match": "EXACT",
+   "name": "Syringa vulgaris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "lilyvalley": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asparagaceae",
+   "gbif": 7459480,
+   "match": "EXACT",
+   "name": "Convallaria majalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "linden": {
+   "authorship": "Mill.",
+   "confidence": 99,
+   "family": "Malvaceae",
+   "gbif": 3152047,
+   "match": "EXACT",
+   "name": "Tilia cordata",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "locust": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Fabaceae",
+   "gbif": 5352251,
+   "match": "EXACT",
+   "name": "Robinia pseudoacacia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "lovage": {
+   "authorship": "W.D.J.Koch",
+   "confidence": 100,
+   "family": "Apiaceae",
+   "gbif": 5371772,
+   "match": "EXACT",
+   "name": "Levisticum officinale",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "mallow": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Malvaceae",
+   "gbif": 3152374,
+   "match": "EXACT",
+   "name": "Malva sylvestris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "marigold": {
+   "acceptedFamily": "Asteraceae",
+   "acceptedKey": 3088488,
+   "acceptedName": "Tagetes erecta",
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 3088492,
+   "match": "EXACT",
+   "name": "Tagetes patula",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "marjoram": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 2926615,
+   "match": "EXACT",
+   "name": "Origanum majorana",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "meadowsage": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Lamiaceae",
+   "gbif": 2927028,
+   "match": "EXACT",
+   "name": "Salvia nemorosa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "meadowsweet": {
+   "authorship": "(L.) Maxim.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 2987999,
+   "match": "EXACT",
+   "name": "Filipendula ulmaria",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "medlar": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Rosaceae",
+   "gbif": 3031774,
+   "match": "EXACT",
+   "name": "Mespilus germanica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "melon": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Cucurbitaceae",
+   "gbif": 2874570,
+   "match": "EXACT",
+   "name": "Cucumis melo",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "mint": {
+   "authorship": "Mentha × piperita L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 8707933,
+   "match": "EXACT",
+   "name": "Mentha piperita",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "mirabelle": {
+   "authorship": "Prunus domestica subsp. syriaca (Borkh.) Janch.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3023671,
+   "match": "EXACT",
+   "name": "Prunus domestica syriaca",
+   "rank": "SUBSPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "mockorange": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Hydrangeaceae",
+   "gbif": 2986045,
+   "match": "EXACT",
+   "name": "Philadelphus coronarius",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "monkshood": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Ranunculaceae",
+   "gbif": 3033665,
+   "match": "EXACT",
+   "name": "Aconitum napellus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "mulberry": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Moraceae",
+   "gbif": 5361889,
+   "match": "EXACT",
+   "name": "Morus alba",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "nasturtium": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Tropaeolaceae",
+   "gbif": 2889934,
+   "match": "EXACT",
+   "name": "Tropaeolum majus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "nettle": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Urticaceae",
+   "gbif": 7960979,
+   "match": "EXACT",
+   "name": "Urtica dioica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "norwaymaple": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Sapindaceae",
+   "gbif": 3189846,
+   "match": "EXACT",
+   "name": "Acer platanoides",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "oak": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Fagaceae",
+   "gbif": 2878688,
+   "match": "EXACT",
+   "name": "Quercus robur",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "onion": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaryllidaceae",
+   "gbif": 2857697,
+   "match": "EXACT",
+   "name": "Allium cepa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "orache": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaranthaceae",
+   "gbif": 3083761,
+   "match": "EXACT",
+   "name": "Atriplex hortensis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "oregano": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Lamiaceae",
+   "gbif": 2926612,
+   "match": "EXACT",
+   "name": "Origanum vulgare",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "oxeye": {
+   "authorship": "Lam.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 8848598,
+   "match": "EXACT",
+   "name": "Leucanthemum vulgare",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "pakchoi": {
+   "acceptedFamily": "Brassicaceae",
+   "acceptedKey": 7903057,
+   "acceptedName": "Brassica rapa",
+   "authorship": "Brassica rapa subsp. chinensis (L.) Hanelt",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 3042702,
+   "match": "EXACT",
+   "name": "Brassica rapa chinensis",
+   "rank": "SUBSPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "SYNONYM"
+  },
+  "parsley": {
+   "authorship": "(Mill.) Fuss",
+   "confidence": 99,
+   "family": "Apiaceae",
+   "gbif": 7828157,
+   "match": "EXACT",
+   "name": "Petroselinum crispum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "parsnip": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Apiaceae",
+   "gbif": 8262702,
+   "match": "EXACT",
+   "name": "Pastinaca sativa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "pea": {
+   "acceptedFamily": "Fabaceae",
+   "acceptedKey": 5347846,
+   "acceptedName": "Lathyrus oleraceus",
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Fabaceae",
+   "gbif": 5347845,
+   "match": "EXACT",
+   "name": "Pisum sativum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "SYNONYM"
+  },
+  "peach": {
+   "authorship": "(L.) Stokes",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 8149923,
+   "match": "EXACT",
+   "name": "Prunus persica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "pear": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 5362573,
+   "match": "EXACT",
+   "name": "Pyrus communis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "pepper": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Solanaceae",
+   "gbif": 2932944,
+   "match": "EXACT",
+   "name": "Capsicum annuum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "phacelia": {
+   "authorship": "Benth.",
+   "confidence": 99,
+   "family": "Hydrophyllaceae",
+   "gbif": 2928226,
+   "match": "EXACT",
+   "name": "Phacelia tanacetifolia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "plantain": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Plantaginaceae",
+   "gbif": 3189767,
+   "match": "EXACT",
+   "name": "Plantago major",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "plum": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 7931731,
+   "match": "EXACT",
+   "name": "Prunus domestica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "poppy": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Papaveraceae",
+   "gbif": 2888443,
+   "match": "EXACT",
+   "name": "Papaver rhoeas",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "potato": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Solanaceae",
+   "gbif": 2930262,
+   "match": "EXACT",
+   "name": "Solanum tuberosum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "privet": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Oleaceae",
+   "gbif": 3172300,
+   "match": "EXACT",
+   "name": "Ligustrum vulgare",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "pumpkin": {
+   "authorship": "Duchesne",
+   "confidence": 99,
+   "family": "Cucurbitaceae",
+   "gbif": 2874515,
+   "match": "EXACT",
+   "name": "Cucurbita maxima",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "purslane": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Portulacaceae",
+   "gbif": 3084719,
+   "match": "EXACT",
+   "name": "Portulaca oleracea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "quince": {
+   "authorship": "Mill.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 5362215,
+   "match": "EXACT",
+   "name": "Cydonia oblonga",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "radish": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 7678610,
+   "match": "EXACT",
+   "name": "Raphanus sativus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "raspberry": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 2993094,
+   "match": "EXACT",
+   "name": "Rubus idaeus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "redclover": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Fabaceae",
+   "gbif": 8324121,
+   "match": "EXACT",
+   "name": "Trifolium pratense",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "redcurrant": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Grossulariaceae",
+   "gbif": 2986097,
+   "match": "EXACT",
+   "name": "Ribes rubrum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "DAISIE"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "rhubarb": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Polygonaceae",
+   "gbif": 2888867,
+   "match": "EXACT",
+   "name": "Rheum rhabarbarum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "rocket": {
+   "authorship": "(L.) Cav.",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 5375920,
+   "match": "EXACT",
+   "name": "Eruca vesicaria",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "DAISIE"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "rosehip": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3002461,
+   "match": "EXACT",
+   "name": "Rosa canina",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "rosemary": {
+   "authorship": "Spenn.",
+   "confidence": 99,
+   "family": "Lamiaceae",
+   "gbif": 10902460,
+   "match": "EXACT",
+   "name": "Salvia rosmarinus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "rowan": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3012167,
+   "match": "EXACT",
+   "name": "Sorbus aucuparia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "rue": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Rutaceae",
+   "gbif": 3190382,
+   "match": "EXACT",
+   "name": "Ruta graveolens",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "runnerbean": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Fabaceae",
+   "gbif": 5350466,
+   "match": "EXACT",
+   "name": "Phaseolus coccineus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "sage": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Lamiaceae",
+   "gbif": 2927004,
+   "match": "EXACT",
+   "name": "Salvia officinalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "savory": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Lamiaceae",
+   "gbif": 2926885,
+   "match": "EXACT",
+   "name": "Satureja hortensis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "scotspine": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Pinaceae",
+   "gbif": 5285637,
+   "match": "EXACT",
+   "name": "Pinus sylvestris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "seabuckthorn": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Elaeagnaceae",
+   "gbif": 3039285,
+   "match": "EXACT",
+   "name": "Hippophae rhamnoides",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "sedum": {
+   "authorship": "(L.) H.Ohba",
+   "confidence": 100,
+   "family": "Crassulaceae",
+   "gbif": 2985865,
+   "match": "EXACT",
+   "name": "Hylotelephium telephium",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "servicetree": {
+   "acceptedFamily": "Rosaceae",
+   "acceptedKey": 3013215,
+   "acceptedName": "Cormus domestica",
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Rosaceae",
+   "gbif": 3013206,
+   "match": "EXACT",
+   "name": "Sorbus domestica",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "SYNONYM"
+  },
+  "sessileoak": {
+   "authorship": "(Matt.) Liebl.",
+   "confidence": 100,
+   "family": "Fagaceae",
+   "gbif": 2880130,
+   "match": "EXACT",
+   "name": "Quercus petraea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "shallot": {
+   "acceptedFamily": "Amaryllidaceae",
+   "acceptedKey": 2857697,
+   "acceptedName": "Allium cepa",
+   "authorship": "Allium cepa var. aggregatum G.Don",
+   "confidence": 100,
+   "family": "Amaryllidaceae",
+   "gbif": 2857717,
+   "match": "EXACT",
+   "name": "Allium cepa aggregatum",
+   "rank": "VARIETY",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "SYNONYM"
+  },
+  "snowdrop": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Amaryllidaceae",
+   "gbif": 2855356,
+   "match": "EXACT",
+   "name": "Galanthus nivalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "sorrel": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Polygonaceae",
+   "gbif": 2888951,
+   "match": "EXACT",
+   "name": "Rumex acetosa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "sourcherry": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3021922,
+   "match": "EXACT",
+   "name": "Prunus cerasus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "spinach": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaranthaceae",
+   "gbif": 3083647,
+   "match": "EXACT",
+   "name": "Spinacia oleracea",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "spindle": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Celastraceae",
+   "gbif": 3169131,
+   "match": "EXACT",
+   "name": "Euonymus europaeus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "springonion": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaryllidaceae",
+   "gbif": 2856504,
+   "match": "EXACT",
+   "name": "Allium fistulosum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "spruce": {
+   "authorship": "(L.) H.Karst.",
+   "confidence": 99,
+   "family": "Pinaceae",
+   "gbif": 5284884,
+   "match": "EXACT",
+   "name": "Picea abies",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "stjohnswort": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Hypericaceae",
+   "gbif": 3189486,
+   "match": "EXACT",
+   "name": "Hypericum perforatum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "strawberry": {
+   "authorship": "Fragaria × ananassa (Weston) Rozier",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3029912,
+   "match": "EXACT",
+   "name": "Fragaria ananassa",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "sunflower": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 9206251,
+   "match": "EXACT",
+   "name": "Helianthus annuus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [
+     "Catalogue of Life"
+    ],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "sweetcorn": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Poaceae",
+   "gbif": 5290052,
+   "match": "EXACT",
+   "name": "Zea mays",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "DAISIE",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "sweetpea": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Fabaceae",
+   "gbif": 5356514,
+   "match": "EXACT",
+   "name": "Lathyrus odoratus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "sycamore": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Sapindaceae",
+   "gbif": 3189870,
+   "match": "EXACT",
+   "name": "Acer pseudoplatanus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "tansy": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 3118274,
+   "match": "EXACT",
+   "name": "Tanacetum vulgare",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "tarragon": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 3121581,
+   "match": "EXACT",
+   "name": "Artemisia dracunculus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "thyme": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Lamiaceae",
+   "gbif": 5341442,
+   "match": "EXACT",
+   "name": "Thymus vulgaris",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "tomato": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Solanaceae",
+   "gbif": 2930137,
+   "match": "EXACT",
+   "name": "Solanum lycopersicum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "turnip": {
+   "authorship": "Brassica rapa subsp. rapa",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 7225636,
+   "match": "EXACT",
+   "name": "Brassica rapa rapa",
+   "rank": "SUBSPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "valerian": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Caprifoliaceae",
+   "gbif": 2888763,
+   "match": "EXACT",
+   "name": "Valeriana officinalis",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "violet": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Violaceae",
+   "gbif": 5331181,
+   "match": "EXACT",
+   "name": "Viola odorata",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "walnut": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Juglandaceae",
+   "gbif": 3054368,
+   "match": "EXACT",
+   "name": "Juglans regia",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [
+     "Catalogue of Life"
+    ],
+    "verdict": "conflict"
+   },
+   "status": "ACCEPTED"
+  },
+  "watermelon": {
+   "authorship": "(Thunb.) Matsum. & Nakai",
+   "confidence": 99,
+   "family": "Cucurbitaceae",
+   "gbif": 2874621,
+   "match": "EXACT",
+   "name": "Citrullus lanatus",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "wayfaring": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Viburnaceae",
+   "gbif": 2888615,
+   "match": "EXACT",
+   "name": "Viburnum lantana",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "whiteclover": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Fabaceae",
+   "gbif": 5358748,
+   "match": "EXACT",
+   "name": "Trifolium repens",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "whitemustard": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Brassicaceae",
+   "gbif": 3047621,
+   "match": "EXACT",
+   "name": "Sinapis alba",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "wildgarlic": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Amaryllidaceae",
+   "gbif": 2857601,
+   "match": "EXACT",
+   "name": "Allium ursinum",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [],
+    "verdict": "unknown"
+   },
+   "status": "ACCEPTED"
+  },
+  "wildpear": {
+   "authorship": "(L.) Burgsd.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 5362445,
+   "match": "EXACT",
+   "name": "Pyrus pyraster",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "willow": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Salicaceae",
+   "gbif": 5372513,
+   "match": "EXACT",
+   "name": "Salix alba",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "woodstrawberry": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Rosaceae",
+   "gbif": 3029817,
+   "match": "EXACT",
+   "name": "Fragaria vesca",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "wormwood": {
+   "authorship": "L.",
+   "confidence": 100,
+   "family": "Asteraceae",
+   "gbif": 3121319,
+   "match": "EXACT",
+   "name": "Artemisia absinthium",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "Catalogue of Life",
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "yarrow": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 3120060,
+   "match": "EXACT",
+   "name": "Achillea millefolium",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "yew": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Taxaceae",
+   "gbif": 5284517,
+   "match": "EXACT",
+   "name": "Taxus baccata",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [],
+    "native": [
+     "WCVP"
+    ],
+    "verdict": "native"
+   },
+   "status": "ACCEPTED"
+  },
+  "zinnia": {
+   "authorship": "Jacq.",
+   "confidence": 99,
+   "family": "Asteraceae",
+   "gbif": 3111754,
+   "match": "EXACT",
+   "name": "Zinnia elegans",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Catalogue of Life",
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  },
+  "zucchini": {
+   "authorship": "L.",
+   "confidence": 99,
+   "family": "Cucurbitaceae",
+   "gbif": 2874508,
+   "match": "EXACT",
+   "name": "Cucurbita pepo",
+   "rank": "SPECIES",
+   "ro": {
+    "casual": [],
+    "introduced": [
+     "Checklist of introduced taxa in Romania",
+     "WCVP"
+    ],
+    "native": [],
+    "verdict": "introduced"
+   },
+   "status": "ACCEPTED"
+  }
+ },
+ "source": {
+  "distribution": "GBIF species distribution records for Romania: World Checklist of Vascular Plants (WCVP), Checklist of introduced taxa in Romania, Catalogue of Life",
+  "taxonomy": "GBIF Backbone Taxonomy (CC0), api.gbif.org"
+ }
+}

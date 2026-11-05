@@ -46,7 +46,7 @@ function DrawTab() {
         <section key={g}>
           <h4>{g}</h4>
           <div className="palette">
-            {KINDS.filter((k) => k.group === g).map((k) => {
+            {KINDS.filter((k) => k.group === g && !k.noTool).map((k) => {
               const on = tool.type === 'draw' && tool.kind === k.kind
               return (
                 <button key={k.kind} className={on ? 'pal on' : 'pal'} onClick={() => setTool({ type: 'draw', kind: k.kind, presetId: k.presets?.[0].id })}>

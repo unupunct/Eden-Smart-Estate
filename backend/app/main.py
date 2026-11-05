@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 import asyncio
 
-from . import auth, config, db, manage, ocr, onvif, push, smart, smart_mqtt, terrain
+from . import auth, config, db, manage, neighbours, ocr, onvif, plantpictures, push, smart, smart_mqtt, terrain
 from .providers import router as providers_router
 from .routes import router
 
@@ -26,7 +26,7 @@ async def lifespan(_app: FastAPI):
         smart_mqtt.stop_all()
 
 
-app = FastAPI(title="EDEN Smart Estate", version="1.2.0", lifespan=lifespan)
+app = FastAPI(title="EDEN Smart Estate", version="1.3.0", lifespan=lifespan)
 app.include_router(auth.router)
 app.include_router(router)
 app.include_router(providers_router)
@@ -36,6 +36,8 @@ app.include_router(push.router)
 app.include_router(ocr.router)
 app.include_router(onvif.router)
 app.include_router(terrain.router)
+app.include_router(neighbours.router)
+app.include_router(plantpictures.router)
 app.middleware("http")(auth.guard)
 
 dist = config.FRONTEND_DIST
@@ -46,5 +48,8 @@ if (dist / "index.html").exists():
     def spa(path: str):
         candidate = (dist / path).resolve()
         if path and candidate.is_file() and dist.resolve() in candidate.parents:
+            if candidate.name in ("sw.js", "manifest.webmanifest"):  # the browser must always re-check these so updates arrive
+                return FileResponse(candidate, headers={"Cache-Control": "no-cache"},
+                                    media_type="application/manifest+json" if candidate.suffix == ".webmanifest" else "text/javascript")
             return FileResponse(candidate)
-        return FileResponse(dist / "index.html")
+        return FileResponse(dist / "index.html", headers={"Cache-Control": "no-cache"})

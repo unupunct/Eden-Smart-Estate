@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { elevationCells, useTerrain } from '../terrain/terrain'
 import { compass, sunPosition } from '../sun/astro'
 import { useSun } from '../sun/store'
@@ -7,7 +7,8 @@ import { useSun } from '../sun/store'
 export function TerrainCard({ propertyId, lat, lng, dayStartMs }: { propertyId: string; lat: number; lng: number; dayStartMs: number }) {
   const t = useTerrain()
   const sun = useSun()
-  useEffect(() => { void useTerrain.getState().load(propertyId) }, [propertyId])
+  const [pick, setPick] = useState('terrarium') // new installations are offered the finer source first
+  useEffect(() => { void useTerrain.getState().loadSettings(); void useTerrain.getState().load(propertyId) }, [propertyId])
   // elevation tint on the map
   useEffect(() => {
     const on = sun.terrainOn && t.data
@@ -47,8 +48,13 @@ export function TerrainCard({ propertyId, lat, lng, dayStartMs }: { propertyId: 
       <h4>Terrain</h4>
       {!t.enabled && !d && (
         <>
-          <p className="note">Switched off. Turn it on to look up the ground height around the property and let hills on the skyline count in the sun hours. This sends the property’s location, rounded to about 100 m, to the Open-Meteo elevation service (Copernicus 90 m data). Nothing is sent otherwise.</p>
-          <button onClick={() => void t.setEnabled(propertyId, true).catch((e) => useTerrain.setState({ error: (e as Error).message }))}>Turn on terrain</button>
+          <p className="note">Switched off. Turn it on to look up the ground height around the property, tilt beds to the lie of the land and let hills on the skyline count in the sun hours. Nothing is sent unless you turn it on. Choose where the heights come from:</p>
+          <div className="radios" role="radiogroup" aria-label="Elevation data source">
+            {[...(t.providers.length ? t.providers : [{ id: 'terrarium', name: 'Terrain Tiles on AWS (about 30 m)', resolutionM: 30, licence: '', sends: 'only the numbers of the map tiles that cover the property' }])].sort((a, b) => a.resolutionM - b.resolutionM).map((p) => (
+              <label key={p.id} className="check"><input type="radio" name="terrain-source" checked={pick === p.id} onChange={() => setPick(p.id)} /> <span><b>{p.name}</b><small className="muted"> sends {p.sends}</small></span></label>
+            ))}
+          </div>
+          <button onClick={() => void t.setEnabled(propertyId, true, pick).catch((e) => useTerrain.setState({ error: (e as Error).message }))}>Turn on terrain</button>
         </>
       )}
       {t.loading && <p className="note">Looking up the terrain…</p>}
@@ -71,7 +77,15 @@ export function TerrainCard({ propertyId, lat, lng, dayStartMs }: { propertyId: 
           </svg>
           <small className="muted">Grey: the skyline of the land; amber: the sun’s path on the chosen day (the part below {top}°).</small>
           <label className="check"><input type="checkbox" checked={t.blocks} onChange={(e) => t.set({ blocks: e.target.checked })} /> Hills on the skyline block the sun in the sun-hours figures</label>
+          <label className="check"><input type="checkbox" checked={t.tilt} onChange={(e) => t.set({ tilt: e.target.checked })} /> Tilt beds and the sun map to the lie of the land (a slope facing the sun gets more, one facing away gets less)</label>
           <label className="check"><input type="checkbox" checked={sun.terrainOn} onChange={(e) => sun.set({ terrainOn: e.target.checked })} /> Show ground height on the map</label>
+          {t.providers.length > 1 && (
+            <label className="check">Elevation source{' '}
+              <select value={t.providerId} onChange={(e) => void t.setEnabled(propertyId, true, e.target.value).catch((er) => useTerrain.setState({ error: (er as Error).message }))} aria-label="Elevation source">
+                {t.providers.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </label>
+          )}
           {sun.terrainOn && <div className="heatlegend"><i style={{ background: 'linear-gradient(90deg,#1e3a8a,#0e7490,#65a30d,#ca8a04,#92400e,#f5f5f4)' }} /><span>low</span><span /><span /><span /><span>high</span></div>}
           <div className="btnrow">
             <button className="chip" disabled={t.loading || !t.enabled} onClick={() => void t.load(propertyId, true)}>Look up again</button>

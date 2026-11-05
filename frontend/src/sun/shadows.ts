@@ -87,7 +87,25 @@ export function longAxisBearing(ring: XY[]): number {
  * The ridge runs along \`roofOrientation\` (a compass bearing) or the long side. A shed roof is only modelled when its direction
  * is given (otherwise the building stays a box, which is the safe overestimate). Returns null for flat or unknown roofs.
  */
-export function pitchedRoof(ring: XY[], height: number, props: Record<string, unknown>): { eave: number; pts: [number, number, number][] } | null {
+export type RoofType = 'gable' | 'hip' | 'mansard' | 'shed'
+
+/** The roof's own frame: which way the ridge runs (u), across it (v), the footprint's extent in that frame, and where the eave and ridge sit. */
+export interface RoofFrame {
+  type: RoofType
+  ux: number
+  uy: number
+  vx: number
+  vy: number
+  umin: number
+  umax: number
+  vmin: number
+  vmax: number
+  span: number // width across the ridge
+  eave: number // wall height
+  rise: number // eave to ridge
+}
+
+export function roofFrame(ring: XY[], height: number, props: Record<string, unknown>): RoofFrame | null {
   const type = typeof props.roofType === 'string' ? props.roofType : 'flat'
   if (!['gable', 'hip', 'mansard', 'shed'].includes(type) || height < 1.5 || ring.length < 3) return null
   const bearingProp = toFinite(props.roofOrientation)
@@ -104,14 +122,27 @@ export function pitchedRoof(ring: XY[], height: number, props: Record<string, un
   let rise = eaveGiven !== null ? height - Math.min(Math.max(eaveGiven, 0.3), height) : span * factor
   rise = Math.max(0, Math.min(rise, height * 0.6))
   if (rise < 0.2) return null
-  const eave = height - rise
+  return { type: type as RoofType, ux, uy, vx, vy, umin, umax, vmin, vmax, span, eave: height - rise, rise }
+}
+
+/**
+ * A pitched roof as a convex volume. `height` is the overall height (to the ridge). The wall (eave) height is
+ * `eaveHeight` if given, otherwise the roof rise is assumed: 25 % of the building's width for gable/hip, 30 % for mansard.
+ * The ridge runs along `roofOrientation` (a compass bearing) or the long side. A shed roof is only modelled when its direction
+ * is given (otherwise the building stays a box, which is the safe overestimate). Returns null for flat or unknown roofs.
+ */
+export function pitchedRoof(ring: XY[], height: number, props: Record<string, unknown>): { eave: number; pts: [number, number, number][] } | null {
+  const f = roofFrame(ring, height, props)
+  if (!f) return null
+  const { ux, uy, vx, vy, umin, umax, vmin, vmax, span, eave, rise } = f
+  const vs = ring.map(([x, y]) => x * vx + y * vy)
   const at = (u: number, v: number): XY => [u * ux + v * vx, u * uy + v * vy]
   const pts: [number, number, number][] = []
-  if (type === 'shed') {
+  if (f.type === 'shed') {
     ring.forEach(([x, y], i) => pts.push([x, y, eave + (rise * (vs[i] - vmin)) / span]))
   } else {
     ring.forEach(([x, y]) => pts.push([x, y, eave]))
-    const inset = type === 'gable' ? 0 : Math.min(span / 2, (umax - umin) / 2)
+    const inset = f.type === 'gable' ? 0 : Math.min(span / 2, (umax - umin) / 2)
     const vm = (vmin + vmax) / 2
     for (const u of [umin + inset, umax - inset]) {
       const [x, y] = at(u, vm)
@@ -141,7 +172,7 @@ export function buildCasters(doc: Doc, origin: Pos, opts: CasterOptions): Caster
       const ring = g.coordinates[0].slice(0, -1).map(local)
       if (ring.length < 3) continue
       const density = o.kind === 'greenhouse' ? GLAZING_DENSITY : 1
-      const roof = o.kind === 'building' ? pitchedRoof(ring, zt, o.props) : null
+      const roof = o.kind === 'building' || o.kind === 'neighbour' ? pitchedRoof(ring, zt, o.props) : null
       if (roof) {
         out.push({ id: o.id, kind: o.kind, density, shape: { type: 'poly', ring }, zb: 0, zt: roof.eave, bbox: bboxOf(ring) })
         out.push({ id: o.id, kind: o.kind, density, shape: { type: 'hull3', pts: roof.pts }, zb: roof.eave, zt, bbox: bboxOf(ring) })
@@ -346,10 +377,42 @@ export function shadowFeatures(casters: Caster[], v: SunVector | null, origin: P
 
 // ------------------------------------------------------------------ sun hours
 
+/** The tilt of the ground: slope in degrees and the compass direction it FACES (downhill; 180 = a south-facing slope). */
+export interface Surface {
+  slopeDeg: number
+  aspectDeg: number
+}
+
 export interface SunHourOptions {
   stepMin?: number
   minAlt?: number // sun below this elevation is not counted as useful light
   horizon?: (azimuthDeg: number) => number // skyline of the surrounding land: sun below it is hidden (terrain)
+  surfaceAt?: (p: XY) => Surface | undefined // tilt of the ground at a point; undefined = level. A slope turned away from the sun is in its own shade.
+}
+
+/** Cosine of the angle between the sun's rays and the ground's normal: > 0 the sun shines on the surface, <= 0 it is behind the slope. Level ground: sin(elevation). */
+export function incidence(surface: Surface | undefined, az: number, alt: number): number {
+  const a = (alt * Math.PI) / 180
+  if (!surface || surface.slopeDeg <= 0) return Math.sin(a)
+  const sl = (surface.slopeDeg * Math.PI) / 180
+  return Math.sin(a) * Math.cos(sl) + Math.cos(a) * Math.sin(sl) * Math.cos(((az - surface.aspectDeg) * Math.PI) / 180)
+}
+
+/**
+ * How much more (or less) direct sunlight a tilted surface gets over a day than level ground, by the sun's own path
+ * (the terrain skyline counts, buildings and trees do not): energy on the slope / energy on the flat. 1 = no difference.
+ */
+export function tiltGain(dayStart: number, dayEnd: number, origin: Pos, surface: Surface, opts: SunHourOptions = {}): number {
+  const step = (opts.stepMin ?? 10) * 60000
+  const minAlt = opts.minAlt ?? DEFAULT_MIN_ALT
+  let tilted = 0, flat = 0
+  for (let t = dayStart + step / 2; t < dayEnd; t += step) {
+    const s = sunPosition(t, origin[1], origin[0])
+    if (s.alt < minAlt || (opts.horizon && s.alt < opts.horizon(s.az))) continue
+    flat += incidence(undefined, s.az, s.alt)
+    tilted += Math.max(0, incidence(surface, s.az, s.alt))
+  }
+  return flat > 0 ? tilted / flat : 1
 }
 
 export const DEFAULT_MIN_ALT = 3
@@ -362,6 +425,7 @@ export function sunHours(casters: Caster[], points: XY[], dayStart: number, dayE
   const step = (opts.stepMin ?? 10) * 60000
   const minAlt = opts.minAlt ?? DEFAULT_MIN_ALT
   const acc = new Array<number>(points.length).fill(0)
+  const tilt = opts.surfaceAt ? points.map((p) => opts.surfaceAt!(p)) : null
   for (let t = dayStart + step / 2; t < dayEnd; t += step) {
     const s = sunPosition(t, origin[1], origin[0])
     if (s.alt < minAlt || (opts.horizon && s.alt < opts.horizon(s.az))) continue
@@ -369,7 +433,10 @@ export function sunHours(casters: Caster[], points: XY[], dayStart: number, dayE
     if (!v) continue
     const swept = sweepAll(casters, v)
     const w = step / 3600000
-    for (let i = 0; i < points.length; i++) acc[i] += lightAt(swept, points[i]) * w
+    for (let i = 0; i < points.length; i++) {
+      if (tilt && tilt[i] && incidence(tilt[i], s.az, s.alt) <= 0) continue // the slope faces away from the sun: its own shade
+      acc[i] += lightAt(swept, points[i]) * w
+    }
   }
   return acc
 }
@@ -457,10 +524,12 @@ export interface AreaSun {
   max: number
   fullShare: number // share of sample points with 6+ h
   samples: number
+  tilt?: { slopeDeg: number; aspectDeg: number; gain: number } // set when the area sits on sloping ground: the slope and its direct-light gain over level ground
 }
 
 export function analyseAreas(
-  doc: Doc, ids: string[], casters: Caster[], dayStart: number, dayEnd: number, origin: Pos, opts?: SunHourOptions,
+  doc: Doc, ids: string[], casters: Caster[], dayStart: number, dayEnd: number, origin: Pos,
+  opts?: SunHourOptions & { surfaceOf?: (o: Doc['objects'][string], centre: XY) => Surface | undefined },
 ): AreaSun[] {
   const out: AreaSun[] = []
   for (const id of ids) {
@@ -472,9 +541,14 @@ export function analyseAreas(
       pts = samplePolygon(ring)
     } else if (o.geometry.type === 'Point') pts = [toLocal(o.geometry.coordinates, origin)]
     else pts = [toLocal(centroid(o.geometry), origin)]
-    const h = sunHours(casters, pts, dayStart, dayEnd, origin, opts)
+    const centre: XY = [pts.reduce((a, p) => a + p[0], 0) / pts.length, pts.reduce((a, p) => a + p[1], 0) / pts.length]
+    const surface = opts?.surfaceOf?.(o, centre)
+    const h = sunHours(casters, pts, dayStart, dayEnd, origin, surface ? { ...opts, surfaceAt: () => surface } : opts)
     const mean = h.reduce((s, x) => s + x, 0) / h.length
-    out.push({ id, mean, min: Math.min(...h), max: Math.max(...h), fullShare: h.filter((x) => x >= 6).length / h.length, samples: h.length })
+    out.push({
+      id, mean, min: Math.min(...h), max: Math.max(...h), fullShare: h.filter((x) => x >= 6).length / h.length, samples: h.length,
+      ...(surface ? { tilt: { ...surface, gain: tiltGain(dayStart, dayEnd, origin, surface, opts) } } : {}),
+    })
   }
   return out
 }

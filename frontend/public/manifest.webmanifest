@@ -1,0 +1,19 @@
+{
+  "name": "EDEN — Smart Estate",
+  "short_name": "EDEN",
+  "description": "Digital twin and smart-estate platform for your property: map, garden design, sun and shadows, smart home, cameras and tasks.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#14201b",
+  "theme_color": "#14201b",
+  "categories": ["lifestyle", "productivity"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

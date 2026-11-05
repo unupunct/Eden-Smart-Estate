@@ -2,10 +2,12 @@ import type { Feature, FeatureCollection } from 'geojson'
 import { kindDef, num } from '../model/kinds'
 import { displayColor, sortedLayers } from '../model/ops'
 import type { Doc, EdenObject, Geom, Pos } from '../model/types'
-import { circlePolygon, lineQuads, midpoints, offsetFrom, pivotOf, vertices } from '../geo/transform'
+import { circlePolygon, fromLocal, lineQuads, midpoints, offsetFrom, pivotOf, toLocal, vertices } from '../geo/transform'
+import { roofPieces } from './roofs'
 import { centroid, measureGeom } from '../geo/measure'
 import { LEVEL_COLOR, matureCanopy, type LibraryIndex, type NeighbourLink } from '../library/logic'
 
+const ROOF_COLOR = '#9a5b46' // roof tiles in the 3D view
 const M_PER_PX_Z0 = 78271.517 // MapLibre uses 512px tiles
 
 /** Metres -> pixel size at zoom 0 for a given latitude. Exponential(2) zoom interpolation then scales it exactly. */
@@ -75,7 +77,18 @@ export function buildExtrusions(doc: Doc): FeatureCollection {
     const color = displayColor(o, layer)
     if (def.extrude && o.geometry.type === 'Polygon') {
       const h = num(o.props[def.extrude.heightProp], def.extrude.fallback)
-      features.push(feat(o.geometry, { id: o.id, color: def.extrude.color ?? color, h, base: def.extrude.base ?? 0 }))
+      const origin = o.geometry.coordinates[0][0]
+      const roof = (o.kind === 'building' || o.kind === 'neighbour') && h > 0.05 ? roofPieces(o.geometry.coordinates[0].slice(0, -1).map((p) => toLocal(p, origin)), h, o.props) : null
+      if (roof) {
+        // walls up to the eave, then the roof as a stack of thin prisms (the same roof the shadows use)
+        features.push(feat(o.geometry, { id: o.id, color: def.extrude.color ?? color, h: roof.eave, base: def.extrude.base ?? 0 }))
+        for (const piece of roof.pieces) {
+          const ring = [...piece.ring, piece.ring[0]].map((p) => fromLocal(p, origin))
+          features.push(feat({ type: 'Polygon', coordinates: [ring] }, { id: o.id, color: ROOF_COLOR, h: piece.top, base: piece.base }))
+        }
+      } else {
+        features.push(feat(o.geometry, { id: o.id, color: def.extrude.color ?? color, h, base: def.extrude.base ?? 0 }))
+      }
     } else if (def.extrude && o.geometry.type === 'Point' && def.radiusProp) {
       const h = num(o.props[def.extrude.heightProp], def.extrude.fallback)
       const r = Math.max(0.3, num(o.props[def.radiusProp], 2) / 2)

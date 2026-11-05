@@ -63,9 +63,15 @@ powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -SkipE2E   # no browse
 
 ## Release package
 
-`scripts\package.ps1 -Version 1.2.0` builds `release\EdenSmartEstate-1.2.0.zip` (built web app + backend source + scripts + docs + `Install-EDEN.cmd` + `VERSION`). `scripts\test-setup.ps1` installs that zip into a temporary folder (`-Portable`), starts it, updates it over itself (data must survive) and uninstalls it.
+`scripts\package.ps1 -Version 1.3.0` builds `release\EdenSmartEstate-1.3.0.zip` (built web app + backend source + scripts + docs + `Install-EDEN.cmd` + `VERSION`). `scripts\test-setup.ps1` installs that zip into a temporary folder (`-Portable`), starts it, updates it over itself (data must survive) and uninstalls it.
 
 **The Windows installer.** `scripts\build-installer.ps1 -Version 1.2.0` builds `release\EdenSmartEstate-Setup-1.2.0.exe` with Inno Setup (`winget install JRSoftware.InnoSetup`), bundling the verified embeddable Python and the components, signs it with `scripts\sign-file.ps1` and writes `release\SHA256SUMS.txt`. `scripts\new-signing-cert.ps1` makes the self-signed certificate used when no real one is configured (see [SIGNING.md](SIGNING.md)). `scripts\test-installer.ps1` installs, updates, runs and uninstalls the `.exe` in a temporary folder and checks the signature (and that a changed byte breaks it); it refuses to run if EDEN is already installed through the installer.
+
+## Library data, icons and the new test suites (v1.3)
+
+- After changing the plant library run `backend\.venv\Scripts\python.exe scripts\verify-taxonomy.py` (needs internet): it rewrites `backend/app/library_taxa.json` and prints every difference between the library and GBIF (synonyms, families, native vs introduced). A test fails when an entry has no record.
+- `python scripts\make-pwa-icons.py` redraws `frontend/public/icons/*.png` from the favicon leaf (needs Pillow, in the development requirements).
+- Browser suites added in v1.3: `e2e/neighbours.mjs` (fake Overpass; neighbours and 3D roofs), `e2e/library.mjs` (fake Wikipedia and Commons; sources and pictures), `e2e/pwa.mjs` (manifest, service worker, offline), and `e2e/terrain.mjs` now also covers the 30 m source (fake PNG tiles) and tilted beds. All use stand-in servers: no real data is requested.
 
 ## Extending
 
