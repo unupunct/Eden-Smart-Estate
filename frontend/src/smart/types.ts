@@ -44,7 +44,7 @@ export interface Camera {
 
 export type Trigger = { type: 'state'; deviceId: string; to?: string; above?: string; below?: string } | { type: 'time'; at: string; days?: number[] }
 export type Condition = { type: 'state'; deviceId: string; op: 'eq' | 'ne' | 'gt' | 'lt'; value: string } | { type: 'time'; after: string; before: string }
-export type Action = { type: 'device'; deviceId: string; service: string } | { type: 'log'; message: string }
+export type Action = { type: 'device'; deviceId: string; service: string } | { type: 'log'; message: string } | { type: 'notify'; message: string }
 
 export interface Automation {
   id: string

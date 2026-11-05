@@ -139,6 +139,7 @@ export class EdenMap {
     if (!sun.on || !origin) {
       this.setData('shadow', EMPTY)
       this.setData('sunheat', EMPTY)
+      this.setData('terrain', EMPTY)
       return
     }
     const pos = sunPosition(sun.instant, origin[1], origin[0])
@@ -147,6 +148,7 @@ export class EdenMap {
     const f = shadowFeatures(casters, sunVector(pos.az, pos.alt), origin)
     this.setData('shadow', { type: 'FeatureCollection', features: [...f.dense, ...f.light] })
     this.setData('sunheat', sun.heatOn && sun.heat ? sun.heat : EMPTY)
+    this.setData('terrain', sun.terrainOn && sun.terrain ? sun.terrain : EMPTY)
   }
 
   private apply3d(on: boolean) {

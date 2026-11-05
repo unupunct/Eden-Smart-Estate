@@ -94,14 +94,16 @@ Keys are **write-only**: `GET /api/settings` only reports `hasMaptilerKey: true/
 
 Rule JSON: triggers `{"type":"state","deviceId","to"|"above"|"below"}` or `{"type":"time","at":"07:30","days":[0..6]}`; conditions `{"type":"state","deviceId","op":"eq|ne|gt|lt","value"}` or `{"type":"time","after","before"}`; actions `{"type":"device","deviceId","service"}` or `{"type":"log","message"}`.
 
-## Authentication (v1.0)
+## Authentication (v1.2: the admin account)
 
-Off unless the server was started with `EDEN_PASSWORD` (or `start.ps1 -Password`/`-Lan`). When on, every `/api` request except `/api/health` and `/api/auth/*` needs the session cookie and otherwise answers `401 {"detail":"Login required"}`.
+There is **one admin account**. While none exists the API is open (EDEN listens on 127.0.0.1 only). Once it exists, every `/api` request except `/api/health` and `/api/auth/*` needs the session cookie and otherwise answers `401 {"detail":"Login required"}`.
 
 | Method & path | Purpose |
 |---|---|
-| `GET /api/auth/status` | `{required, authenticated}` |
-| `POST /api/auth/login` | `{password}`: `200` + HttpOnly SameSite=Strict cookie; `401` wrong password; `429` locked out for 5 minutes after 5 failures |
+| `GET /api/auth/status` | `{required, authenticated, setupAvailable, username}` (`setupAvailable` is true only while no admin exists and the caller is this computer) |
+| `POST /api/auth/setup` | `{username, password}`: creates the admin and signs this browser in. `409` if one exists, `403` if not from this computer, `422` for a weak password (min. 10 characters) |
+| `POST /api/auth/login` | `{username, password}`: `200` + HttpOnly SameSite=Strict cookie; `401` wrong; `429` locked out for 5 minutes after 5 failures |
+| `POST /api/auth/password` | `{current, new}` (signed in): changes the password, signs every other session out, keeps this one. `403` wrong current password |
 | `POST /api/auth/logout` | clears the cookie |
 
 Writes carrying a foreign `Origin` header are refused (`403`) while protection is on.
@@ -120,6 +122,26 @@ Writes carrying a foreign `Origin` header are refused (`403`) while protection i
 | `GET /api/documents/{id}/file[?download=true]` | the file, with `nosniff` and a sandbox CSP |
 | `GET/PUT /api/weather/settings` | `{enabled}`: weather is off by default |
 | `GET /api/weather?lat=&lng=` | `403` while switched off; otherwise `{source, fetchedAt, stale, error?, data}` (current, 7 days, next 48 hours) |
+
+## Notifications, documents, cameras and terrain (v1.2)
+
+| Method & path | Purpose |
+|---|---|
+| `GET /api/push/status` | `{publicKey, digest, hour, subscriptions[]}`: the VAPID public key the browser subscribes with (the private key never leaves the server) |
+| `POST /api/push/subscribe` · `POST /api/push/unsubscribe` · `DELETE /api/push/subscriptions/{id}` | register / remove a browser (`{endpoint, keys:{p256dh, auth}, label}`); only real push-service addresses are accepted |
+| `PUT /api/push/settings` | `{digest?, hour?}`: the daily task digest |
+| `POST /api/push/test` | send a test notification to every subscribed browser (`409` if none) |
+| `GET /api/ocr/status` · `PUT /api/ocr/settings` | OCR engine, installed languages, selected languages (`{languages:["eng","ron"]}`) |
+| `GET /api/documents/{id}/text` | `{status, note, text, label}`: text read from the document; `label` says whether it is machine-read (OCR) |
+| `POST /api/documents/{id}/ocr` · `POST /api/ocr/run-missing?propertyId=` | read (again) one document / every unread one (background) |
+| `GET /api/documents-text/search?q=&propertyId=` | documents whose text contains `q`, with a snippet |
+| `POST /api/documents` | now also takes `readText` (`true`/`false`) |
+| `POST /api/onvif/discover` | `{seconds?}`: WS-Discovery on the local network → `{cameras:[{xaddr, host, name, hardware, ...}], note}` |
+| `POST /api/onvif/profiles` | `{xaddr, username, password}`: logs in to the camera and returns its device information and video profiles with snapshot / RTSP addresses (nothing is stored) |
+| `POST /api/onvif/add` | `{xaddr, username, password, profileToken, name, objectId?}`: asks the camera again and creates the camera (snapshot if it has a snapshot address, otherwise RTSP) |
+| `GET /api/terrain/settings` · `PUT /api/terrain/settings` | the opt-in switch (`{enabled}`) |
+| `GET /api/properties/{id}/terrain?refresh=` | `{enabled, terrain, error?}`: elevation, slope, aspect, relief, skyline profile (36 azimuths), the 5x5 and 15x15 grids, source and licence, `fetchedAt`, `stale`. Fetches only when enabled and not cached; `DELETE` on the same path forgets it |
+| automation action `{"type":"notify","message":"..."}` | sends a push notification when the rule fires (dry runs only log it) |
 
 ## Planned integrations (not implemented yet)
 

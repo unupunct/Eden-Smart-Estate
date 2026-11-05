@@ -55,7 +55,13 @@ export interface DocumentInfo {
   createdAt: string
   isImage: boolean
   url: string
+  textStatus: '' | 'pending' | 'done' | 'none' | 'unavailable' | 'error'
+  textNote: string
 }
+
+export interface OcrStatus { available: boolean; engine: string | null; version: string; installed: string[]; selected: string[]; usable: string[]; hint: string }
+export interface DocText { status: string; note: string; text: string; label: string }
+export interface TextHit { id: string; snippet: string; note: string }
 
 export interface WeatherData {
   timezone: string

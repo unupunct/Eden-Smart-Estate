@@ -4,7 +4,8 @@
    scripts\start.ps1 -Lan            also reachable from other devices on your network (asks for a password)
    scripts\start.ps1 -Lan -Https     the same, encrypted with a self-signed certificate (recommended)
    scripts\start.ps1 -Port 9000      use another port
-   scripts\start.ps1 -Password ...   protect the estate with a password (also without -Lan)
+   scripts\start.ps1 -Password ...   create the admin account ("admin") with this password if none exists yet
+ The admin account is normally created in Settings. Forgot the password? scripts\reset-admin.ps1
  Your data lives in the "data" folder next to the app (override with -DataDir).
 #>
 param(
@@ -18,7 +19,8 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$py = Join-Path $root 'backend\.venv\Scripts\python.exe'
+$py = Join-Path $root 'python\python.exe'                       # the installer's bundled Python
+if (-not (Test-Path $py)) { $py = Join-Path $root 'backend\.venv\Scripts\python.exe' }  # script install / source checkout
 if (-not (Test-Path $py)) { Write-Host 'Not installed yet. Run scripts\install.ps1 (or Install-EDEN.cmd) first.' -ForegroundColor Red; exit 1 }
 if (-not (Test-Path (Join-Path $root 'frontend\dist\index.html'))) { Write-Host 'The web app is not built. Run scripts\install.ps1 first.' -ForegroundColor Red; exit 1 }
 if ($DataDir) {
@@ -37,11 +39,15 @@ try {
 }
 
 if ($Password) { $env:EDEN_PASSWORD = $Password }
-if ($Lan -and -not $env:EDEN_PASSWORD -and -not $NoPassword) {
-    Write-Host 'LAN mode lets other devices on your network open this estate and operate your devices, so it needs a password.' -ForegroundColor Yellow
-    $secure = Read-Host 'Choose a password (at least 8 characters)' -AsSecureString
+$hasAdmin = $false
+Push-Location (Join-Path $root 'backend')
+try { $hasAdmin = ((& $py -m app.admin status 2>$null) -join '') -match '^ADMIN=(?!none)' } catch { }
+Pop-Location
+if ($Lan -and -not $hasAdmin -and -not $env:EDEN_PASSWORD -and -not $NoPassword) {
+    Write-Host 'LAN mode lets other devices on your network open this estate and operate your devices, so it needs the admin account.' -ForegroundColor Yellow
+    $secure = Read-Host 'Choose the admin password (at least 10 characters; the user name is "admin")' -AsSecureString
     $plain = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure))
-    if ($plain.Length -lt 8) { Write-Host 'Password too short. Not starting. (Use -NoPassword only on a network you fully trust.)' -ForegroundColor Red; exit 1 }
+    if ($plain.Length -lt 10) { Write-Host 'Password too short. Not starting. (Use -NoPassword only on a network you fully trust.)' -ForegroundColor Red; exit 1 }
     $env:EDEN_PASSWORD = $plain
 }
 $bind = if ($Lan) { '0.0.0.0' } else { '127.0.0.1' }
@@ -67,11 +73,12 @@ if ($Https) {
     Write-Host "  Certificate file (to trust it on another device): $cert"
 }
 if ($Lan) {
-    if ($env:EDEN_PASSWORD) { Write-Host 'LAN mode with password protection.' -ForegroundColor Yellow }
+    if ($hasAdmin -or $env:EDEN_PASSWORD) { Write-Host 'LAN mode with the admin account.' -ForegroundColor Yellow }
     else { Write-Host 'LAN mode WITHOUT a password: anyone on your network can open, edit and control devices. Only do this on a network you fully trust.' -ForegroundColor Red }
     if (-not $Https) { Write-Host 'Traffic is NOT encrypted (plain HTTP). Add -Https to encrypt it.' -ForegroundColor Yellow }
     foreach ($ip in $ips) { Write-Host "  other devices:  ${scheme}://${ip}:$Port" }
-} elseif ($env:EDEN_PASSWORD) { Write-Host 'Password protection is on.' -ForegroundColor Yellow }
+} elseif ($hasAdmin -or $env:EDEN_PASSWORD) { Write-Host 'The admin account protects this estate.' -ForegroundColor Yellow }
+else { Write-Host 'No admin account yet: create one in Settings to require a password.' -ForegroundColor DarkYellow }
 Write-Host "EDEN Smart Estate is starting on ${scheme}://127.0.0.1:$Port  (Ctrl+C or close this window to stop)" -ForegroundColor Green
 if (-not $NoBrowser) {
     Start-Job -ScriptBlock { param($p, $s) Start-Sleep 2; Start-Process "${s}://127.0.0.1:$p" } -ArgumentList $Port, $scheme | Out-Null

@@ -15,7 +15,7 @@ const ctx: SearchContext = {
   pages: [{ route: 'tasks', label: 'Tasks & Maintenance', keywords: 'reminders todo' }, { route: 'weather', label: 'Weather', keywords: 'forecast frost' }],
   objects: [obj('o1', 'tree', 'Apple 1', { species: 'Apple', variety: 'Jonathan' }), obj('o2', 'garden_bed', 'Bed 1')],
   lib, tasks: [task({ id: 't1', title: 'Prune the apple trees', due: '2025-02-15', notes: 'after frost' })],
-  documents: [{ id: 'd1', propertyId: 'p', objectId: null, title: 'Pump warranty', originalName: 'pump.pdf', mime: 'application/pdf', size: 1, tags: ['pond', 'warranty'], note: '', takenAt: null, createdAt: '', isImage: false, url: '' }],
+  documents: [{ id: 'd1', propertyId: 'p', objectId: null, title: 'Pump warranty', originalName: 'pump.pdf', mime: 'application/pdf', size: 1, tags: ['pond', 'warranty'], note: '', takenAt: null, createdAt: '', isImage: false, url: '', textStatus: '', textNote: '' }],
   devices: [{ id: 'dev1', integrationId: 'i', externalId: 'switch.garden_pump', name: 'Garden pump', domain: 'switch', deviceClass: '', unit: '', state: 'off', stateUpdated: null, attrs: {}, objectId: null, risky: false, commandTopic: '', integrationStatus: 'online', controllable: true }],
   automations: [], cameras: [], integrations: [],
 }

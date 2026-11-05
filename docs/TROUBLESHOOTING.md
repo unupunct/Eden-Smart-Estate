@@ -13,7 +13,22 @@
 | Setup says *"This folder does not contain the built web app"* | You ran it from a source checkout. Use the release zip, or run `scripts\install.ps1` (needs Node.js 20+). |
 | The browser warns about the certificate with `-Https` | Expected: the certificate is self-signed. Compare its SHA-256 fingerprint with the one printed in the console, then continue; or import `data\tls\eden-cert.pem` into the device's trusted certificates. After you add a new network address EDEN issues a new certificate (new fingerprint). |
 | Python is missing and winget did not install it | Install Python 3.11+ from python.org (tick *Add python.exe to PATH*), open a new window and run the installer again. |
-| Forgot the password | Stop EDEN and start it without `-Password`/`EDEN_PASSWORD` (this computer only), or with a new password: the password is never stored in the data. Your data is not affected. |
+| Forgot the admin password | On the EDEN computer run `scripts\reset-admin.ps1` (also in the program folder of the installer version). It asks for a new password (at least 10 characters), signs everybody out, and does not touch your data. |
+
+| *Windows protected your PC* / *Unknown publisher* when running the installer | The installer is signed, but with a self-signed certificate, which Windows does not know. Compare the file's SHA-256 with `SHA256SUMS.txt` on the release page and the signer thumbprint with `docs/SIGNING.md`; then *More info → Run anyway*. See `docs/SIGNING.md` for how a trusted signature is obtained. |
+| The installer says another copy is running | It stops EDEN's own server itself. If it still complains, close the EDEN console window and run it again. |
+
+## Notifications, OCR, cameras and terrain
+
+| Symptom | Fix |
+|---|---|
+| *Turn on notifications* is greyed out / says "only on https or localhost" | Open EDEN on this computer as `http://127.0.0.1:8787`, or start it with `-Https` and accept the certificate warning on the other device. |
+| Notifications were allowed but nothing arrives | Press *Send a test notification* and read the answer. The EDEN computer must be on and online. Remove the device and turn notifications on again. A browser that is fully closed, or a phone in battery saver, may delay delivery. |
+| Photos and scans are not searchable ("no OCR engine installed") | Install Tesseract: `winget install UB-Mannheim.TesseractOCR` (or tick it in the installer), then press *Read text of documents that were not read yet* on the Documents page. |
+| OCR reads Romanian badly | Run `scripts\get-ocr-language.ps1 ron`, then set the languages to `eng + ron` in Settings. Scans in low resolution or handwriting stay unreliable. |
+| ONVIF search finds nothing | Multicast may be blocked (guest Wi-Fi, VLAN, some routers) or the camera has ONVIF switched off. Type its address by hand (`http://<ip>/onvif/device_service`). |
+| ONVIF says the user name or password was rejected | Use an **ONVIF user** created in the camera's own settings; some cameras do not accept their web login for ONVIF. |
+| Terrain says the service could not be reached | The elevation service needs internet. EDEN keeps showing the last real answer with its date. |
 
 ## Map and imagery
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Camera as CamIcon, Maximize2, Pause, Play, Trash2, X } from 'lucide-react'
 import { smartApi } from '../api/client'
+import { OnvifPanel } from './OnvifPanel'
 import { useEditor } from '../model/store'
 import { useSmart } from '../smart/store'
 import type { Camera, Integration } from '../smart/types'
@@ -70,6 +71,7 @@ export function SecurityPage() {
   const [paused, setPaused] = useState(false)
   const [full, setFull] = useState<Camera | null>(null)
   const [adding, setAdding] = useState(false)
+  const [onvif, setOnvif] = useState(false)
   const placed = Object.values(objects).filter((o) => o.kind === 'camera')
   const linked = new Set(cameras.map((c) => c.objectId))
   const unconfigured = placed.filter((o) => !linked.has(o.id))
@@ -81,10 +83,12 @@ export function SecurityPage() {
       </div>
       <div className="btnrow">
         <button className="primary" onClick={() => setAdding(true)}><CamIcon size={14} /> Add camera</button>
+        <button onClick={() => setOnvif((v) => !v)}>Find ONVIF camera…</button>
         <label className="tb">Refresh every
           <select value={every} onChange={(e) => setEvery(Number(e.target.value))}><option value={2}>2 s</option><option value={5}>5 s</option><option value={10}>10 s</option><option value={30}>30 s</option></select></label>
         <button onClick={() => setPaused((p) => !p)}>{paused ? <Play size={14} /> : <Pause size={14} />} {paused ? 'Resume' : 'Pause'}</button>
       </div>
+      {onvif && <OnvifPanel onDone={() => void load()} onCancel={() => setOnvif(false)} />}
       {adding && <AddCamera integrations={integrations.filter((i) => i.kind === 'homeassistant')} onDone={() => { setAdding(false); void load() }} onCancel={() => setAdding(false)} ffmpeg={status?.ffmpeg ?? false} />}
       <div className="camgrid">
         {cameras.map((c) => (
@@ -103,7 +107,7 @@ export function SecurityPage() {
       <details className="more"><summary>What EDEN can and cannot do with cameras</summary>
         <ul className="assume">
           <li>Snapshot, MJPEG and Home Assistant cameras work out of the box. RTSP needs ffmpeg ({status?.ffmpeg ? 'found on this computer' : 'not found on this computer'}).</li>
-          <li>Automatic ONVIF discovery is not implemented: enter the camera's snapshot or RTSP address (ONVIF cameras usually publish both).</li>
+          <li>ONVIF cameras can be found on your network (multicast must be allowed) and added with their ONVIF user name and password; EDEN reads the picture and video addresses from the camera. This was tested against a simulated camera only, so a real camera may need ONVIF switched on in its own settings. If discovery finds nothing, add the camera by its snapshot or RTSP address.</li>
           <li>No recording, motion detection or cloud: EDEN only displays what the camera delivers right now.</li>
           <li>Camera passwords are stored on this computer, never returned by the API. They are part of a full backup file, so keep backups private.</li>
         </ul>

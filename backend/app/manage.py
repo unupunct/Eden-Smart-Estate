@@ -12,11 +12,11 @@ from pathlib import Path
 from typing import Literal
 
 import httpx
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
-from . import config, db, privacy, recurrence
+from . import config, db, ocr, privacy, recurrence
 
 router = APIRouter(prefix="/api")
 
@@ -292,6 +292,7 @@ def _doc(r) -> dict:
         "id": r["id"], "propertyId": r["property_id"], "objectId": r["object_id"], "title": r["title"], "originalName": r["original_name"], "mime": r["mime"],
         "size": r["size"], "tags": [t for t in r["tags"].split(",") if t], "note": r["note"], "takenAt": r["taken_at"], "createdAt": r["created_at"],
         "isImage": r["mime"].startswith("image/"), "url": f"/api/documents/{r['id']}/file",
+        "textStatus": r["ocr_status"], "textNote": r["ocr_note"] if r["ocr_status"] in ("done", "none") else "",
     }
 
 
@@ -305,8 +306,8 @@ def _tags(s: str) -> str:
 
 
 @router.post("/documents", status_code=201)
-async def upload_document(file: UploadFile = File(...), propertyId: str = Form(...), objectId: str = Form(""), title: str = Form(""),
-                          tags: str = Form(""), note: str = Form(""), takenAt: str = Form(""), stripMetadata: str = Form("true")):
+async def upload_document(tasks: BackgroundTasks, file: UploadFile = File(...), propertyId: str = Form(...), objectId: str = Form(""), title: str = Form(""),
+                          tags: str = Form(""), note: str = Form(""), takenAt: str = Form(""), stripMetadata: str = Form("true"), readText: str = Form("true")):
     name = Path(file.filename or "file").name
     ext = Path(name).suffix.lower()
     if ext not in ALLOWED:
@@ -330,6 +331,10 @@ async def upload_document(file: UploadFile = File(...), propertyId: str = Form(.
         (config.UPLOAD_DIR / stored).write_bytes(data)
         conn.execute("INSERT INTO documents(id,property_id,object_id,title,filename,original_name,mime,size,tags,note,taken_at,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                      (did, propertyId, objectId or None, (title.strip() or Path(name).stem)[:200], stored, name[:200], ALLOWED[ext], len(data), _tags(tags), note[:2000], takenAt or None, db.now()))
+        read = readText.lower() not in ("false", "0", "no", "off")
+        if read:
+            conn.execute("UPDATE documents SET ocr_status='pending' WHERE id=?", (did,))
+            tasks.add_task(ocr.process_document, did)
         return {**_doc(_need(conn, "documents", did, "Document")), "metadataRemoved": removed}
 
 

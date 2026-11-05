@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 import asyncio
 
-from . import auth, config, db, manage, smart, smart_mqtt
+from . import auth, config, db, manage, ocr, onvif, push, smart, smart_mqtt, terrain
 from .providers import router as providers_router
 from .routes import router
 
@@ -15,6 +15,7 @@ from .routes import router
 async def lifespan(_app: FastAPI):
     config.ensure_dirs()
     db.migrate()
+    auth.bootstrap()
     smart.start_mqtt_all()
     task = asyncio.create_task(smart.poll_loop(config.POLL_SECONDS)) if config.POLL_SECONDS > 0 else None
     try:
@@ -25,12 +26,16 @@ async def lifespan(_app: FastAPI):
         smart_mqtt.stop_all()
 
 
-app = FastAPI(title="EDEN Smart Estate", version="1.1.0", lifespan=lifespan)
+app = FastAPI(title="EDEN Smart Estate", version="1.2.0", lifespan=lifespan)
 app.include_router(auth.router)
 app.include_router(router)
 app.include_router(providers_router)
 app.include_router(smart.router)
 app.include_router(manage.router)
+app.include_router(push.router)
+app.include_router(ocr.router)
+app.include_router(onvif.router)
+app.include_router(terrain.router)
 app.middleware("http")(auth.guard)
 
 dist = config.FRONTEND_DIST

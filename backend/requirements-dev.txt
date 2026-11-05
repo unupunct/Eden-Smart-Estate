@@ -1,2 +1,4 @@
 # Extra packages for the test suite (not needed to run EDEN)
+pytest>=8
 amqtt>=0.11  # a real in-process MQTT broker for tests/test_mqtt_broker.py
+pillow>=10

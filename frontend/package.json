@@ -2,14 +2,14 @@
   "name": "eden-smart-estate-frontend",
   "private": true,
   "license": "MIT",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "test": "vitest run",
     "preview": "vite preview",
-    "e2e": "node e2e/interact.mjs && node e2e/design.mjs && node e2e/sun.mjs && node e2e/smart.mjs && node e2e/manage.mjs && node e2e/auth.mjs && node e2e/a11y.mjs",
+    "e2e": "node e2e/interact.mjs && node e2e/design.mjs && node e2e/sun.mjs && node e2e/smart.mjs && node e2e/manage.mjs && node e2e/auth.mjs && node e2e/account.mjs && node e2e/terrain.mjs && node e2e/a11y.mjs",
     "screenshots": "node e2e/screenshots.mjs ../docs/screenshots"
   },
   "dependencies": {

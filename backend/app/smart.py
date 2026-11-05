@@ -644,6 +644,19 @@ async def execute_actions(aid: str, name: str, actions: list[dict], dry: bool) -
             out.append(msg)
             _log(aid, "info", msg, dry)
             continue
+        if a.get("type") == "notify":
+            text = str(a.get("message", "")).strip()
+            if dry:
+                msg = f"{name}: would send the notification “{text}” (dry run, nothing was sent)."
+                out.append(msg)
+                _log(aid, "info", msg, True)
+                continue
+            from . import push
+            res = await push.notify(name, text, "/#automations", f"auto-{aid}")
+            msg = f"{name}: notification “{text}” " + (f"sent to {res['sent']} device(s)." if res["sent"] else ("not sent: no browser is subscribed." if not res["subscribers"] else "could not be delivered."))
+            out.append(msg)
+            _log(aid, "info" if res["sent"] else "warn", msg)
+            continue
         d = dev.get(a.get("deviceId"))
         if not d:
             msg = f"{name}: device no longer exists, action skipped."
@@ -747,6 +760,11 @@ async def tick() -> None:
         await run_engine()
     except Exception as e:
         _log(None, "error", f"Automation engine error: {type(e).__name__}: {e}")
+    try:
+        from . import push
+        await push.send_digest_if_due()
+    except Exception as e:
+        _log(None, "error", f"Notification digest error: {type(e).__name__}: {e}")
 
 
 async def poll_loop(seconds: float) -> None:

@@ -104,6 +104,7 @@ export function AutomationsPage() {
 
 function describeAction(a: Action, devices: Device[]): string {
   if (a.type === 'log') return `write “${a.message}” to the log`
+  if (a.type === 'notify') return `send the notification “${a.message}”`
   const d = devices.find((x) => x.id === a.deviceId)
   const label = SERVICES[d?.domain ?? '']?.find(([s]) => s === a.service)?.[1] ?? a.service
   return `${label} → ${d?.name ?? 'missing device'}`
@@ -185,12 +186,13 @@ function Editor({ draft, devices, onSave, onCancel }: { draft: Draft; devices: D
                 {(SERVICES[byId.get(a.deviceId)?.domain ?? ''] ?? []).map(([s, l]) => <option key={s} value={s}>{l}</option>)}
               </select>
             </>
-          ) : <input value={a.message} placeholder="message for the log" onChange={(e) => upd('actions', i, { type: 'log', message: e.target.value })} />}
+          ) : <input value={a.message} placeholder={a.type === 'notify' ? 'text of the notification' : 'message for the log'} aria-label={a.type === 'notify' ? 'Notification text' : 'Log message'} onChange={(e) => upd('actions', i, { type: a.type, message: e.target.value })} />}
           <button className="icon danger" onClick={() => del('actions', i)}><Trash2 size={14} /></button>
         </div>
       ))}
       <div className="btnrow">
         <button className="chip" disabled={!commandable.length} onClick={() => { const dev = commandable[0]; setD({ ...d, actions: [...d.actions, { type: 'device', deviceId: dev.id, service: SERVICES[dev.domain]?.[0]?.[0] ?? 'turn_on' }] }) }}>+ control a device</button>
+        <button className="chip" onClick={() => setD({ ...d, actions: [...d.actions, { type: 'notify', message: '' }] })}>+ send a notification</button>
         <button className="chip" onClick={() => setD({ ...d, actions: [...d.actions, { type: 'log', message: '' }] })}>+ write to log</button>
       </div>
 

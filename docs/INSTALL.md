@@ -7,7 +7,7 @@ EDEN runs as a small local web server (Python) that serves the web app (React). 
 | | Needed for | Where to get it |
 |---|---|---|
 | Windows 11 (Windows 10 also works) | the provided installer and scripts | – |
-| **Python 3.11 or newer** | running EDEN | <https://www.python.org/downloads/>: during setup tick **"Add python.exe to PATH"** |
+| Python 3.11 or newer | only for the zip / script install (the `.exe` installer brings its own Python) | <https://www.python.org/downloads/>: during setup tick **"Add python.exe to PATH"** |
 | Node.js 20+ | *only* when building from source | <https://nodejs.org/> |
 | Git | *only* when cloning | <https://git-scm.com/> |
 | A modern browser (Edge, Chrome, Firefox) | using EDEN | – |
@@ -15,9 +15,27 @@ EDEN runs as a small local web server (Python) that serves the web app (React). 
 
 Check Python: open PowerShell and run `py -3 --version` (or `python --version`). You should see 3.11 or higher.
 
-## 2. Install (recommended: the installer)
+## 2. Install
 
-1. Download `EdenSmartEstate-1.1.0.zip` from the project's **Releases** page.
+### Option A (recommended): the installer, `EdenSmartEstate-Setup-1.2.0.exe`
+
+1. Download `EdenSmartEstate-Setup-1.2.0.exe` and `SHA256SUMS.txt` from the project's **Releases** page, and compare the checksum (`Get-FileHash .\EdenSmartEstate-Setup-1.2.0.exe -Algorithm SHA256`).
+2. Double-click it. It is signed, but with a **self-signed certificate**, so Windows says *Unknown publisher* / SmartScreen may say *Windows protected your PC*. Read [SIGNING.md](SIGNING.md) (what the signature does prove, the signer's fingerprint, and how a trusted one is obtained), then choose *More info → Run anyway* if you are satisfied.
+3. Follow the wizard. It needs **no administrator rights** and **no Python**: it brings its own (the official embeddable Python, checked before it was bundled).
+
+Optional wizard tasks: a desktop shortcut, *start EDEN when I sign in*, and the **OCR engine** (Tesseract, about 50 MB through winget; Windows asks permission) that lets EDEN read text in photos and scans.
+
+Where things go: the program in `%LOCALAPPDATA%\EDEN\app`, **your data in `%LOCALAPPDATA%\EDEN\data`** (never touched by updates), Start Menu entries (EDEN Smart Estate, EDEN data folder, user guide) and an entry in *Settings → Apps → Installed apps*. You can choose another folder.
+
+**Updating:** run the newer installer; it stops a running EDEN, replaces the program and keeps your data. It also takes over an installation made with the older zip route (same folder, same data).
+
+**Uninstalling:** *Installed apps → EDEN Smart Estate → Uninstall*. It asks whether to also delete your data (default: keep). Silent forms: `unins000.exe /VERYSILENT` keeps the data, `unins000.exe /VERYSILENT /REMOVEDATA=1` removes it.
+
+Silent install for scripts: `EdenSmartEstate-Setup-1.2.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR="D:\EDEN" /TASKS="autostart"`.
+
+### Option B: zip + `Install-EDEN.cmd` (uses your own Python)
+
+1. Download `EdenSmartEstate-1.2.0.zip` from the project's **Releases** page.
 2. Right-click → *Extract All…* (any temporary folder is fine, for example Downloads).
 3. Double-click **`Install-EDEN.cmd`**.
 

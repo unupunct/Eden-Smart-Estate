@@ -9,6 +9,8 @@ export interface SunState {
   leaf: LeafMode
   heatOn: boolean
   heat: GeoJSON.FeatureCollection | null // sun-hours grid, filled by the Sun page
+  terrainOn: boolean // tint the map by ground height
+  terrain: GeoJSON.FeatureCollection | null // elevation cells, filled by the terrain card
   set: (p: Partial<Omit<SunState, 'set'>>) => void
 }
 
@@ -19,6 +21,8 @@ export const useSun = create<SunState>((set) => ({
   leaf: 'auto',
   heatOn: false,
   heat: null,
+  terrainOn: false,
+  terrain: null,
   set: (p) => set(p),
 }))
 

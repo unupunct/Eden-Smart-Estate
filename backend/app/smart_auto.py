@@ -124,9 +124,9 @@ def validate(body: dict, devices: dict[str, dict]) -> list[str]:
     if not actions:
         errs.append("Add at least one action.")
     for a in actions:
-        if a.get("type") == "log":
+        if a.get("type") in ("log", "notify"):
             if not str(a.get("message", "")).strip():
-                errs.append("A log action needs a message.")
+                errs.append(f"A {'log' if a.get('type') == 'log' else 'notification'} action needs a message.")
         elif a.get("type") == "device":
             d = devices.get(a.get("deviceId"))
             if not d:

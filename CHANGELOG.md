@@ -2,6 +2,17 @@
 
 All notable changes. Versions follow the build phases of the project; 1.0.0 completes the original plan.
 
+## 1.2.0: admin account, signed installer, terrain, ONVIF, OCR, push
+
+- **Admin account:** exactly one admin (user name + password, stored only as a salted scrypt hash). Created in *Settings → Admin account*; from then on every browser signs in. **Change password** (needs the current one, signs other browsers out) and `scripts\reset-admin.ps1` for a forgotten password. `start.ps1 -Password` / `-Lan` only seed the first account. Replaces the single shared password.
+- **Windows installer (.exe):** `EdenSmartEstate-Setup-<version>.exe` (Inno Setup) installs per user without administrator rights and **bundles its own Python** (the official embeddable build, checked against a pinned hash and its signature), so no Python is needed. Updates keep your data; uninstall asks whether to keep it. Optional tasks: desktop shortcut, autostart, OCR engine. The older zip + `Install-EDEN.cmd` route still works.
+- **Signing:** installer and uninstaller are Authenticode-signed (SHA-256, RFC 3161 timestamp) by `scripts\sign-file.ps1`; this release is signed with a **self-signed** certificate (thumbprint in `docs/SIGNING.md`), so the signature proves integrity but Windows still shows *Unknown publisher* until a certificate authority's certificate is used. `docs/SIGNING.md` explains how. `SHA256SUMS.txt` is published with every release.
+- **Push notifications:** Web Push with VAPID and end-to-end encrypted payloads, daily task digest, a *send a notification* automation action, test button, device list. Verified by decrypting real messages in tests.
+- **OCR and document text:** text of Word/Excel/OpenDocument/text files and PDF text layers is searchable; photos and scanned PDFs are read with Tesseract when installed (language data via `scripts\get-ocr-language.ps1`). OCR text is always labelled machine-read.
+- **ONVIF:** find cameras on the network (WS-Discovery), log in with WS-Security digest (using the camera's own clock), choose a video profile and add it; only local-network addresses are contacted. Tested against a simulated camera.
+- **Terrain (opt-in):** ground height, slope and aspect, and a skyline profile from 90 m Copernicus data via Open-Meteo; hills block the sun in the sun hours; optional elevation tint on the map; last real answer kept.
+- Dependencies: `pywebpush`, `pypdf`; `pytest` moved to the development requirements.
+
 ## 1.1.0: MIT licence, privacy and fewer limits
 
 - **MIT licence** (`LICENSE`) and `THIRD_PARTY_NOTICES.md` (libraries, data services and their terms).

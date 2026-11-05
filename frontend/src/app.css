@@ -405,3 +405,8 @@ pre.errtext { max-width: 640px; white-space: pre-wrap; background: rgba(240,113,
 .palette-item.on { background: rgba(76,195,138,.2); }
 .palette-item small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55%; }
 kbd { border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; font-size: 11px; background: rgba(255,255,255,.06); }
+
+.snippet { display: block; color: var(--accent, #6ee7a8); font-size: 12px; margin-top: 2px; }
+.doctext { max-height: 50vh; overflow: auto; white-space: pre-wrap; word-break: break-word; font: 12.5px/1.45 ui-monospace, Consolas, monospace; background: rgba(0,0,0,.25); padding: 10px; border-radius: 8px; margin: 6px 0; }
+ul.plain { list-style: none; padding: 0; margin: 6px 0; display: grid; gap: 6px; }
+.horizonchart { width: 100%; height: auto; color: var(--text, #e5e7eb); display: block; margin: 4px 0; }

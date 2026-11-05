@@ -63,7 +63,21 @@ export interface GeocodeHit {
   center: Pos
 }
 
+export interface PushStatus { publicKey: string; digest: boolean; hour: number; subscriptions: { id: string; label: string; createdAt: string; lastOk: string | null; failures: number }[] }
+export interface PushResult { sent: number; failed: number; removed: number; subscribers: number; results: { label: string; ok: boolean; message: string }[] }
+
+export interface AuthStatus { required: boolean; authenticated: boolean; setupAvailable: boolean; username: string | null }
+
 export const api = {
+  pushStatus: () => req<PushStatus>('/api/push/status'),
+  pushSubscribe: (sub: { endpoint: string; keys: { p256dh: string; auth: string } }, label: string) => req<PushStatus>('/api/push/subscribe', json('POST', { ...sub, label })),
+  pushUnsubscribe: (endpoint: string) => req<PushStatus>('/api/push/unsubscribe', json('POST', { endpoint })),
+  pushRemove: (id: string) => req<void>(`/api/push/subscriptions/${id}`, { method: 'DELETE' }),
+  pushSettings: (patch: { digest?: boolean; hour?: number }) => req<PushStatus>('/api/push/settings', json('PUT', patch)),
+  pushTest: () => req<PushResult>('/api/push/test', { method: 'POST' }),
+  authStatus: () => req<AuthStatus>('/api/auth/status'),
+  authSetup: (username: string, password: string) => req<{ ok: boolean; username: string }>('/api/auth/setup', json('POST', { username, password })),
+  authPassword: (current: string, next: string) => req<{ ok: boolean }>('/api/auth/password', json('POST', { current, new: next })),
   health: () => req<{ status: string; version: string; properties: number }>('/api/health'),
   listProperties: () => req<PropertyMeta[]>('/api/properties'),
   createProperty: (name: string, center: Pos, zoom = 17, description = '') =>
@@ -137,7 +151,7 @@ export const smartApi = {
 }
 
 // ---------------------------------------------------------------------------------------------- management (Phase 6)
-import type { DocumentInfo, HistoryEntry, Task, TaskInput, WeatherReply } from '../manage/types'
+import type { DocText, DocumentInfo, HistoryEntry, OcrStatus, Task, TaskInput, TextHit, WeatherReply } from '../manage/types'
 
 export const manageApi = {
   tasks: (propertyId: string) => req<Task[]>(`/api/tasks?propertyId=${propertyId}`),
@@ -149,7 +163,7 @@ export const manageApi = {
   tasksCsvUrl: (propertyId: string) => `/api/properties/${propertyId}/tasks.csv`,
   tasksIcsUrl: (propertyId: string) => `/api/properties/${propertyId}/tasks.ics`,
   documents: (propertyId: string) => req<DocumentInfo[]>(`/api/documents?propertyId=${propertyId}`),
-  upload: (propertyId: string, file: File, extra: { objectId?: string; title?: string; tags?: string; note?: string; takenAt?: string; stripMetadata?: string } = {}) => {
+  upload: (propertyId: string, file: File, extra: { objectId?: string; title?: string; tags?: string; note?: string; takenAt?: string; stripMetadata?: string; readText?: string } = {}) => {
     const f = new FormData()
     f.append('file', file)
     f.append('propertyId', propertyId)
@@ -158,6 +172,12 @@ export const manageApi = {
   },
   patchDocument: (id: string, b: Partial<{ title: string; tags: string; note: string; objectId: string | null; takenAt: string | null }>) => req<DocumentInfo>(`/api/documents/${id}`, json('PATCH', b)),
   deleteDocument: (id: string) => req<void>(`/api/documents/${id}`, { method: 'DELETE' }),
+  ocrStatus: () => req<OcrStatus>('/api/ocr/status'),
+  ocrLanguages: (languages: string[]) => req<OcrStatus>('/api/ocr/settings', json('PUT', { languages })),
+  ocrRunMissing: (propertyId: string) => req<{ queued: number }>(`/api/ocr/run-missing?propertyId=${propertyId}`, { method: 'POST' }),
+  ocrReread: (id: string) => req<{ queued: number }>(`/api/documents/${id}/ocr`, { method: 'POST' }),
+  documentText: (id: string) => req<DocText>(`/api/documents/${id}/text`),
+  searchDocumentText: (propertyId: string, q: string) => req<TextHit[]>(`/api/documents-text/search?propertyId=${propertyId}&q=${encodeURIComponent(q)}`),
   weatherSettings: () => req<{ enabled: boolean; provider: string; url: string }>('/api/weather/settings'),
   setWeatherEnabled: (enabled: boolean) => req<{ enabled: boolean }>('/api/weather/settings', json('PUT', { enabled })),
   weather: (lat: number, lng: number) => req<WeatherReply>(`/api/weather?lat=${lat}&lng=${lng}`),

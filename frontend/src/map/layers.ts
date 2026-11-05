@@ -24,7 +24,7 @@ export const HIT_LAYERS = {
 
 export function installEdenLayers(map: maplibregl.Map): void {
   const src = (id: string) => map.addSource(id, { type: 'geojson', data: EMPTY })
-  ;['eden', 'ext', 'wedges', 'mature', 'compat', 'handles', 'draw', 'shadow', 'sunheat'].forEach(src)
+  ;['eden', 'ext', 'wedges', 'mature', 'compat', 'handles', 'draw', 'shadow', 'sunheat', 'terrain'].forEach(src)
 
   const add = (l: maplibregl.LayerSpecification) => map.addLayer(l)
 
@@ -33,6 +33,9 @@ export function installEdenLayers(map: maplibregl.Map): void {
   add({ id: 'eden-wedge-line', type: 'line', source: 'wedges', paint: { 'line-color': '#fca5a5', 'line-width': 1.2, 'line-opacity': 0.85 } })
 
   // sun-hours heat map and cast shadows lie on the ground, under the objects
+  add({ id: 'terrain-fill', type: 'fill', source: 'terrain',
+    paint: { 'fill-color': ['interpolate', ['linear'], ['get', 'rel'], 0, '#1e3a8a', 0.2, '#0e7490', 0.45, '#65a30d', 0.7, '#ca8a04', 0.9, '#92400e', 1, '#f5f5f4'],
+      'fill-opacity': ['case', ['==', ['get', 'level'], 'local'], 0.5, 0.3], 'fill-antialias': true } })
   add({ id: 'sunheat-fill', type: 'fill', source: 'sunheat',
     paint: { 'fill-color': ['interpolate', ['linear'], ['get', 'hours'], 0, '#312e81', 3, '#38bdf8', 6, '#a3e635', 9, '#fbbf24', 12, '#f97316', 15, '#ef4444'], 'fill-opacity': 0.55, 'fill-antialias': false } })
   add({ id: 'shadow-light', type: 'fill', source: 'shadow', filter: ['==', ['get', 'cls'], 'light'], paint: { 'fill-color': '#05080f', 'fill-opacity': 0.22 } })

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useIntent } from '../search/intent'
 import { FileText, Image as ImageIcon, Paperclip, Search, Trash2, Upload } from 'lucide-react'
 import { manageApi } from '../api/client'
+import type { DocText, OcrStatus } from '../manage/types'
 import { fmtSize, useManage } from '../manage/store'
 import type { DocumentInfo } from '../manage/types'
 import { useApp } from '../model/app'
@@ -27,14 +28,35 @@ export function DocumentsPage() {
   const [objectId, setObjectId] = useState('')
   const [strip, setStrip] = useState(true)
   const [info, setInfo] = useState('')
+  const [read, setRead] = useState(true)
+  const [hits, setHits] = useState<Record<string, string>>({})
+  const [ocr, setOcr] = useState<OcrStatus | null>(null)
+  const [textOf, setTextOf] = useState<{ d: DocumentInfo; t: DocText } | null>(null)
   const input = useRef<HTMLInputElement>(null)
+  useEffect(() => { manageApi.ocrStatus().then(setOcr).catch(() => undefined) }, [])
+  // text found inside documents (file text, PDF text layers, machine-read photos); the server does the matching
+  useEffect(() => {
+    const needleNow = q.trim()
+    if (!pid || needleNow.length < 2) { setHits({}); return }
+    const h = setTimeout(() => {
+      manageApi.searchDocumentText(pid, needleNow).then((r) => setHits(Object.fromEntries(r.map((x) => [x.id, x.snippet])))).catch(() => setHits({}))
+    }, 250)
+    return () => clearTimeout(h)
+  }, [q, pid])
+  // while something is being read, check back until it is done
+  const pendingCount = documents.filter((d) => d.textStatus === 'pending').length
+  useEffect(() => {
+    if (!pid || !pendingCount) return
+    const h = setInterval(() => void load(pid), 2000)
+    return () => clearInterval(h)
+  }, [pendingCount, pid, load])
   if (!property || !pid) return <div className="emptystate"><h2>No property open</h2><p>Open or create a property first.</p></div>
 
   const notes = Object.values(objects).filter((o) => o.kind === 'note')
   const needle = q.trim().toLowerCase()
   const objName = (id: string | null) => (id ? objects[id]?.name || (objects[id] ? kindDef(objects[id].kind).label : '(removed object)') : 'whole property')
   const shown = documents.filter((d) => (kind === 'all' || (kind === 'photo') === d.isImage)
-    && (!needle || [d.title, d.originalName, d.note, d.tags.join(' '), objName(d.objectId)].join(' ').toLowerCase().includes(needle)))
+    && (!needle || d.id in hits || [d.title, d.originalName, d.note, d.tags.join(' '), objName(d.objectId)].join(' ').toLowerCase().includes(needle)))
   const linkable = Object.values(objects).filter((o) => o.kind !== 'boundary').sort((a, b) => (a.name || a.kind).localeCompare(b.name || b.kind))
 
   const send = async (files: FileList | null) => {
@@ -45,7 +67,7 @@ export function DocumentsPage() {
     const cleaned: string[] = []
     for (const f of Array.from(files)) {
       try {
-        const d = await manageApi.upload(pid, f, { objectId, stripMetadata: strip ? 'true' : 'false' })
+        const d = await manageApi.upload(pid, f, { objectId, stripMetadata: strip ? 'true' : 'false', readText: read ? 'true' : 'false' })
         if (d.metadataRemoved.length) cleaned.push(`${f.name}: removed ${d.metadataRemoved.join(', ')}`)
       } catch (e) {
         setErr(`${f.name}: ${(e as Error).message}`)
@@ -70,9 +92,15 @@ export function DocumentsPage() {
         <label>Show<select value={kind} onChange={(e) => setKind(e.target.value as 'all')}><option value="all">Photos and documents</option><option value="photo">Photos only</option><option value="document">Documents only</option></select></label>
         <label>Attach new files to<select value={objectId} onChange={(e) => setObjectId(e.target.value)}><option value="">the whole property</option>{linkable.map((o) => <option key={o.id} value={o.id}>{o.name || kindDef(o.kind).label} ({kindDef(o.kind).label})</option>)}</select></label>
         <label className="check" title="Removes GPS position and camera details from JPEG and PNG pictures; the picture itself is not changed"><input type="checkbox" checked={strip} onChange={(e) => setStrip(e.target.checked)} /> Remove location data from photos</label>
+        <label className="check" title="Reads text from documents and pictures so they can be searched. Done on this computer; nothing is uploaded."><input type="checkbox" checked={read} onChange={(e) => setRead(e.target.checked)} /> Read text for search</label>
         <button className="primary" disabled={busy} onClick={() => input.current?.click()}><Upload size={14} /> {busy ? 'Uploading…' : 'Add files'}</button>
         <input ref={input} type="file" multiple hidden accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.txt,.csv,.md,.docx,.xlsx,.odt,.ods" onChange={(e) => { void send(e.target.files); e.target.value = '' }} />
       </div>
+      {ocr && !ocr.available && <div className="notice">{ocr.hint}</div>}
+      {ocr?.available && ocr.hint && <div className="notice">{ocr.hint}</div>}
+      {documents.some((d) => d.textStatus === '' || d.textStatus === 'unavailable' || d.textStatus === 'error') && (
+        <div className="btnrow"><button className="chip" onClick={() => void manageApi.ocrRunMissing(pid).then((r) => { setInfo(`Reading ${r.queued} document(s)…`); return load(pid) }).catch((e) => setErr((e as Error).message))}>Read text of documents that were not read yet</button></div>
+      )}
       <div className="docgrid">
         {shown.map((d) => (
           <div key={d.id} className="doccard glass">
@@ -82,7 +110,12 @@ export function DocumentsPage() {
               <small className="muted">{d.takenAt ?? d.createdAt.slice(0, 10)} · {fmtSize(d.size)} · {d.objectId ? <button className="linklike" onClick={() => { focus(d.objectId!); go('editor') }}>{objName(d.objectId)}</button> : 'whole property'}</small>
               {d.tags.length > 0 && <div>{d.tags.map((t) => <span key={t} className="pill">{t}</span>)}</div>}
               {d.note && <small className="muted">{d.note}</small>}
+              {hits[d.id] && <small className="snippet">found in the text: {hits[d.id]}</small>}
+              {d.textStatus === 'pending' && <small className="muted">reading text…</small>}
+              {d.textStatus === 'unavailable' && <small className="muted">text not read (no OCR engine installed)</small>}
+              {d.textStatus === 'error' && <small className="muted">text could not be read</small>}
               <div className="btnrow" style={{ margin: '4px 0 0' }}>
+                {d.textStatus === 'done' && <button className="chip" onClick={() => void manageApi.documentText(d.id).then((t) => setTextOf({ d, t })).catch((e) => setErr((e as Error).message))}>Text</button>}
                 <button className="chip" onClick={() => setEdit(d)}>Edit</button>
                 <a className="btn chip" href={`${d.url}?download=true`}>Download</a>
                 <button className="icon danger" title="Delete" onClick={() => { if (confirm(`Delete “${d.title}” and its file permanently?`)) void manageApi.deleteDocument(d.id).then(() => load(pid)).catch((e) => setErr((e as Error).message)) }}><Trash2 size={14} /></button>
@@ -101,6 +134,16 @@ export function DocumentsPage() {
         {!notes.length && <li className="empty">No notes on the map yet.</li>}
       </ul>
       {edit && <EditDoc d={edit} onClose={() => setEdit(null)} onSaved={() => { setEdit(null); void load(pid) }} />}
+      {textOf && (
+        <div className="modal-back" onClick={() => setTextOf(null)}>
+          <div className="modal glass" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head"><h3>Text of {textOf.d.title}</h3></div>
+            <p className="note">{textOf.t.label}</p>
+            <pre className="doctext" tabIndex={0}>{textOf.t.text}</pre>
+            <div className="btnrow end"><button onClick={() => setTextOf(null)}>Close</button></div>
+          </div>
+        </div>
+      )}
       {view && <div className="modal-back" onClick={() => setView(null)}><div className="fullcam" onClick={(e) => e.stopPropagation()}><div className="camhead"><b>{view.title}</b></div><img src={view.url} alt={view.title} style={{ width: '100%', maxHeight: '80vh', objectFit: 'contain', background: '#05080a' }} /></div></div>}
     </div>
   )

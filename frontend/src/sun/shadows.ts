@@ -349,6 +349,7 @@ export function shadowFeatures(casters: Caster[], v: SunVector | null, origin: P
 export interface SunHourOptions {
   stepMin?: number
   minAlt?: number // sun below this elevation is not counted as useful light
+  horizon?: (azimuthDeg: number) => number // skyline of the surrounding land: sun below it is hidden (terrain)
 }
 
 export const DEFAULT_MIN_ALT = 3
@@ -363,7 +364,7 @@ export function sunHours(casters: Caster[], points: XY[], dayStart: number, dayE
   const acc = new Array<number>(points.length).fill(0)
   for (let t = dayStart + step / 2; t < dayEnd; t += step) {
     const s = sunPosition(t, origin[1], origin[0])
-    if (s.alt < minAlt) continue
+    if (s.alt < minAlt || (opts.horizon && s.alt < opts.horizon(s.az))) continue
     const v = sunVector(s.az, s.alt)
     if (!v) continue
     const swept = sweepAll(casters, v)
@@ -373,12 +374,15 @@ export function sunHours(casters: Caster[], points: XY[], dayStart: number, dayE
   return acc
 }
 
-/** The sun's own possible hours above the threshold (an unobstructed horizon), for comparison. */
+/** The sun's own possible hours above the threshold (a flat, unobstructed horizon unless opts.horizon is given), for comparison. */
 export function possibleHours(dayStart: number, dayEnd: number, origin: Pos, opts: SunHourOptions = {}): number {
   const step = (opts.stepMin ?? 10) * 60000
   const minAlt = opts.minAlt ?? DEFAULT_MIN_ALT
   let h = 0
-  for (let t = dayStart + step / 2; t < dayEnd; t += step) if (sunPosition(t, origin[1], origin[0]).alt >= minAlt) h += step / 3600000
+  for (let t = dayStart + step / 2; t < dayEnd; t += step) {
+    const s = sunPosition(t, origin[1], origin[0])
+    if (s.alt >= minAlt && !(opts.horizon && s.alt < opts.horizon(s.az))) h += step / 3600000
+  }
   return h
 }
 

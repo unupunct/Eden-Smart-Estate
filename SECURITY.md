@@ -1,17 +1,17 @@
 # Security notes
 
-EDEN is a **self-hosted, single-user** application. It is designed to run on your own computer, and it can control real devices (through Home Assistant or MQTT) and show camera pictures, so please read this.
+EDEN is a **self-hosted, single-admin** application. It is designed to run on your own computer, and it can control real devices (through Home Assistant or MQTT) and show camera pictures, so please read this.
 
 ## Defaults
 
 - EDEN listens on **127.0.0.1** only: nothing else on your network can reach it.
-- There is **no login** in that mode, because only programs on your computer can connect.
+- Until the **admin account** is created (Settings) there is no login in that mode, because only programs on your computer can connect. Creating the account is only possible from this computer.
 - All data stays in the data folder on your computer. The only outgoing requests are the ones you configure: map tiles (your browser asks the imagery provider), place search (only when you press Enter), the optional weather forecast (off until you enable it), and your own Home Assistant / MQTT broker / cameras.
 
 ## Network use (`-Lan`)
 
-- `scripts\start.ps1 -Lan` makes EDEN reachable from your network and **requires a password** (`-NoPassword` overrides this: only for a network you fully trust).
-- With a password every `/api` request needs a signed session cookie (HttpOnly, SameSite=Strict). Tokens are HMAC-signed with a key derived from the password, so changing the password signs everyone out. Five wrong passwords lock an address out for five minutes. Cross-site writes (a foreign `Origin`) are refused.
+- `scripts\start.ps1 -Lan` makes EDEN reachable from your network and **requires the admin account** (it asks for the password when no account exists yet) (`-NoPassword` overrides this: only for a network you fully trust).
+- Once the admin account exists every `/api` request needs a signed session cookie (HttpOnly, SameSite=Strict, `Secure` over HTTPS). The password is stored only as a salted scrypt hash in the database (a `CHECK` makes a second account impossible). Tokens are HMAC-signed with a random server secret **and** the current password hash, so changing the password (or `scripts\reset-admin.ps1`) signs every other session out. Five wrong passwords lock an address out for five minutes. Cross-site writes (a foreign `Origin`) are refused. Passwords need at least 10 characters.
 - **Encryption is optional: add `-Https`.** EDEN then serves TLS with a self-signed certificate created on your computer (`data\tls`, EC P-256, one year, renewed automatically, subject alternative names for localhost, the computer name and its LAN addresses) and the session cookie is marked `Secure`. Browsers warn once about the unknown issuer: compare the SHA-256 fingerprint printed at start-up. Without `-Https` the password and your data travel as plain HTTP and can be read by others on the network. Either way **never expose the port to the internet** and never port-forward it; for remote access use a VPN (for example WireGuard or Tailscale).
 - Anyone who is signed in can do everything, including commanding devices marked *risky*: the confirmation is a precaution against mistakes, not a permission system. There are no separate users or roles.
 
@@ -33,7 +33,12 @@ Documents and photos are accepted by extension **and** content (magic bytes), li
 
 ## Known limits
 
-- Single user; no per-user accounts, two-factor login or audit trail beyond the automation log.
+- One admin account; no per-user accounts, roles, two-factor login or audit trail beyond the automation log.
+- **Push notifications** go through the browser makers' push services (payloads are end-to-end encrypted; the service learns that a message was sent). Subscription addresses are accepted only for those services, so EDEN cannot be used to call other machines. The private VAPID key lives in the local `secrets` table like other credentials.
+- **ONVIF** discovery and set-up contact only addresses on private networks, and the addresses a camera reports are checked the same way. Camera passwords are stored like all camera passwords.
+- **OCR** runs locally; machine-read text can be wrong and is labelled as such.
+- **Terrain** and **weather** are opt-in and send rounded coordinates only.
+- The Windows installer is signed with a self-signed certificate (see `docs/SIGNING.md`): check the SHA-256 in `SHA256SUMS.txt` and the signer thumbprint.
 - The built-in certificate is self-signed (no certificate authority), so every new device must be told to trust it. For a properly trusted certificate put a reverse proxy in front. Do not use EDEN beyond a trusted LAN.
 
 ## Reporting a vulnerability

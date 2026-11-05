@@ -2,7 +2,7 @@
 
 **A digital twin of your land.** Open a satellite image of your real property, trace its boundary, and gradually turn it into an editable, measured, geographic model — buildings, fences, trees, garden beds with companion-planting checks, an orchard, a greenhouse and a natural swimming pond — stored on your own computer, no cloud subscription required.
 
-> **Status: v1.1.0 (MIT licence).** All seven planned phases are done (property editor, landscape design, plant library, sun & shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports, installer, optional password protection).
+> **Status: v1.2.0 (MIT licence).** All seven planned phases are done (property editor, landscape design, plant library, sun & shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports) and v1.2 adds a signed Windows installer that needs no Python, an admin account with password change, push notifications, text search inside documents (OCR), ONVIF camera discovery and terrain.
 > The map, object system, editor, measurements, layers, image calibration, 2D/3D, import/export and backup (v0.1) come with garden-bed planting plans, evidence-labelled companion planting, orchard records, greenhouse and natural-pond planning, a plant library (v0.2), and now **real sun positions, cast shadows, sun hours per bed and a night-sky chart** (v0.3), and **Home Assistant / MQTT devices, camera pictures and simple automations** (v0.4). **tasks, documents and photos, an opt-in weather forecast and printable reports** (v0.5). and, in v1.0, a **Windows installer, optional password protection, faster start-up and an accessibility audit** and appear in the app as clearly-marked *soon* pages. EDEN never fakes sensor values, camera feeds or device connections.
 
 ![Property editor with the demo estate](docs/screenshots/02-property-editor.png)
@@ -51,10 +51,12 @@
 | ![Weather](docs/screenshots/29-weather.png) | ![Tasks](docs/screenshots/30-tasks.png) |
 | **Notes & documents** | **Printable report** |
 | ![Documents](docs/screenshots/31-documents.png) | ![Report](docs/screenshots/32-report.png) |
-| **Buildings** | **Sign-in screen (password protection)** |
+| **Buildings** | **Sign-in screen (admin account)** |
 | ![Buildings](docs/screenshots/34-buildings.png) | ![Sign in](docs/screenshots/33-sign-in.png) |
-| **Search everything with Ctrl+K** | |
-| ![Search](docs/screenshots/35-search.png) | |
+| **Search everything with Ctrl+K** | **Text read from a document (searchable)** |
+| ![Search](docs/screenshots/35-search.png) | ![Document text](docs/screenshots/36-document-text.png) |
+| **Admin account, notifications and OCR (Settings)** | **Terrain: slope, skyline and sun hours** |
+| ![Admin account](docs/screenshots/37-admin-account.png) | ![Terrain](docs/screenshots/38-terrain.png) |
 
 <details><summary>More screenshots</summary>
 
@@ -102,6 +104,14 @@
 
 The library is a **curated starter set** written from general horticultural and botanical knowledge — *not* a citation-backed database and not exhaustive. Every companion relationship carries its evidence level; tradition is never presented as established science. Please verify anything important (especially toxicity, medicinal use and foraging) with local experts and sources. Entries are plain Python in `backend/app/library_*.py`, covered by integrity tests, and meant to be reviewed and extended.
 
+**New in v1.2**
+- **Windows installer (`.exe`)** that brings its own Python (no Python needed), installs per user without administrator rights, keeps your data on updates and asks before removing it. It is **Authenticode-signed and time-stamped, with a self-signed certificate**: the signature proves the file is unchanged and who signed it, but Windows still says *Unknown publisher* until a certificate authority's certificate is used. [docs/SIGNING.md](docs/SIGNING.md) gives the fingerprint to compare and the routes to a trusted signature (SignPath Foundation is free for open source).
+- **One admin account** with user name and password (stored only as a salted hash), created in Settings; **change password** there (other browsers are signed out), `scripts\reset-admin.ps1` if you forget it.
+- **Push notifications** (Web Push, end-to-end encrypted): a daily digest of overdue and due-today tasks and a *send a notification* automation action, even when EDEN is closed in the browser.
+- **Text inside documents:** Word, Excel, OpenDocument, text files and PDFs are searchable; photos and scans are read with Tesseract OCR when installed (labelled machine-read).
+- **ONVIF:** find cameras on your network, log in, pick a video profile and add the camera.
+- **Terrain (opt-in):** ground height, slope and direction, and the skyline of the surrounding land from 90 m elevation data; hills hide the sun in the sun-hours figures.
+
 **New in v1.1**
 - **MIT licence** and a list of third-party components and data terms ([THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
 - **Search everything with Ctrl+K:** pages, map objects, plants (also by Romanian name, accents optional), tasks, documents, devices, automations, cameras.
@@ -113,16 +123,16 @@ The library is a **curated starter set** written from general horticultural and 
 
 **Polish and safety (v1.0)**
 - **Windows installer:** download the zip, double-click `Install-EDEN.cmd`: no administrator rights, Start Menu entries, *Installed apps* entry, optional autostart; **your data lives in its own folder** so updates never touch it; an uninstaller keeps your data unless you type `DELETE`.
-- **Password protection:** `start.ps1 -Lan` requires a password (also available for local use): signed sessions, lock-out after repeated failures, cross-site write protection. Add `-Https` to encrypt the connection: see [SECURITY.md](SECURITY.md).
+- **Admin account:** one account (user name + password, salted hash) created in Settings; `start.ps1 -Lan` requires it. Signed sessions, lock-out after repeated failures, cross-site write protection, change password and a local reset script. Add `-Https` to encrypt the connection: see [SECURITY.md](SECURITY.md).
 - **Fast start-up:** about 190 kB of script on first load (pages and the map engine load on demand); a 3000-object benchmark guards performance.
 - **Accessibility and resilience:** automated axe-core audit of every page, labelled controls, visible focus, zoom allowed; a crashing page shows a message instead of a blank screen.
 - **Buildings page:** footprint, floors, floor area, services, devices inside, tasks and files per building.
 
 ## Install (Windows 11)
 
-You need **Python 3.11 or newer** ([python.org](https://www.python.org/downloads/), tick *Add python.exe to PATH*). Node.js is only needed if you build from source.
+**The installer (recommended):** download `EdenSmartEstate-Setup-1.2.0.exe` from the [Releases](https://github.com/unupunct/Eden-Smart-Estate/releases) page, check it against `SHA256SUMS.txt`, and run it. No Python and no administrator rights are needed. Windows will say *Unknown publisher* because the signature is self-signed: see [docs/SIGNING.md](docs/SIGNING.md) before you choose *Run anyway*. Then start *EDEN Smart Estate* from the Start Menu and create the admin account in *Settings*.
 
-**From the release:** download `EdenSmartEstate-1.1.0.zip`, extract it and double-click **`Install-EDEN.cmd`**. Then start *EDEN Smart Estate* from the Start Menu.
+**Without an `.exe`:** download `EdenSmartEstate-1.2.0.zip`, extract it and double-click **`Install-EDEN.cmd`** (needs Python 3.11 or newer; it can install it with winget).
 
 **From source:**
 
@@ -135,7 +145,7 @@ powershell -ExecutionPolicy Bypass -File scripts\start.ps1
 
 Your browser opens at <http://127.0.0.1:8787>. Click **Explore the demo estate**, or **Create my property**. Your existing data is migrated automatically when you update.
 
-The complete guide (installer options, LAN/tablet access with a password, autostart, updating, backup, uninstall) is in **[docs/INSTALL.md](docs/INSTALL.md)**; problems are covered in **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)**.
+The complete guide (installer options, LAN/tablet access with the admin account, autostart, updating, backup, uninstall) is in **[docs/INSTALL.md](docs/INSTALL.md)**; signing is explained in **[docs/SIGNING.md](docs/SIGNING.md)**; problems are covered in **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)**; the full feature walk-through is **[docs/USER_GUIDE.md](docs/USER_GUIDE.md)**.
 
 ## Documentation
 
@@ -152,7 +162,7 @@ The complete guide (installer options, LAN/tablet access with a password, autost
 
 ## Tech
 
-React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 150 frontend unit tests, 116 backend tests (including TLS and a real MQTT broker), six browser end-to-end suites (35 + 34 + 23 + 29 + 41 + 11 checks) and an accessibility audit of all 18 pages.
+React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastAPI · SQLite (portable SQL, ready for PostgreSQL) · 157 frontend unit tests, 172 backend tests (including TLS, a real MQTT broker, real Tesseract OCR and real encrypted push messages decrypted with the subscriber's key), eight browser end-to-end suites (35 + 34 + 23 + 29 + 41 + 11 + 19 + 12 checks), an accessibility audit of all 18 pages, and a real install / update / run / uninstall test of the signed `.exe`.
 
 ## Data, privacy and imagery
 
@@ -160,7 +170,7 @@ React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastA
 - **Weather** is the one feature that sends your property's coordinates to a third party (Open-Meteo), and only after you enable it on the Weather page.
 - Your **browser** requests map tiles directly from the imagery provider you select (so that provider sees your IP address and viewed area, like any web map). Place search goes through your local EDEN server to OpenStreetMap Nominatim and is only sent when you press Enter. Both are optional; the editor and the plant library work offline with stored data.
 - Please read your imagery provider's terms. Esri World Imagery is shown with its required attribution; heavy or commercial use calls for your own key from a provider such as MapTiler.
-- By default EDEN listens on `127.0.0.1` only. `-Lan` mode needs a password, uses plain HTTP and should stay on a trusted network: see [SECURITY.md](SECURITY.md).
+- By default EDEN listens on `127.0.0.1` only. `-Lan` mode needs the admin account, uses plain HTTP unless you add `-Https`, and should stay on a trusted network: see [SECURITY.md](SECURITY.md).
 
 ## Roadmap
 
@@ -174,7 +184,7 @@ React 18 + TypeScript + Vite · MapLibre GL JS (maps, 2D/3D) · Zustand · FastA
 | 6 | Management: tasks, maintenance, documents, photos, weather, reports | ✅ done (v0.5) |
 | 7 | Polish: performance, installer, further docs | ✅ done (v1.0) |
 
-Known limitations of v1.1.0: the installer is a PowerShell setup (not a signed `.exe`, so Windows may show an execution-policy or SmartScreen prompt) and needs Python 3.11+ (it can install it through winget) and internet for the first install; access is one shared password, no user accounts, and `-Https` uses a self-signed certificate that browsers warn about once; photo cleaning covers JPEG and PNG (WebP, GIF, PDF and Office files are stored as they are); reminders are browser notifications while EDEN is open plus a calendar file (no push or e-mail); weather is a model forecast from one provider and needs internet; no OCR or search inside documents; no ONVIF discovery, recording or motion detection for cameras; automations are simple rules (one trigger, a few conditions, device and log actions) that run only while EDEN runs; RTSP cameras need ffmpeg and that path has only been tested with a fake (MQTT is tested against a real broker, Home Assistant against a fake); the 3D view still shows buildings as boxes (shadows use the pitched roof); there is no terrain elevation, so hills and neighbouring buildings outside your property cast no shade; foliage light transmission and greenhouse glazing are estimates; the night sky shows about 100 stars and five planets (no deep-sky objects, satellites or cloud forecast; planets ±1°); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); touch use is supported but has only been tested with emulated input.
+Known limitations of v1.2.0: the installer is **signed with a self-signed certificate**, so Windows still shows *Unknown publisher* until a certificate authority's certificate is used (this needs an identity check only the maintainer can pass: [docs/SIGNING.md](docs/SIGNING.md)); there is **one admin account**, no per-user accounts or roles, and `-Https` uses a self-signed certificate that browsers warn about once; push notifications go through the browser makers' push services (encrypted) and have been verified against a local stand-in for the push service, not against Google's, Mozilla's, Microsoft's or Apple's real servers; OCR needs Tesseract (optional install) and is machine reading that can be wrong; **ONVIF** discovery and set-up have been tested against a simulated camera and the discovery step against a real network, but nobody has logged in to a real camera through EDEN, and multicast discovery needs a network that allows it; terrain uses 90 m data (hills and valleys, not terraces or garden mounds; trees and buildings may appear in it), shows the skyline from the property centre and does not tilt beds in the sun-hours calculation; photo cleaning covers JPEG and PNG (WebP, GIF, PDF and Office files are stored as they are); weather is a model forecast from one provider and needs internet; no recording or motion detection for cameras; automations are simple rules (one trigger, a few conditions, device, notification and log actions) that run only while EDEN runs; RTSP cameras need ffmpeg and that path has only been tested with a fake (MQTT is tested against a real broker, Home Assistant against a fake); the 3D view still shows buildings as boxes (shadows use the pitched roof); a neighbour's house outside your property casts no shade in the model; foliage light transmission and greenhouse glazing are estimates; the night sky shows about 100 stars and five planets (no deep-sky objects, satellites or cloud forecast; planets ±1°); the plant library has no photographs and only about a hundred plants; pollination checks use species and variety names, not full cultivar pollination groups; GeoTIFF is not read directly (use PNG/JPEG + world file); touch use is supported but has only been tested with emulated input.
 
 ## License
 

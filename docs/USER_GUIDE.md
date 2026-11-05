@@ -183,7 +183,7 @@ Open **Sun & Shadows** in the menu. The map shows the shadows cast by every **vi
 
 **Roofs:** a building with a **gable, hip or mansard** roof casts the shape of its walls plus the sloping roof. *Height* is to the ridge; give the optional **wall (eave) height** for an exact roof rise, otherwise a rise of about a quarter of the building's width is assumed. The ridge follows *Roof ridge bearing* if set, otherwise the long side. A **shed** roof is modelled only when its bearing is set (otherwise the building stays a box, which overstates the shadow). Flat roofs, greenhouses and solar panels are boxes; the 3D view still draws every building as a box.
 
-**What it does not know:** terrain (a hill or a neighbour's house outside your drawing casts no shade), roof details such as dormers and chimneys, exact crown shapes (cylinders from 30 % of the height up) and real leaf density. Foliage is assumed to block about 75 % of light in leaf, 20 % bare and 85 % for evergreens; greenhouse glazing is assumed to pass 60 %. Treat results as planning estimates.
+**Terrain:** with *Terrain* switched on (see section 35) hills on the skyline hide the sun when it is lower than the land, in the sun hours and in the table. **What it does not know:** terraces and garden-scale mounds (the data is 90 m), a neighbour's house outside your drawing, roof details such as dormers and chimneys, exact crown shapes (cylinders from 30 % of the height up) and real leaf density. Foliage is assumed to block about 75 % of light in leaf and 20 % when bare, and evergreens 85 %: these are estimates.
 
 ## 18. Night Sky
 
@@ -229,7 +229,9 @@ User name and password can be typed into the address (`http://user:pass@192.168.
 
 If a camera cannot be reached EDEN shows the reason (*Cannot reach the camera*, *rejected the user name/password (401)*, *ffmpeg not found*), never an old or invented picture. Every picture shows when it was taken.
 
-Not included: automatic ONVIF discovery (use the snapshot or RTSP address your camera publishes), recording, motion detection and cloud access.
+**ONVIF cameras:** press *Find ONVIF camera…* to search your network, pick the camera (or type its address), give the **ONVIF user name and password** (create that user in the camera's own settings), choose a video profile and *Add this camera*. EDEN asks the camera itself for its picture and video addresses, and uses the snapshot address when there is one (works without ffmpeg), otherwise the RTSP stream (needs ffmpeg). Only addresses on your own network are contacted. Discovery needs multicast to be allowed on the network (some guest Wi-Fi and VLANs block it: then type the address, usually `http://<camera address>/onvif/device_service`). Tested against a simulated camera, not a real one: if yours behaves differently, add it by its snapshot or RTSP address and tell us.
+
+Not included: recording, motion detection and cloud access.
 
 ## 21. Automations
 
@@ -252,13 +254,13 @@ Rules run on the EDEN server **only while it is running**. Automations are a con
 - **On an object:** select a tree or bed in the Property Editor and its panel shows the open tasks, when it was last maintained, a quick *Add a task* box and its attachments.
 - **Export:** *Export CSV* for a spreadsheet (text that starts with `=`, `+`, `-` or `@` is neutralised so it cannot run as a formula).
 
-**Reminders:** tick *Browser notifications* to get one notification a day for overdue and due-today tasks while EDEN is open in a browser tab (the browser asks for permission once). *Calendar file (.ics)* downloads your open dated tasks as all-day events with a 09:00 alarm and, for tasks that repeat on their due date, the repeat rule: open it with your calendar app (Outlook, Google Calendar, Apple Calendar…) to see them on your phone. It is a snapshot, not a live feed: download it again after changes. There is no push to a closed browser and no e-mail.
+**Reminders:** *Calendar file (.ics)* downloads your open dated tasks as all-day events with a 09:00 alarm and, for tasks that repeat on their due date, a repeat rule, for your phone's calendar. *Browser notifications* shows a notification once a day for overdue and due-today tasks while EDEN is open in a tab. For notifications that arrive when EDEN is closed, turn on **push notifications** in Settings (section 33).
 
 ## 23. Notes & Documents
 
 *Add files* (JPG, PNG, WebP, GIF, PDF, TXT, CSV, MD, DOCX, XLSX, ODT, ODS, up to 40 MB). Choose first whether the files belong to the **whole property** or to a specific object. For each file you can set a title, **tags**, a note and a date (when the photo was taken or the document is dated), change which object it belongs to, download it or delete it. Photos open in a viewer; other files download or open in the browser's own viewer. **Remove location data from photos** (on by default) strips the GPS position, camera and date details, XMP/IPTC data and comments from JPEG and PNG photos as they are uploaded: the picture itself is copied unchanged and its orientation is kept, and the page tells you what was removed. Untick it to keep a file exactly as it is. Other file types are stored unchanged.
 
-*Search* looks at title, tags, note, file name and the object's name; *Show* limits the list to photos or documents. Map notes pinned in the Property Editor are listed below the files.
+*Search* looks at title, tags, note, file name, the object's name **and the text inside the documents** (section 34); *Show* limits the list to photos or documents. Map notes pinned in the Property Editor are listed below the files.
 
 Safety: files are accepted by extension **and** by content (a `.pdf` that is not a PDF is refused; HTML and executables are never accepted), are stored under generated names, and are served with `nosniff` and a sandbox policy. They are part of every **backup** and restore. Photos keep their own metadata (including GPS position, if the camera recorded it) — remove it before sharing a file or backup.
 
@@ -280,7 +282,11 @@ Open **Reports**, tick the sections you want (summary, inventory, beds and plant
 
 ## 27. Password, sign-in and sign-out
 
-When EDEN is started with a password (`start.ps1 -Lan`, `-Password …`, or the `EDEN_PASSWORD` variable) the app shows a **sign-in screen**. Sessions last 30 days on that browser; *Sign out* is at the bottom of the menu. After five wrong passwords the address is locked out for five minutes. Changing the password signs everybody out. The password protects the app and everything it can control, but the connection is plain HTTP: use it on a trusted network or behind a VPN, and read [SECURITY.md](../SECURITY.md).
+EDEN has **one admin account**. Until you create it EDEN is open (it only listens on this computer). Create it in **Settings → Admin account** (from the computer EDEN runs on): choose a user name and a password of at least 10 characters. From then on every browser has to sign in (the browser you created it in stays signed in); sessions last 30 days and *Sign out* is at the bottom of the menu. After five wrong passwords the address is locked out for five minutes.
+
+**Change the password** in the same place: enter the current password and the new one twice. All other browsers are signed out; this one stays signed in. The password is stored only as a salted hash.
+
+**Forgot it?** On the EDEN computer run `scripts\reset-admin.ps1` (Start Menu folder → *EDEN data folder* is beside it): it sets a new password and signs everybody out. Your data is not affected. `start.ps1 -Password …` (or `-Lan`, which asks) just creates the account named `admin` the first time, when none exists yet.
 
 ## 28. Keyboard, zoom and screen readers
 
@@ -293,6 +299,30 @@ Press **Ctrl+K** (or click *Search* at the top of the menu) from any page. One b
 ## 30. Secure connections (HTTPS)
 
 `start.ps1 -Lan -Https` serves EDEN over an encrypted connection. The first time a device opens it the browser warns about an unknown certificate issuer, because the certificate is made by EDEN on your computer. Compare the fingerprint in the browser's certificate details with the one printed in the console, then continue; or import `data\tls\eden-cert.pem` into the device's trusted certificates to stop the warning. See [SECURITY.md](../SECURITY.md).
+
+## 31. Install with the Windows installer
+
+`EdenSmartEstate-Setup-<version>.exe` installs EDEN for your Windows user without administrator rights and **brings its own Python**, so nothing else has to be installed. It is code-signed; see `docs/SIGNING.md` for what that does and does not mean. Updating: run the newer installer over the old one: your data (in the `data` folder next to the program) is never touched. Uninstalling asks whether to keep your data (default: keep).
+
+## 32. Admin account and password
+
+See section 27.
+
+## 33. Push notifications
+
+*Settings → Push notifications → Turn on notifications on this device* lets EDEN send notifications that appear even when no EDEN tab is open: a **daily digest** of overdue and due-today tasks (choose the hour; sent once a day and only when something is due) and any **automation** that has a *send a notification* action. *Send a test notification* checks the whole chain.
+
+How it works and what to know: your browser subscribes through its maker's push service (Google, Mozilla, Microsoft or Apple); EDEN encrypts each message for that browser, so the push service only sees that a message was sent. EDEN's computer must be switched on and online. Browsers only offer push on **https://** pages or on **localhost**, so on another device use `start.ps1 -Lan -Https` (accept the certificate warning first) and open it there. EDEN never sends sensor values or camera pictures, and nothing is sent until a browser subscribes; remove a device any time in the same card.
+
+## 34. Text inside documents (and OCR)
+
+When you add a file EDEN reads its text so *Search* finds it: text files, Word, Excel and OpenDocument files, and PDFs with a text layer are read directly. **Photos and scanned PDFs** are read with the open-source **Tesseract** engine on your computer (nothing is uploaded): the installer can add it, or run `winget install UB-Mannheim.TesseractOCR`. For other languages than English run `scripts\get-ocr-language.ps1 ron` (Romanian) and set *Languages* in *Settings → Reading text from documents*. *Text* on a document card shows what was read, labelled **machine-read** for OCR: it can contain mistakes (smudged print, handwriting, unusual fonts), so check the original before relying on a number. Untick *Read text for search* when adding a file to skip this; *Read text of documents that were not read yet* handles older files.
+
+## 35. Terrain
+
+On the *Sun & Shadows* page, **Turn on terrain** asks the Open-Meteo elevation service (Copernicus 90 m data) for the ground height around the property. It sends the property's location rounded to about 100 m and nothing else; it is off until you turn it on. You get the ground height, the **slope and which way it faces**, the height range nearby, and a chart of the **skyline** the surrounding land makes with the sun's path on the chosen day. With *Hills on the skyline block the sun* ticked, the sun hours drop when a hill stands in the sun's way, and *Show ground height on the map* tints the area by height.
+
+Limits, plainly: 90 m resolution means hills and valleys yes, terraces, ditches and garden mounds no; it is a surface model, so trees and buildings may show up in it; the skyline is seen from the property centre, fine for a normal plot, not for a very large one; a sloping bed is not tilted in the sun-hours calculation. The last real answer is kept with its date and shown as old if the service cannot be reached.
 
 ## Keyboard shortcuts
 

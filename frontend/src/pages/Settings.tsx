@@ -3,6 +3,9 @@ import { Download, Upload } from 'lucide-react'
 import { api, type AppSettings } from '../api/client'
 import { useApp } from '../model/app'
 import { useEditor } from '../model/store'
+import { AccountCard } from './AccountCard'
+import { NotificationsCard } from './NotificationsCard'
+import { OcrCard } from './OcrCard'
 
 const PROVIDER_LABEL: Record<string, string> = {
   'esri-imagery': 'Esri World Imagery (no key needed)',
@@ -56,6 +59,10 @@ export function SettingsPage() {
       {msg && <div className="notice ok">{msg}</div>}
       {err && <div className="notice err">{err}</div>}
 
+      <AccountCard />
+      <NotificationsCard />
+      <OcrCard />
+
       <section className="glass formcard">
         <h2>Satellite imagery provider</h2>
         <p className="note">EDEN never scrapes tiles. It uses a documented imagery service you choose and shows that provider’s attribution on the map. Please read your provider’s terms of use; commercial or high-volume use usually needs your own key.</p>
@@ -101,7 +108,7 @@ export function SettingsPage() {
 
       <section className="glass formcard">
         <h2>About</h2>
-        <p><strong>EDEN — Smart Estate</strong> v1.1.0 (MIT licence) · map, property editor, landscape design, plant library, sun and shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports and optional password protection.</p>
+        <p><strong>EDEN — Smart Estate</strong> v1.2.0 (MIT licence) · map, property editor, landscape design, plant library, sun and shadows, night sky, smart home, cameras, automations, tasks, documents, weather, reports, terrain, notifications and an admin account.</p>
         <p className="note">Units are metric. Areas and distances are geodesic (on the WGS84 sphere), so they stay correct at any zoom and map layer.</p>
       </section>
     </div>

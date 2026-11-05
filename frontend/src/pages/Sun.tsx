@@ -13,6 +13,8 @@ import {
   SEASON_DAYS, seasonDayStart, SUN_NEED_HOURS, type AreaSun, type XY,
 } from '../sun/shadows'
 import { loadZone, saveZone, useSun } from '../sun/store'
+import { horizonFn, horizonAt, useTerrain } from '../terrain/terrain'
+import { TerrainCard } from './TerrainCard'
 import { addDays, allZones, fmtClock, fmtDate, fmtDuration, fromWall, toWall, zoneLabel } from '../sun/tz'
 
 const AREA_KINDS = new Set(['garden_bed', 'greenhouse', 'gh_bed', 'orchard_area', 'pond'])
@@ -38,6 +40,10 @@ function SunInner({ property }: { property: PropertyMeta }) {
   const ix = useLibrary((s) => s.ix)
   const [lng, lat] = property.center
   const origin = property.center
+  const terrainData = useTerrain((s) => s.data)
+  const terrainBlocks = useTerrain((s) => s.blocks)
+  const horizon = terrainBlocks ? horizonFn(terrainData) : undefined
+  const hKey = horizon && terrainData ? terrainData.fetchedAt : ''
 
   // shadows are the point of this page; the zone is remembered per property
   useEffect(() => {
@@ -83,7 +89,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
     const vis = new Map(doc.layers.map((l) => [l.id, l.visible]))
     return Object.values(doc.objects).filter((o) => AREA_KINDS.has(o.kind) && vis.get(o.layerId)).sort((a, b) => a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name)).map((o) => o.id)
   }, [doc])
-  const [table, setTable] = useState<{ ids: string[]; byDay: Record<DayKey, Record<string, AreaSun>>; possible: Record<DayKey, number> } | null>(null)
+  const [table, setTable] = useState<{ ids: string[]; byDay: Record<DayKey, Record<string, AreaSun>>; possible: Record<DayKey, number>; possibleT: Record<DayKey, number> } | null>(null)
   const [busy, setBusy] = useState(false)
   useEffect(() => {
     setBusy(true)
@@ -95,18 +101,20 @@ function SunInner({ property }: { property: PropertyMeta }) {
       }
       const byDay = {} as Record<DayKey, Record<string, AreaSun>>
       const possible = {} as Record<DayKey, number>
+      const possibleT = {} as Record<DayKey, number>
       for (const k of DAY_KEYS) {
         const casters = buildCasters(doc, origin, { leaf: leafAt(days[k].start), ix })
-        byDay[k] = Object.fromEntries(analyseAreas(doc, areaIds, casters, days[k].start, days[k].end, origin, { stepMin: 15 }).map((a) => [a.id, a]))
+        byDay[k] = Object.fromEntries(analyseAreas(doc, areaIds, casters, days[k].start, days[k].end, origin, { stepMin: 15, horizon }).map((a) => [a.id, a]))
         possible[k] = possibleHours(days[k].start, days[k].end, origin, { stepMin: 15 })
+        possibleT[k] = horizon ? possibleHours(days[k].start, days[k].end, origin, { stepMin: 15, horizon }) : possible[k]
       }
-      setTable({ ids: areaIds, byDay, possible })
+      setTable({ ids: areaIds, byDay, possible, possibleT })
       setBusy(false)
     }, 450)
     return () => clearTimeout(h)
     // leafAt closes over sun.leaf and tz, both listed
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doc, ix, areaIds, dayStartMs, wall.y, sun.tz, sun.leaf, lat, lng])
+  }, [doc, ix, areaIds, dayStartMs, wall.y, sun.tz, sun.leaf, lat, lng, hKey])
 
   // ---- whole-property sun-hours map for the chosen day
   const [heatNote, setHeatNote] = useState('')
@@ -118,7 +126,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
     }
     const h = setTimeout(() => {
       const casters = buildCasters(doc, origin, { leaf: leafAt(dayStartMs), ix })
-      const { cells, cell } = heatGrid(casters, boundsOf(doc, origin), origin, dayStartMs, dayEndMs, 3500, { stepMin: 15 })
+      const { cells, cell } = heatGrid(casters, boundsOf(doc, origin), origin, dayStartMs, dayEndMs, 3500, { stepMin: 15, horizon })
       useSun.getState().set({
         heat: { type: 'FeatureCollection', features: cells.map((c) => ({ type: 'Feature', properties: { hours: c.hours }, geometry: { type: 'Polygon', coordinates: [c.ring] } })) },
       })
@@ -126,7 +134,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
     }, 400)
     return () => clearTimeout(h)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sun.heatOn, doc, ix, dayStartMs, sun.tz, sun.leaf, lat, lng])
+  }, [sun.heatOn, doc, ix, dayStartMs, sun.tz, sun.leaf, lat, lng, hKey])
 
   const pct = (t: number | null) => (t === null ? null : Math.max(0, Math.min(100, ((t - dayStartMs) / (dayEndMs - dayStartMs)) * 100)))
   const rise = pct(events.sunrise)
@@ -180,6 +188,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
         <dl className="kv">
           <div className="kvrow"><dt>Azimuth</dt><dd>{pos.az.toFixed(1)}° {compass(pos.az)}</dd></div>
           <div className="kvrow"><dt>Elevation</dt><dd>{pos.alt.toFixed(1)}°{pos.alt <= 0 ? ' (below horizon)' : ''}</dd></div>
+          {horizon && pos.alt > 0 && pos.alt < horizonAt(terrainData!.horizon, pos.az) && <div className="kvrow"><dt>Terrain</dt><dd>behind the hills ({horizonAt(terrainData!.horizon, pos.az).toFixed(1)}° skyline): no direct sun</dd></div>}
           <div className="kvrow"><dt>Shadow of a 1 m post</dt><dd>{shadow === null ? '—' : shadow > 20 ? '> 20 m' : `${shadow.toFixed(2)} m, pointing ${compass(pos.az + 180)}`}</dd></div>
         </dl>
         <h4>{fmtDate(dayStartMs, sun.tz)} at {lat.toFixed(3)}°, {lng.toFixed(3)}°</h4>
@@ -192,6 +201,8 @@ function SunInner({ property }: { property: PropertyMeta }) {
         </dl>
 
         <SunPathDiagram lat={lat} lng={lng} tz={sun.tz} dayStartMs={dayStartMs} year={wall.y} current={pos} />
+
+        <TerrainCard propertyId={property.id} lat={lat} lng={lng} dayStartMs={dayStartMs} />
 
         <h4>Shadow settings</h4>
         <label>Tree and hedge foliage
@@ -213,7 +224,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
           <h3>Direct sun on beds, greenhouse and orchard</h3>
           {busy && <small className="muted">calculating…</small>}
         </div>
-        <p className="note">Hours of direct sunlight above 3° elevation, averaged over each area (foliage lets part of the light through). Selected date: <b>{fmtDate(dayStartMs, sun.tz)}</b> (open-horizon maximum {table ? table.possible.sel.toFixed(1) : '…'} h). Rule of thumb: 6+ h full sun, 4–6 part sun, 2–4 part shade, under 2 h shade.</p>
+        <p className="note">Hours of direct sunlight above 3° elevation, averaged over each area (foliage lets part of the light through). Selected date: <b>{fmtDate(dayStartMs, sun.tz)}</b> (open-horizon maximum {table ? table.possible.sel.toFixed(1) : '…'} h{horizon && table ? `, with the land’s skyline ${table.possibleT.sel.toFixed(1)} h` : ''}). Rule of thumb: 6+ h full sun, 4–6 part sun, 2–4 part shade, under 2 h shade.</p>
         <div className="tablewrap">
           <table>
             <thead><tr><th>Area</th><th>Size</th><th>Selected date</th>{SEASON_DAYS.map((s) => <th key={s.key}>{s.label}</th>)}<th>Growing season</th></tr></thead>
@@ -252,7 +263,7 @@ function SunInner({ property }: { property: PropertyMeta }) {
           <summary>How this is calculated, and its limits</summary>
           <ul className="assume">
             <li>Sun and moon positions: standard astronomical formulas (sun to about 0.01°). Sunrise and sunset use the usual −0.833° (refraction and the sun's radius). Times follow the time zone chosen above.</li>
-            <li>Ground is treated as flat: there is no terrain model, so a hill or a neighbour's house outside your property does not cast shade in this view.</li>
+            <li>The ground under the property is treated as flat. If you turn on Terrain, hills on the skyline (from 90 m elevation data, seen from the property centre) hide the sun when it is lower than the skyline; slopes are shown, but sun on a tilted bed is not recalculated. A neighbour's house outside your property still casts no shade in this view.</li>
             <li>Buildings are walls plus a pitched roof (gable, hip, mansard; a shed roof once its direction is set): the height is to the ridge, the wall (eave) height is the optional field or, if empty, a roof rise of about a quarter of the building's width is assumed. Flat roofs, greenhouses and solar panels are boxes. Fences and hedges are walls of their entered height.</li>
             <li>Tree and bush crowns are cylinders from 30 % of the height up. Foliage blocks about {Math.round(0.75 * 100)} % of light in leaf, 20 % when bare; evergreens 85 % all year. Greenhouse glazing is assumed to pass 60 %. These are estimates, not measurements.</li>
             <li>Sun hours count direct light above 3° elevation, sampled every 15 minutes at a grid of points in each area.</li>
